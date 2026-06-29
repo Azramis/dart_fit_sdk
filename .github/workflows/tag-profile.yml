@@ -1,0 +1,30 @@
+name: Tag FIT profile version
+
+# When a profile update lands on main (FIT_PROFILE_VERSION changes), create the
+# matching immutable tag `profile-v<version>` so consumers can pin it.
+on:
+  push:
+    branches: [main]
+    paths: [FIT_PROFILE_VERSION]
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create profile-v<version> tag
+        run: |
+          version="$(tr -d '[:space:]' < FIT_PROFILE_VERSION)"
+          tag="profile-v${version}"
+          if git rev-parse "refs/tags/${tag}" >/dev/null 2>&1; then
+            echo "Tag ${tag} already exists — nothing to do."
+            exit 0
+          fi
+          git tag "${tag}"
+          git push origin "${tag}"
+          echo "Created and pushed ${tag}."
