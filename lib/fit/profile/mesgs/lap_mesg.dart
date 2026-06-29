@@ -147,6 +147,7 @@ class LapMesg extends Mesg {
   static const int fieldAvgCoreTemperature = 158;
   static const int fieldMinCoreTemperature = 159;
   static const int fieldMaxCoreTemperature = 160;
+  static const int fieldActiveTime = 70;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   LapMesg() : super.from(Profile.getMesg(MesgNum.lap));
@@ -1297,6 +1298,15 @@ class LapMesg extends Mesg {
   double? getMaxCoreTemperature() {
     final val = getFieldValue(
       160,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getActiveTime() {
+    final val = getFieldValue(
+      70,
       index: 0,
       subfieldInfo: Fit.subfieldIndexMainField,
     );

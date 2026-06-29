@@ -121,3 +121,4 @@ export 'workout_mesg.dart';
 export 'workout_session_mesg.dart';
 export 'workout_step_mesg.dart';
 export 'zones_target_mesg.dart';
+export 'nap_event_mesg.dart';

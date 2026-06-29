@@ -194,3 +194,7 @@ export 'workout_capabilities.dart';
 export 'workout_equipment.dart';
 export 'workout_hr.dart';
 export 'workout_power.dart';
+export 'time_into_day.dart';
+export 'localtime_into_day.dart';
+export 'nap_period_feedback.dart';
+export 'nap_source.dart';

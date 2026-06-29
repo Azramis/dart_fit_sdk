@@ -516,4 +516,9 @@ class GarminProduct {
   static const int androidAntplusPlugin = 65532;
   /// Garmin Connect website
   static const int connect = 65534;
+  static const int fr170Music = 4814;
+  static const int fr170 = 4815;
+  static const int approachJ1 = 4825;
+  static const int fr702026 = 4916;
+  static const int d2Mach2Pro = 5056;
 }

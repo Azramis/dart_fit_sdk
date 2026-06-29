@@ -223,6 +223,8 @@ enum ProfileType {
   noFlyTimeMode,
 
   numTypes,
+  napPeriodFeedback,
+  napSource,
 }
 
 class Profile {
@@ -651,6 +653,9 @@ class Profile {
         break;
       case MesgNum.pad:
         newMesg = createPadMesg();
+        break;
+      case MesgNum.napEvent:
+        newMesg = createNapEventMesg();
         break;
       default:
         break;
@@ -4786,6 +4791,13 @@ class Profile {
     );
     fieldIndex++;
 
+    newMesg.setField(
+      Field("ActiveTime", 78, 134, 1000.0, 0.0, "s", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("MetabolicCalories", 196, 132, 1.0, 0.0, "kcal", false,
+          ProfileType.uint16),
+    );
     return newMesg;
   }
 
@@ -6080,6 +6092,9 @@ class Profile {
     );
     fieldIndex++;
 
+    newMesg.setField(
+      Field("ActiveTime", 70, 134, 1000.0, 0.0, "s", false, ProfileType.uint32),
+    );
     return newMesg;
   }
 
@@ -9190,6 +9205,9 @@ class Profile {
     );
     fieldIndex++;
 
+    newMesg.setField(
+      Field("ActiveTime", 78, 134, 1000.0, 0.0, "s", false, ProfileType.uint32),
+    );
     return newMesg;
   }
 
@@ -9308,6 +9326,9 @@ class Profile {
     );
     fieldIndex++;
 
+    newMesg.setField(
+      Field("ActiveTime", 65, 134, 1000.0, 0.0, "s", false, ProfileType.uint32),
+    );
     return newMesg;
   }
 
@@ -9724,6 +9745,15 @@ class Profile {
     );
     fieldIndex++;
 
+    newMesg.setField(
+      Field("ActivityId", 3, 134, 1.0, 0.0, "", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("SegmentTime", 4, 134, 1000.0, 0.0, "s", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("ActivityIdString", 5, 7, 1.0, 0.0, "", false, ProfileType.string),
+    );
     return newMesg;
   }
 
@@ -10862,6 +10892,13 @@ class Profile {
     );
     fieldIndex++;
 
+    newMesg.setField(
+      Field("PoolLength", 14, 132, 100.0, 0.0, "m", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("PoolLengthUnit", 15, 0, 1.0, 0.0, "", false,
+          ProfileType.displayMeasure),
+    );
     return newMesg;
   }
 
@@ -13925,6 +13962,48 @@ class Profile {
     final Mesg newMesg = Mesg("Pad", MesgNum.pad);
     fieldIndex = 0;
 
+    return newMesg;
+  }
+
+  static Mesg createNapEventMesg() {
+    final Mesg newMesg = Mesg("NapEvent", MesgNum.napEvent);
+    newMesg.setField(
+      Field("MessageIndex", 254, 132, 1.0, 0.0, "", false,
+          ProfileType.messageIndex),
+    );
+    newMesg.setField(
+      Field("Timestamp", 253, 134, 1.0, 0.0, "", false, ProfileType.dateTime),
+    );
+    newMesg.setField(
+      Field("StartTime", 0, 134, 1.0, 0.0, "seconds", false,
+          ProfileType.dateTime),
+    );
+    newMesg.setField(
+      Field("StartTimezoneOffset", 1, 131, 1.0, 0.0, "minutes", false,
+          ProfileType.sint16),
+    );
+    newMesg.setField(
+      Field(
+          "EndTime", 2, 134, 1.0, 0.0, "seconds", false, ProfileType.dateTime),
+    );
+    newMesg.setField(
+      Field("EndTimezoneOffset", 3, 131, 1.0, 0.0, "minutes", false,
+          ProfileType.sint16),
+    );
+    newMesg.setField(
+      Field(
+          "Feedback", 4, 0, 1.0, 0.0, "", false, ProfileType.napPeriodFeedback),
+    );
+    newMesg.setField(
+      Field("IsDeleted", 5, 0, 1.0, 0.0, "", false, ProfileType.bool_),
+    );
+    newMesg.setField(
+      Field("Source", 6, 0, 1.0, 0.0, "", false, ProfileType.napSource),
+    );
+    newMesg.setField(
+      Field(
+          "UpdateTimestamp", 7, 134, 1.0, 0.0, "", false, ProfileType.dateTime),
+    );
     return newMesg;
   }
 }

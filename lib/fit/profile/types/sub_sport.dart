@@ -162,4 +162,27 @@ class SubSport {
   /// Flying
   static const int flyIfr = 119;
   static const int all = 254;
+  static const int ccrDiving = 63;
+  static const int expedition = 66;
+  static const int indoorGrinding = 71;
+  static const int huntingWithDogs = 72;
+  static const int esport = 77;
+  static const int triathlon = 78;
+  static const int duathlon = 79;
+  static const int brick = 80;
+  static const int swimRun = 81;
+  static const int adventureRace = 82;
+  static const int truckerWorkout = 83;
+  static const int field = 90;
+  static const int ice = 91;
+  static const int ultimate = 92;
+  static const int platform = 93;
+  static const int overland = 98;
+  static const int trollingMotor = 99;
+  static const int dynamicApnea = 121;
+  static const int enduro = 123;
+  static const int rucking = 124;
+  static const int rally = 125;
+  static const int poolTriathlon = 126;
+  static const int eBikeEnduro = 127;
 }

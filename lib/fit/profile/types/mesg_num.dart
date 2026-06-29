@@ -127,4 +127,5 @@ class MesgNum {
   static const int mfgRangeMin = 65280;
   /// 0xFF00 - 0xFFFE reserved for manufacturer specific messages
   static const int mfgRangeMax = 65534;
+  static const int napEvent = 412;
 }

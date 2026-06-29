@@ -70,4 +70,17 @@ class Sport {
   static const int jumpRope = 84;
   /// All is for goals only to include all sports.
   static const int all = 254;
+  static const int shooting = 56;
+  static const int winterSport = 58;
+  static const int grinding = 59;
+  static const int videoGaming = 63;
+  static const int paraSport = 68;
+  static const int teamSport = 70;
+  static const int waterSport = 78;
+  static const int archery = 79;
+  static const int motorSports = 81;
+  static const int poolApnea = 85;
+  static const int mobility = 86;
+  static const int geocaching = 87;
+  static const int canoeing = 88;
 }

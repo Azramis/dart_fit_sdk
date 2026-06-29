@@ -242,4 +242,14 @@ class Manufacturer {
   static const int cycloptim = 335;
   static const int runna = 337;
   static const int actigraphcorp = 5759;
+  static const int zepp = 339;
+  static const int peloton = 340;
+  static const int carv = 341;
+  static const int tissot = 342;
+  static const int realVelo = 345;
+  static const int wetech = 346;
+  static const int jespr = 347;
+  static const int huawei = 348;
+  static const int gotoes = 349;
+  static const int cadenceApp = 350;
 }

@@ -19,6 +19,7 @@ class SplitSummaryMesg extends Mesg {
   static const int fieldAvgVertSpeed = 12;
   static const int fieldTotalCalories = 13;
   static const int fieldTotalMovingTime = 77;
+  static const int fieldActiveTime = 65;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   SplitSummaryMesg() : super.from(Profile.getMesg(MesgNum.splitSummary));
@@ -144,6 +145,15 @@ class SplitSummaryMesg extends Mesg {
   double? getTotalMovingTime() {
     final val = getFieldValue(
       77,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getActiveTime() {
+    final val = getFieldValue(
+      65,
       index: 0,
       subfieldInfo: Fit.subfieldIndexMainField,
     );

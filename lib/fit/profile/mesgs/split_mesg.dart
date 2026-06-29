@@ -24,6 +24,7 @@ class SplitMesg extends Mesg {
   static const int fieldTotalCalories = 28;
   static const int fieldStartElevation = 74;
   static const int fieldTotalMovingTime = 110;
+  static const int fieldActiveTime = 78;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   SplitMesg() : super.from(Profile.getMesg(MesgNum.split));
@@ -202,6 +203,15 @@ class SplitMesg extends Mesg {
   double? getTotalMovingTime() {
     final val = getFieldValue(
       110,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getActiveTime() {
+    final val = getFieldValue(
+      78,
       index: 0,
       subfieldInfo: Fit.subfieldIndexMainField,
     );

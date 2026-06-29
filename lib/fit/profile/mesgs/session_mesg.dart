@@ -180,6 +180,8 @@ class SessionMesg extends Mesg {
   static const int fieldAvgCoreTemperature = 208;
   static const int fieldMinCoreTemperature = 209;
   static const int fieldMaxCoreTemperature = 210;
+  static const int fieldActiveTime = 78;
+  static const int fieldMetabolicCalories = 196;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   SessionMesg() : super.from(Profile.getMesg(MesgNum.session));
@@ -1631,5 +1633,23 @@ class SessionMesg extends Mesg {
       subfieldInfo: Fit.subfieldIndexMainField,
     );
     return (val as num?)?.toDouble();
+  }
+
+  double? getActiveTime() {
+    final val = getFieldValue(
+      78,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  int? getMetabolicCalories() {
+    final val = getFieldValue(
+      196,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
   }
 }
