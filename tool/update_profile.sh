@@ -54,6 +54,10 @@ if [ "${1:-}" != "--pr" ]; then
 fi
 
 branch="auto/profile-${version}"
+if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+  say "↪ ${branch} already exists on origin — a PR is likely already open. Skipping."
+  exit 0
+fi
 say "🌿 Opening PR on branch ${branch}…"
 git switch -c "$branch"
 git add -A lib
