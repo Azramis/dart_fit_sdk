@@ -90,6 +90,7 @@ export 'fit/profile.dart';
 export 'fit/fit_messages.dart';
 export 'fit/profile/types/mesg_num.dart';
 export 'fit/profile/mesgs/mesgs.dart';
+export 'fit/profile/mesgs/mesg_type.dart';
 export 'fit/profile/types/types.dart';
 
 // Utilities
