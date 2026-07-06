@@ -93,6 +93,9 @@ export 'fit/profile/mesgs/mesgs.dart';
 export 'fit/profile/mesgs/mesg_type.dart';
 export 'fit/profile/types/types.dart';
 
+// Profile introspection catalog
+export 'fit/profile/catalog.dart';
+
 // Utilities
 export 'fit/accumulator.dart';
 export 'fit/crc.dart';
