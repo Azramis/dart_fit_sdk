@@ -92,6 +92,7 @@ export 'fit/profile/types/mesg_num.dart';
 export 'fit/profile/mesgs/mesgs.dart';
 export 'fit/profile/mesgs/mesg_type.dart';
 export 'fit/profile/types/types.dart';
+export 'fit/profile/catalog.dart';
 
 // Utilities
 export 'fit/accumulator.dart';

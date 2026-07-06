@@ -117,6 +117,40 @@ void main() async {
 }
 ```
 
+### Introspecting the Profile
+
+Sometimes you need to know what the profile *contains* rather than decode a file:
+which messages and fields exist, their units, and what a raw enum value means
+(`sport == 1` → `running`). `FitProfileCatalog` exposes this as a read-only,
+synchronous catalog generated from the same profile as the codec, so it always
+stays in sync with the bundled `FIT_PROFILE_VERSION`.
+
+```dart
+import 'package:fit_sdk/fit_sdk.dart';
+
+void main() {
+  final catalog = FitProfileCatalog();
+
+  // Messages and their fields (names are verbatim from the profile):
+  final record = catalog.messageByName('record')!; // or messageByNum(20)
+  final hr = record.fieldByNum(3)!;
+  print('${hr.name} in ${hr.units}'); // HeartRate in bpm
+
+  // Enumerations, value -> name:
+  final sport = catalog.enumType(ProfileType.sport)!;
+  print(sport.nameOf(1)); // running
+  for (final v in sport.values) {
+    print('${v.value} = ${v.name}${v.doc != null ? '  // ${v.doc}' : ''}');
+  }
+
+  // Base/scalar types are not enumerations:
+  print(catalog.enumType(ProfileType.uint8)); // null
+}
+```
+
+This is purely descriptive: it never decodes bytes and leaves any name
+normalisation to the caller.
+
 ## Examples
 
 The `example/` directory contains complete working examples:
@@ -124,6 +158,7 @@ The `example/` directory contains complete working examples:
 - **`decode.dart`**: Demonstrates how to decode FIT files and display message data
 - **`encode.dart`**: Shows how to create FIT files with various message types
 - **`broadcaster.dart`**: Example of using the message broadcaster pattern
+- **`catalog.dart`**: Introspects the profile — lists messages, fields and enum values
 
 Run examples:
 
@@ -167,6 +202,15 @@ Represents a FIT message with fields.
 final mesg = Mesg.fromMesgNum(MesgNum.record);
 mesg.setFieldValue(fieldNum, value);
 final value = mesg.getFieldValue(fieldNum);
+```
+
+#### `FitProfileCatalog`
+Read-only introspection over the profile: messages, fields and enum value tables.
+
+```dart
+final catalog = FitProfileCatalog();
+catalog.messageByNum(20)?.name;                  // Record
+catalog.enumType(ProfileType.sport)?.nameOf(1);  // running
 ```
 
 #### `MesgBroadcaster`

@@ -54,6 +54,16 @@ String _snake(String c) => c
     .replaceAllMapped(RegExp(r'([a-z0-9])([A-Z])'), (m) => '${m[1]}_${m[2]}')
     .toLowerCase();
 
+/// Inverse of [_snake] for the file/type names in this profile (which are all
+/// lowerCamelCase): `sub_sport` -> `subSport`, `date_time` -> `dateTime`.
+String _snakeToCamel(String s) {
+  final parts = s.split('_');
+  return parts.first + parts.skip(1).map(_pascal).join();
+}
+
+/// Renders [s] as a single-quoted Dart string literal, escaping as needed.
+String _dartStr(String s) => "'${s.replaceAll(r'\', r'\\').replaceAll("'", r"\'").replaceAll(r'$', r'\$').replaceAll('\r', '').replaceAll('\n', ' ')}'";
+
 String _ident(String name) {
   var n = name;
   if (RegExp(r'^[0-9]').hasMatch(n)) n = 'n$n';
@@ -111,9 +121,19 @@ void _append(File f, String content, {bool format = true}) {
 
 void main(List<String> args) {
   if (args.isEmpty) {
-    stderr.writeln('Usage: dart run tool/generate_profile.dart <profile.js>');
+    stderr.writeln('Usage: dart run tool/generate_profile.dart <profile.js>\n'
+        '       dart run tool/generate_profile.dart --regen-catalogs');
     exit(64);
   }
+
+  // Regenerate only the derived catalogs from the current generated sources
+  // (no upstream profile needed) — handy to bootstrap or after hand-tweaks.
+  if (args.first == '--regen-catalogs') {
+    _generateEnumType();
+    stdout.writeln(_format.join(' '));
+    return;
+  }
+
   final profile = jsonDecode(_jsToJson(File(args.first).readAsStringSync()))
       as Map<String, dynamic>;
   final ver = profile['version'];
@@ -124,6 +144,7 @@ void main(List<String> args) {
   _additiveMesgClasses(messages);
   _additiveProfileDart(messages);
   _generateMesgType(messages);
+  _generateEnumType();
 
   stderr
     ..writeln('FIT profile v${ver['major']}.${ver['minor']}.${ver['patch']} '
@@ -233,6 +254,133 @@ void _generateMesgType(Map<String, dynamic> messages) {
     ..writeln('}')
     ..writeln();
   _write(File('lib/fit/profile/mesgs/mesg_type.dart'), b.toString());
+}
+
+/// Non-enumeration types that carry a generated class but must NOT be surfaced
+/// as enums: timestamps whose only "values" are sentinels, not a named domain.
+const _scalarTypes = {'dateTime', 'localDateTime'};
+
+/// Extracts `(name, value, doc?)` rows from a generated type class, preserving
+/// declaration order and capturing any preceding `///` doc comment.
+List<({String name, int value, String? doc})> _parseTypeConstants(
+    String content) {
+  final rows = <({String name, int value, String? doc})>[];
+  final doc = <String>[];
+  final constRe = RegExp(r'^static const int (\w+)\s*=\s*(\d+);');
+  for (final line in content.split('\n')) {
+    final t = line.trim();
+    final d = RegExp(r'^///\s?(.*)$').firstMatch(t);
+    if (d != null) {
+      doc.add(d.group(1)!);
+      continue;
+    }
+    final m = constRe.firstMatch(t);
+    if (m != null) {
+      rows.add((
+        name: m.group(1)!,
+        value: int.parse(m.group(2)!),
+        doc: doc.isEmpty ? null : doc.join(' ').trim(),
+      ));
+      doc.clear();
+      continue;
+    }
+    if (t.isNotEmpty) doc.clear();
+  }
+  return rows;
+}
+
+/// (Re)generates the enum-value catalog: for every *named* enumeration type in
+/// the profile, a `value -> name` table (with any doc comments) keyed by
+/// [ProfileType]. This is the piece that makes the profile's enums
+/// introspectable at runtime — see `lib/fit/profile/catalog.dart`.
+///
+/// Fully derived from the already-generated type classes under
+/// `lib/fit/profile/types/`, so it is rewritten in whole on every run and can
+/// be refreshed on its own with `--regen-catalogs` (no upstream profile
+/// needed). Only [ProfileType] members are referenced, so unused profile types
+/// and base/scalar types are naturally absent.
+void _generateEnumType() {
+  final dir = Directory('lib/fit/profile/types');
+
+  // The ProfileType members we may legally reference.
+  final profileDart = File('lib/fit/profile.dart').readAsStringSync();
+  final known = RegExp(r'\b(\w+)\b')
+      .allMatches(RegExp(r'enum ProfileType \{([^}]*)\}')
+          .firstMatch(profileDart)!
+          .group(1)!)
+      .map((m) => m.group(1)!)
+      .toSet();
+
+  final types = <({String ident, String name, String body})>[];
+  for (final f in dir.listSync().whereType<File>()) {
+    if (!f.path.endsWith('.dart')) continue;
+    final base = f.path.split(Platform.pathSeparator).last;
+    if (base == 'types.dart' || base == 'enum_type.dart') continue;
+    final camel = _snakeToCamel(base.substring(0, base.length - '.dart'.length));
+    if (_scalarTypes.contains(camel)) continue;
+    final ident = _ident(camel);
+    if (!known.contains(ident)) continue;
+
+    final rows = _parseTypeConstants(f.readAsStringSync());
+    if (rows.isEmpty) continue;
+
+    final body = StringBuffer();
+    for (final r in rows) {
+      body.write('    EnumValueInfo(${_dartStr(r.name)}, ${r.value}');
+      if (r.doc != null && r.doc!.isNotEmpty) body.write(', ${_dartStr(r.doc!)}');
+      body.writeln('),');
+    }
+    types.add((ident: ident, name: camel, body: body.toString()));
+  }
+  types.sort((a, b) => a.ident.compareTo(b.ident));
+
+  final b = StringBuffer()
+    ..writeln(
+        '// Auto-generated by tool/generate_profile.dart. Do not edit by hand.')
+    ..writeln('//')
+    ..writeln('// value -> name tables for every named enumeration type in this '
+        'profile version.')
+    ..writeln()
+    ..writeln("import '../../profile.dart';")
+    ..writeln()
+    ..writeln('/// A single named value of a FIT enumeration: its [name], the raw')
+    ..writeln('/// integer [value], and the optional [doc] the profile carries.')
+    ..writeln('class EnumValueInfo {')
+    ..writeln('  const EnumValueInfo(this.name, this.value, [this.doc]);')
+    ..writeln()
+    ..writeln('  /// Profile name of the value, verbatim (e.g. "running").')
+    ..writeln('  final String name;')
+    ..writeln()
+    ..writeln('  /// Raw integer the profile assigns to this value (e.g. 1).')
+    ..writeln('  final int value;')
+    ..writeln()
+    ..writeln('  /// Documentation the profile attaches to the value, if any.')
+    ..writeln('  final String? doc;')
+    ..writeln('}')
+    ..writeln()
+    ..writeln('/// Profile name of every named enumeration type, keyed by '
+        '[ProfileType].')
+    ..writeln('const Map<ProfileType, String> profileEnumTypeNames = {');
+  for (final t in types) {
+    b.writeln('  ProfileType.${t.ident}: ${_dartStr(t.name)},');
+  }
+  b
+    ..writeln('};')
+    ..writeln()
+    ..writeln('/// `value -> name` tables for every named enumeration type, keyed')
+    ..writeln('/// by [ProfileType]. Base numeric types (sint8, ...) and scalar')
+    ..writeln('/// types (dateTime, ...) are intentionally absent.')
+    ..writeln(
+        'const Map<ProfileType, List<EnumValueInfo>> profileEnumTypeValues = {');
+  for (final t in types) {
+    b
+      ..writeln('  ProfileType.${t.ident}: [')
+      ..write(t.body)
+      ..writeln('  ],');
+  }
+  b.writeln('};');
+
+  _write(File('lib/fit/profile/types/enum_type.dart'), b.toString());
 }
 
 void _additiveMesgClasses(Map<String, dynamic> messages) {
