@@ -1,6 +1,6 @@
 name: fit_sdk
 description: A Dart port of the Garmin FIT SDK for encoding and decoding FIT (Flexible and Interoperable Data Transfer) files. This library allows you to read and write FIT files used by Garmin and other fitness devices.
-version: 0.3.0
+version: 0.4.0
 homepage: https://github.com/floatinghotpot/dart_fit_sdk
 repository: https://github.com/floatinghotpot/dart_fit_sdk
 issue_tracker: https://github.com/floatinghotpot/dart_fit_sdk/issues

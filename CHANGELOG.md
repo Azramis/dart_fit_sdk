@@ -30,3 +30,10 @@
 ## 0.3.0
 
 * **Run dart fix --apply**: auto fix the code style
+
+## 0.4.0
+
+* **Profile introspection (`FitProfileCatalog`)**: a read-only, synchronous catalog over the generated profile — enumerate messages and their fields (with units, scale/offset, `isArray`, subfields and components), and resolve enum types to their `value -> name` tables (e.g. `sport == 1` → `running`). Purely descriptive; it does not decode or encode.
+  * New generated registries `lib/fit/profile/types/enum_type.dart` (value→name tables per `ProfileType`, with verbatim names) and `field_array.dart` (which fields are arrays), emitted by the profile generator so they stay in sync with `FIT_PROFILE_VERSION`.
+  * `tool/generate_profile.dart` gains a `--regen-catalogs [profile.js]` mode to regenerate the derived catalogs without a full additive update.
+  * Added the package's first unit tests (`test/profile_catalog_test.dart`) and an `example/catalog.dart`.
