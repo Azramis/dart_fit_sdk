@@ -16,9 +16,10 @@ void main() {
   print('Message "${record.name}" (num ${record.num}) — first 6 fields:');
   for (final field in record.fields.take(6)) {
     final units = field.units.isNotEmpty ? ' [${field.units}]' : '';
+    final array = field.isArray ? '[]' : '';
     final enumType = catalog.enumType(field.type);
     final kind = enumType != null ? 'enum ${enumType.name}' : field.type.name;
-    print('  #${field.num} ${field.name}$units — $kind');
+    print('  #${field.num} ${field.name}$array$units — $kind');
   }
 
   // 2. Resolve enum values to names.

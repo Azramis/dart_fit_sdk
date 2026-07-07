@@ -442,7 +442,7 @@ const Map<ProfileType, List<EnumValueInfo>> profileEnumTypeValues = {
     EnumValueInfo('overheadPressWheelchair', 61),
   ],
   ProfileType.batteryStatus: [
-    EnumValueInfo('new_', 1),
+    EnumValueInfo('new', 1),
     EnumValueInfo('good', 2),
     EnumValueInfo('ok', 3),
     EnumValueInfo('low', 4),
@@ -1516,7 +1516,7 @@ const Map<ProfileType, List<EnumValueInfo>> profileEnumTypeValues = {
     EnumValueInfo('fullQuarterSplit', 5),
     EnumValueInfo('halfVerticalLeftSplit', 6),
     EnumValueInfo('halfHorizontalTopSplit', 7),
-    EnumValueInfo('dynamic_', 8,
+    EnumValueInfo('dynamic', 8,
         'The EXD may display the configured concepts in any layout it sees fit.'),
   ],
   ProfileType.exdQualifiers: [
@@ -1668,7 +1668,7 @@ const Map<ProfileType, List<EnumValueInfo>> profileEnumTypeValues = {
     EnumValueInfo('erase', 8),
   ],
   ProfileType.fitBaseType: [
-    EnumValueInfo('enum_', 0),
+    EnumValueInfo('enum', 0),
     EnumValueInfo('sint8', 1),
     EnumValueInfo('uint8', 2),
     EnumValueInfo('sint16', 131),
@@ -3057,7 +3057,7 @@ const Map<ProfileType, List<EnumValueInfo>> profileEnumTypeValues = {
     EnumValueInfo('oneDSensorCalibration', 210),
     EnumValueInfo('monitoringHrData', 211),
     EnumValueInfo('timeInZone', 216),
-    EnumValueInfo('set_', 225),
+    EnumValueInfo('set', 225),
     EnumValueInfo('stressLevel', 227),
     EnumValueInfo('maxMetData', 229),
     EnumValueInfo('diveSettings', 258),

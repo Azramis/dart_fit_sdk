@@ -37,6 +37,13 @@ void main() {
       expect(record.fieldByName('HeartRate'), same(heartRate));
     });
 
+    test('fields flag whether they are arrays', () {
+      final record = catalog.messageByName('record')!;
+      // heart_rate is a scalar; compressed_speed_distance (num 8) is an array.
+      expect(record.fieldByNum(3)!.isArray, isFalse);
+      expect(record.fieldByNum(8)!.isArray, isTrue);
+    });
+
     test('every message is reachable by its number', () {
       expect(catalog.messages, isNotEmpty);
       for (final m in catalog.messages) {
@@ -82,6 +89,14 @@ void main() {
       expect(transition!.name, 'transition');
       expect(transition.doc, isNotNull);
       expect(transition.doc, contains('transition'));
+    });
+
+    test('reserved-word value names are returned verbatim (no _ suffix)', () {
+      // BatteryStatus.new is a Dart reserved word: the profile name is "new",
+      // not the sanitized identifier "new_".
+      final battery = catalog.enumType(ProfileType.batteryStatus)!;
+      expect(battery.nameOf(1), 'new');
+      expect(battery.values.map((v) => v.name), isNot(contains('new_')));
     });
   });
 

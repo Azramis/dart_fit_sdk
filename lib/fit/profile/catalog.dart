@@ -4,6 +4,7 @@ import '../profile.dart';
 import '../subfield.dart';
 import 'mesgs/mesg_type.dart';
 import 'types/enum_type.dart';
+import 'types/field_array.dart';
 
 export 'types/enum_type.dart' show EnumValueInfo;
 
@@ -94,19 +95,23 @@ class FitProfileCatalog {
     return out;
   }
 
-  List<FieldInfo> _buildFields(Mesg mesg) => List.unmodifiable(<FieldInfo>[
-        for (final f in mesg.fields)
-          FieldInfo._(
-            f.num,
-            f.name,
-            f.units,
-            f.scale,
-            f.offset,
-            f.profileType,
-            _buildSubfields(f.subfields),
-            _buildComponents(f.components),
-          ),
-      ]);
+  List<FieldInfo> _buildFields(Mesg mesg) {
+    final arrays = profileArrayFields[mesg.num] ?? const <int>{};
+    return List.unmodifiable(<FieldInfo>[
+      for (final f in mesg.fields)
+        FieldInfo._(
+          f.num,
+          f.name,
+          f.units,
+          f.scale,
+          f.offset,
+          f.profileType,
+          arrays.contains(f.num),
+          _buildSubfields(f.subfields),
+          _buildComponents(f.components),
+        ),
+    ]);
+  }
 
   List<SubfieldInfo> _buildSubfields(List<Subfield> subfields) =>
       List.unmodifiable(<SubfieldInfo>[
@@ -187,7 +192,7 @@ class MessageInfo {
 /// (`uint8`, ...) that has no enumeration.
 class FieldInfo {
   const FieldInfo._(this.num, this.name, this.units, this.scale, this.offset,
-      this.type, this.subfields, this.components);
+      this.type, this.isArray, this.subfields, this.components);
 
   /// Field number, unique within its message (e.g. 3 for heart rate).
   final int num;
@@ -207,6 +212,9 @@ class FieldInfo {
   /// The field's profile type; pass it to [FitProfileCatalog.enumType] to get
   /// the value tables when it is an enumeration.
   final ProfileType type;
+
+  /// Whether the field holds an array of values rather than a single scalar.
+  final bool isArray;
 
   /// Dynamic (reference) subfields the profile models for this field.
   final List<SubfieldInfo> subfields;

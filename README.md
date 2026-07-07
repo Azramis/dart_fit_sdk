@@ -134,7 +134,7 @@ void main() {
   // Messages and their fields (names are verbatim from the profile):
   final record = catalog.messageByName('record')!; // or messageByNum(20)
   final hr = record.fieldByNum(3)!;
-  print('${hr.name} in ${hr.units}'); // HeartRate in bpm
+  print('${hr.name} in ${hr.units}, array: ${hr.isArray}'); // HeartRate in bpm, array: false
 
   // Enumerations, value -> name:
   final sport = catalog.enumType(ProfileType.sport)!;
