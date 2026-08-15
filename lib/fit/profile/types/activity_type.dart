@@ -10,4 +10,5 @@ class ActivityType {
   static const int sedentary = 8;
   /// All is for goals only to include all sports.
   static const int all = 254;
+  static const int wheelchairPushing = 13;
 }

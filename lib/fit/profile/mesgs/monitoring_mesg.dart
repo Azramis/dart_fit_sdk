@@ -41,6 +41,7 @@ class MonitoringMesg extends Mesg {
   static const int fieldDescent = 32;
   static const int fieldModerateActivityMinutes = 33;
   static const int fieldVigorousActivityMinutes = 34;
+  static const int fieldPushes = 41;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   MonitoringMesg() : super.from(Profile.getMesg(MesgNum.monitoring));
@@ -323,6 +324,15 @@ class MonitoringMesg extends Mesg {
   int? getVigorousActivityMinutes() {
     final val = getFieldValue(
       34,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getPushes() {
+    final val = getFieldValue(
+      41,
       index: 0,
       subfieldInfo: Fit.subfieldIndexMainField,
     );

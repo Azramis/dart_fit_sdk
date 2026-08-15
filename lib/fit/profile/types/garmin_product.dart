@@ -521,4 +521,9 @@ class GarminProduct {
   static const int approachJ1 = 4825;
   static const int fr702026 = 4916;
   static const int d2Mach2Pro = 5056;
+  static const int fr970 = 4565;
+  static const int fr570Large = 4570;
+  static const int fr570Small = 4574;
+  static const int fenix7ProSolarNoWifi = 4595;
+  static const int cirqaSmartBand = 5019;
 }
