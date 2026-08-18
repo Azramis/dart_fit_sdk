@@ -12101,6 +12101,10 @@ class Profile {
     );
     fieldIndex++;
 
+    newMesg.setField(
+      Field("Pushes", 41, 134, 1.0, 0.0, "", false, ProfileType.uint32),
+    );
+    fieldIndex++;
     return newMesg;
   }
 

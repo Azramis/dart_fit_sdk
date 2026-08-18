@@ -269,6 +269,7 @@ const Map<ProfileType, List<EnumValueInfo>> profileEnumTypeValues = {
     EnumValueInfo('walking', 6),
     EnumValueInfo('sedentary', 8),
     EnumValueInfo('all', 254, 'All is for goals only to include all sports.'),
+    EnumValueInfo('wheelchairPushing', 13),
   ],
   ProfileType.analogWatchfaceLayout: [
     EnumValueInfo('minimal', 0),
@@ -2203,6 +2204,11 @@ const Map<ProfileType, List<EnumValueInfo>> profileEnumTypeValues = {
     EnumValueInfo('approachJ1', 4825),
     EnumValueInfo('fr702026', 4916),
     EnumValueInfo('d2Mach2Pro', 5056),
+    EnumValueInfo('fr970', 4565),
+    EnumValueInfo('fr570Large', 4570),
+    EnumValueInfo('fr570Small', 4574),
+    EnumValueInfo('fenix7ProSolarNoWifi', 4595),
+    EnumValueInfo('cirqaSmartBand', 5019),
   ],
   ProfileType.gasConsumptionRateType: [
     EnumValueInfo('pressureSac', 0, 'Pressure-based Surface Air Consumption'),
@@ -2955,6 +2961,7 @@ const Map<ProfileType, List<EnumValueInfo>> profileEnumTypeValues = {
     EnumValueInfo('huawei', 348),
     EnumValueInfo('gotoes', 349),
     EnumValueInfo('cadenceApp', 350),
+    EnumValueInfo('unaWatch', 351),
   ],
   ProfileType.maxMetCategory: [
     EnumValueInfo('generic', 0),

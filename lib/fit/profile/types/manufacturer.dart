@@ -252,4 +252,5 @@ class Manufacturer {
   static const int huawei = 348;
   static const int gotoes = 349;
   static const int cadenceApp = 350;
+  static const int unaWatch = 351;
 }
