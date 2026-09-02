@@ -253,4 +253,5 @@ class Manufacturer {
   static const int gotoes = 349;
   static const int cadenceApp = 350;
   static const int unaWatch = 351;
+  static const int tymewear = 352;
 }

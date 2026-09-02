@@ -526,4 +526,16 @@ class GarminProduct {
   static const int fr570Small = 4574;
   static const int fenix7ProSolarNoWifi = 4595;
   static const int cirqaSmartBand = 5019;
+  static const int fenix9Pro43mm = 4952;
+  static const int fenix9Pro47mm = 4953;
+  static const int fenix9Pro51mm = 4954;
+  static const int fenix9ProSolar47mm = 4955;
+  static const int fenix9ProSolar51mm = 4956;
+  static const int fenix943mm = 5133;
+  static const int fenix9 = 5134;
+  static const int trainingPeaksVirtualIos = 30059;
+  static const int trainingPeaksVirtualAndroid = 30060;
+  static const int trainingPeaksVirtualWindows = 30061;
+  static const int trainingPeaksVirtualMacOs = 30062;
+  static const int trainingPeaksVirtualAppleTv = 30063;
 }
