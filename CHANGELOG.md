@@ -37,3 +37,13 @@
   * New generated registries `lib/fit/profile/types/enum_type.dart` (value→name tables per `ProfileType`, with verbatim names) and `field_array.dart` (which fields are arrays), emitted by the profile generator so they stay in sync with `FIT_PROFILE_VERSION`.
   * `tool/generate_profile.dart` gains a `--regen-catalogs [profile.js]` mode to regenerate the derived catalogs without a full additive update.
   * Added the package's first unit tests (`test/profile_catalog_test.dart`) and an `example/catalog.dart`.
+
+## 0.5.0
+
+* **Profile documentation in `FitProfileCatalog`**: Garmin's `Profile.xlsx` (from [garmin/fit-sdk-tools](https://github.com/garmin/fit-sdk-tools)) now documents the catalog, for in-app help.
+  * `doc` on `MessageInfo`, `FieldInfo`, `SubfieldInfo`, `EnumTypeInfo` and `EnumValueInfo`, plus `FitProfileCatalog.typeDoc()` for scalar types (e.g. `dateTime`) and `docsVersion`.
+  * `MessageInfo.section` (e.g. `ACTIVITY FILE MESSAGES`), `FieldInfo.arrayLength` (fixed-size arrays such as `[3]`) and `EnumTypeInfo.baseType` (e.g. `uint32z`).
+  * `EnumValueInfo.doc` now comes from `Profile.xlsx` too: 412 documented values instead of 384, none lost.
+  * **Behaviour change:** `FieldInfo.isArray` follows the profile's `Array` column, so 40 string fields (e.g. `Sport.Name`) are no longer reported as arrays; true string arrays (e.g. `FieldDescription.FieldName`) still are.
+  * `tool/generate_profile.dart` downloads the `Profile.xlsx` of the matching fit-sdk-tools release (or the closest earlier one), checks it against its Git LFS pointer, and emits `lib/fit/profile/types/profile_docs.dart`. Documentation failures only warn: they never block a profile update.
+  * New dev dependencies for the generator only: `archive`, `xml`, `crypto`. The package itself still has no dependencies.

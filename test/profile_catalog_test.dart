@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:fit_sdk/fit/profile/types/profile_docs.dart';
 import 'package:fit_sdk/fit_sdk.dart';
 import 'package:test/test.dart';
 
@@ -37,11 +38,29 @@ void main() {
       expect(record.fieldByName('HeartRate'), same(heartRate));
     });
 
-    test('fields flag whether they are arrays', () {
+    test('fields flag whether they are arrays, and fixed sizes', () {
       final record = catalog.messageByName('record')!;
-      // heart_rate is a scalar; compressed_speed_distance (num 8) is an array.
+      // heart_rate is a single value; compressed_speed_distance (num 8) is [3].
       expect(record.fieldByNum(3)!.isArray, isFalse);
+      expect(record.fieldByNum(3)!.arrayLength, isNull);
       expect(record.fieldByNum(8)!.isArray, isTrue);
+      expect(record.fieldByNum(8)!.arrayLength, 3);
+
+      // hrv.time is a variable-size array ([N]): no fixed length.
+      final hrvTime = catalog.messageByName('hrv')!.fieldByName('Time')!;
+      expect(hrvTime.isArray, isTrue);
+      expect(hrvTime.arrayLength, isNull);
+    });
+
+    test('strings are single values unless declared as string arrays', () {
+      expect(catalog.messageByName('sport')!.fieldByName('Name')!.isArray,
+          isFalse);
+      expect(
+          catalog
+              .messageByName('field_description')!
+              .fieldByName('FieldName')!
+              .isArray,
+          isTrue);
     });
 
     test('every message is reachable by its number', () {
@@ -177,6 +196,116 @@ void main() {
       expect(avgSpeed, isNotNull);
       expect(avgSpeed!.components, isNotEmpty);
       expect(avgSpeed.components.first.bits, greaterThan(0));
+    });
+  });
+
+  group('documentation (Profile.xlsx)', () {
+    test('comes from a known fit-sdk-tools release', () {
+      expect(catalog.docsVersion, matches(RegExp(r'^\d+\.\d+\.\d+$')));
+    });
+
+    test('messages carry their comment and section', () {
+      final fileId = catalog.messageByName('file_id')!;
+      expect(fileId.doc, 'Must be first message in file.');
+      expect(fileId.section, isNull); // listed before the first section
+      expect(
+          catalog.messageByName('record')!.section, 'ACTIVITY FILE MESSAGES');
+    });
+
+    test('fields carry their comment when the profile has one', () {
+      final session = catalog.messageByName('session')!;
+      expect(session.fieldByName('TotalElapsedTime')!.doc,
+          'Time (includes pauses)');
+      expect(session.fieldByName('TotalTimerTime')!.doc,
+          'Timer Time (excludes pauses)');
+      // Most fields are undocumented.
+      expect(catalog.messageByName('record')!.fieldByNum(3)!.doc, isNull);
+    });
+
+    test('subfields carry their comment', () {
+      final target =
+          catalog.messageByName('workout_step')!.fieldByName('TargetValue')!;
+      final hrZone =
+          target.subfields.firstWhere((s) => s.name == 'TargetHrZone');
+      expect(hrZone.doc, contains('hr zone'));
+    });
+
+    test('values sharing a number keep their own comment', () {
+      // weatherReport: forecast and hourlyForecast are both 1, and only
+      // forecast is documented (deprecated in favour of hourlyForecast).
+      final values = catalog.enumType(ProfileType.weatherReport)!.values;
+      final forecast = values.firstWhere((v) => v.name == 'forecast');
+      final hourly = values.firstWhere((v) => v.name == 'hourlyForecast');
+      expect(forecast.value, hourly.value);
+      expect(forecast.doc, contains('Deprecated'));
+      expect(hourly.doc, isNull);
+    });
+
+    test('types carry their base type and comment', () {
+      final sportBits = catalog.enumType(ProfileType.sportBits0)!;
+      expect(sportBits.baseType, 'uint8z');
+      expect(sportBits.doc, contains('Bit field'));
+
+      final sport = catalog.enumType(ProfileType.sport)!;
+      expect(sport.baseType, 'enum');
+      expect(sport.doc, isNull);
+
+      // Scalar types have no EnumTypeInfo but are documented all the same.
+      expect(catalog.enumType(ProfileType.dateTime), isNull);
+      expect(catalog.typeDoc(ProfileType.dateTime), contains('1989'));
+    });
+
+    test('every documented element exists in the catalog', () {
+      // Guards the join between Profile.xlsx and the Dart profile, which is
+      // done by message/field number and enum value, never by name.
+      final unresolved = <String>{};
+      for (final mesg in {
+        ...profileMessageSections.keys,
+        ...profileMessageDocs.keys,
+      }) {
+        if (catalog.messageByNum(mesg) == null) unresolved.add('message $mesg');
+      }
+      profileFieldDocs.forEach((mesg, fields) {
+        for (final field in fields.keys) {
+          if (catalog.messageByNum(mesg)?.fieldByNum(field) == null) {
+            unresolved.add('field $mesg#$field');
+          }
+        }
+      });
+      profileSubfieldDocs.forEach((mesg, fields) {
+        fields.forEach((field, subfields) {
+          final names = catalog
+                  .messageByNum(mesg)
+                  ?.fieldByNum(field)
+                  ?.subfields
+                  .map((s) => s.name)
+                  .toSet() ??
+              const <String>{};
+          for (final name in subfields.keys) {
+            if (!names.contains(name)) {
+              unresolved.add('subfield $mesg#$field.$name');
+            }
+          }
+        });
+      });
+      profileValueDocs.forEach((type, values) {
+        final attached = {
+          for (final v in catalog.enumType(type)?.values ?? <EnumValueInfo>[])
+            if (v.doc != null) '${v.value}:${v.doc}',
+        };
+        values.forEach((value, docs) {
+          docs.forEach((name, doc) {
+            if (!attached.contains('$value:$doc')) {
+              unresolved.add('value ${type.name}:$value:$name');
+            }
+          });
+        });
+      });
+
+      // Session.TotalCycles' TotalPushes subfield was added upstream after the
+      // original port, and the additive updater never adds subfields to
+      // existing fields: its comment is kept and attaches once it exists.
+      expect(unresolved.difference({'subfield 18#10.TotalPushes'}), isEmpty);
     });
   });
 
