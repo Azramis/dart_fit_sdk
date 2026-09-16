@@ -151,6 +151,36 @@ void main() {
 This is purely descriptive: it never decodes bytes and leaves any name
 normalisation to the caller.
 
+#### In-app documentation
+
+The catalog also carries the documentation Garmin publishes in
+[`Profile.xlsx`](https://github.com/garmin/fit-sdk-tools), to help end users
+pick the right message or field:
+
+```dart
+final session = catalog.messageByName('session')!;
+session.fieldByName('TotalElapsedTime')!.doc; // Time (includes pauses)
+session.fieldByName('TotalTimerTime')!.doc;   // Timer Time (excludes pauses)
+
+catalog.messageByName('record')!.section;     // ACTIVITY FILE MESSAGES
+catalog.messageByName('file_id')!.doc;        // Must be first message in file.
+
+final velocity = catalog.messageByName('gps_metadata')!.fieldByName('Velocity')!;
+velocity.arrayLength;                         // 3
+velocity.doc; // velocity[0] is lon velocity. Velocity[1] is lat velocity. ...
+
+catalog.enumType(ProfileType.workoutHr)!.doc; // 0 - 100 indicates% of max hr; ...
+catalog.typeDoc(ProfileType.dateTime);        // seconds since UTC 00:00 Dec 31 1989
+catalog.docsVersion;                          // 21.214.0
+```
+
+Every `doc` is optional: Garmin documents about 38 % of fields and far fewer
+messages, types and enum values. The text is English and returned verbatim, so
+translation or curation is up to your app. It is regenerated from the
+`Profile.xlsx` of the matching `fit-sdk-tools` release whenever the profile is
+updated (or the closest earlier release, since Garmin doesn't tag the tools for
+every profile release — see `docsVersion`).
+
 ## Examples
 
 The `example/` directory contains complete working examples:
@@ -158,7 +188,7 @@ The `example/` directory contains complete working examples:
 - **`decode.dart`**: Demonstrates how to decode FIT files and display message data
 - **`encode.dart`**: Shows how to create FIT files with various message types
 - **`broadcaster.dart`**: Example of using the message broadcaster pattern
-- **`catalog.dart`**: Introspects the profile — lists messages, fields and enum values
+- **`catalog.dart`**: Introspects the profile — lists messages, fields, enum values and their documentation
 
 Run examples:
 
@@ -205,12 +235,14 @@ final value = mesg.getFieldValue(fieldNum);
 ```
 
 #### `FitProfileCatalog`
-Read-only introspection over the profile: messages, fields and enum value tables.
+Read-only introspection over the profile: messages, fields, enum value tables,
+and Garmin's documentation for them.
 
 ```dart
 final catalog = FitProfileCatalog();
 catalog.messageByNum(20)?.name;                  // Record
 catalog.enumType(ProfileType.sport)?.nameOf(1);  // running
+catalog.messageByName('file_id')?.doc;           // Must be first message in file.
 ```
 
 #### `MesgBroadcaster`
