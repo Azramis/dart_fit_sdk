@@ -157,11 +157,11 @@ Future<void> main(List<String> args) async {
     if (args.length > 1) {
       final profile = jsonDecode(_jsToJson(File(args[1]).readAsStringSync()))
           as Map<String, dynamic>;
-      final docs = await _loadProfileDocs(_versionOf(profile));
+      final messages = (profile['messages'] as Map).cast<String, dynamic>();
+      final docs = await _loadProfileDocs(_versionOf(profile), messages);
       if (docs != null) {
         _generateProfileDocs(docs);
-        _generateFieldArrays(
-            (profile['messages'] as Map).cast<String, dynamic>(), docs);
+        _generateFieldArrays(messages, docs);
       }
     }
     stdout.writeln(_format.join(' '));
@@ -180,7 +180,7 @@ Future<void> main(List<String> args) async {
   _generateMesgType(messages);
   _generateEnumType();
   // Both registries depend on Profile.xlsx: without it, keep them as they are.
-  final docs = await _loadProfileDocs(version);
+  final docs = await _loadProfileDocs(version, messages);
   if (docs != null) {
     _generateProfileDocs(docs);
     _generateFieldArrays(messages, docs);
@@ -421,9 +421,11 @@ void _generateEnumType() {
 /// Profile.xlsx's `Array` column ([docs]) is authoritative for the fields it
 /// documents. A field it doesn't document yet (the workbook can predate the
 /// profile) falls back on profile.js's `array` flag, except for strings:
-/// profile.js flags every string field as an array, while the profile documents
-/// most of them as a single value. Only called when Profile.xlsx is available,
-/// so a documentation outage leaves the previous registry untouched.
+/// profile.js flags every string field as an array, and nothing in it singles
+/// out true string arrays, so a string field no workbook documents yet reads as
+/// a single value, the common case (40 of 45 strings at 21.214.0), until one
+/// does. Only called when Profile.xlsx is available, so a documentation outage
+/// leaves the previous registry untouched.
 void _generateFieldArrays(Map<String, dynamic> messages, _ProfileDocs docs) {
   final arrays = StringBuffer();
   final lengths = StringBuffer();
@@ -520,11 +522,23 @@ const _httpTimeout = Duration(seconds: 60);
 /// be obtained. Failures are reported and leave the previously generated
 /// registries that depend on it (documentation and field arrays) in place:
 /// documentation must never block a profile update.
-Future<_ProfileDocs?> _loadProfileDocs(String version) async {
+Future<_ProfileDocs?> _loadProfileDocs(
+    String version, Map<String, dynamic> messages) async {
   try {
     final xlsx = await _fetchProfileXlsx(version);
     if (xlsx == null) return null;
     final docs = _parseProfileXlsx(xlsx.tag, xlsx.bytes);
+    // A workbook that parses but doesn't hold the profile (emptied, truncated,
+    // or laid out differently) must not overwrite good registries. An earlier
+    // release may lack a few of the profile's new messages, hence the margin.
+    final covered = messages.keys
+        .map(int.parse)
+        .where(docs.fieldArrays.containsKey)
+        .length;
+    if (covered < messages.length * 0.9) {
+      throw FormatException('Profile.xlsx ${xlsx.tag} documents only $covered '
+          'of the ${messages.length} profile messages');
+    }
     stderr.writeln('Documentation: Profile.xlsx from $_toolsRepo ${xlsx.tag}.');
     return docs;
   } catch (e) {
@@ -584,11 +598,11 @@ String _rawXlsxUrl(String tag) =>
     'https://raw.githubusercontent.com/$_toolsRepo/$tag/Profile.xlsx';
 
 /// The newest fit-sdk-tools release tag that is not newer than [version]. Reads
-/// every page of the tags API (100 per page, capped at 20 pages).
+/// every page of the tags API, up to the first short page.
 Future<String?> _latestToolsTagUpTo(HttpClient client, String version) async {
   const perPage = 100;
   final tags = <String>[];
-  for (var page = 1; page <= 20; page++) {
+  for (var page = 1;; page++) {
     final url = 'https://api.github.com/repos/$_toolsRepo/tags'
         '?per_page=$perPage&page=$page';
     final body = await _httpGet(client, url);
