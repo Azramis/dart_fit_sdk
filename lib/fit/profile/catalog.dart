@@ -5,6 +5,7 @@ import '../subfield.dart';
 import 'mesgs/mesg_type.dart';
 import 'types/enum_type.dart';
 import 'types/field_array.dart';
+import 'types/profile_docs.dart';
 
 export 'types/enum_type.dart' show EnumValueInfo;
 
@@ -15,6 +16,11 @@ export 'types/enum_type.dart' show EnumValueInfo;
 /// decoding anything or requiring [Mesg] instances. It is the counterpart to
 /// the codec: where [Profile] builds messages to decode/encode bytes, this
 /// catalog answers "what does the profile contain?".
+///
+/// It also carries the documentation Garmin publishes in Profile.xlsx (the
+/// `doc` of messages, fields, subfields, types and enum values, and each
+/// message's [MessageInfo.section]), for in-app help. That text is English,
+/// terse, and absent for most elements, so treat every `doc` as optional.
 ///
 /// All data is static and held in memory, so every accessor is synchronous.
 /// The catalog is a lazily-built singleton — `FitProfileCatalog()` always
@@ -29,11 +35,15 @@ export 'types/enum_type.dart' show EnumValueInfo;
 ///
 /// // Enumerations, value -> name:
 /// catalog.enumType(ProfileType.sport)!.nameOf(1); // "running"
+///
+/// // Documentation:
+/// catalog.messageByName('session')!.fieldByName('TotalTimerTime')!.doc;
+/// // "Timer Time (excludes pauses)"
 /// ```
 ///
-/// Names are returned exactly as the profile carries them (fields in
-/// PascalCase, e.g. `HeartRate`). Normalisation (snake_case, etc.) is left to
-/// the caller.
+/// Names and documentation are returned exactly as the profile carries them
+/// (fields in PascalCase, e.g. `HeartRate`). Normalisation (snake_case, etc.),
+/// translation and curation are left to the caller.
 class FitProfileCatalog {
   FitProfileCatalog._();
 
@@ -73,11 +83,27 @@ class FitProfileCatalog {
   /// numeric type (`sint8`, ...) or a non-enumeration scalar (`dateTime`, ...).
   EnumTypeInfo? enumType(ProfileType type) => _enumsByType[type];
 
+  /// The Profile.xlsx comment on [type], or null when it has none. Covers every
+  /// profile type, including scalars that have no [EnumTypeInfo] (e.g.
+  /// `dateTime`: "seconds since UTC 00:00 Dec 31 1989").
+  String? typeDoc(ProfileType type) => profileTypeDocs[type];
+
+  /// Release of Garmin's FIT SDK tools whose Profile.xlsx the documentation
+  /// comes from (e.g. `21.214.0`). It can predate the profile, since Garmin
+  /// does not tag the tools for every profile release.
+  String get docsVersion => profileDocsVersion;
+
   List<MessageInfo> _buildMessages() {
     final out = <MessageInfo>[];
     for (final t in MesgType.values) {
       final mesg = Profile.getMesg(t.num);
-      out.add(MessageInfo._(t.num, mesg.name, _buildFields(mesg)));
+      out.add(MessageInfo._(
+        t.num,
+        mesg.name,
+        profileMessageSections[t.num],
+        profileMessageDocs[t.num],
+        _buildFields(mesg),
+      ));
     }
     out.sort((a, b) => a.num.compareTo(b.num));
     return List.unmodifiable(out);
@@ -97,6 +123,10 @@ class FitProfileCatalog {
 
   List<FieldInfo> _buildFields(Mesg mesg) {
     final arrays = profileArrayFields[mesg.num] ?? const <int>{};
+    final lengths = profileArrayLengths[mesg.num] ?? const <int, int>{};
+    final docs = profileFieldDocs[mesg.num] ?? const <int, String>{};
+    final subfieldDocs =
+        profileSubfieldDocs[mesg.num] ?? const <int, Map<String, String>>{};
     return List.unmodifiable(<FieldInfo>[
       for (final f in mesg.fields)
         FieldInfo._(
@@ -107,13 +137,17 @@ class FitProfileCatalog {
           f.offset,
           f.profileType,
           arrays.contains(f.num),
-          _buildSubfields(f.subfields),
+          lengths[f.num],
+          docs[f.num],
+          _buildSubfields(
+              f.subfields, subfieldDocs[f.num] ?? const <String, String>{}),
           _buildComponents(f.components),
         ),
     ]);
   }
 
-  List<SubfieldInfo> _buildSubfields(List<Subfield> subfields) =>
+  List<SubfieldInfo> _buildSubfields(
+          List<Subfield> subfields, Map<String, String> docs) =>
       List.unmodifiable(<SubfieldInfo>[
         for (final s in subfields)
           SubfieldInfo._(
@@ -127,6 +161,7 @@ class FitProfileCatalog {
                 SubfieldReference._(m.refFieldNum, m.refFieldValue),
             ]),
             _buildComponents(s.components),
+            docs[s.name],
           ),
       ]);
 
@@ -140,10 +175,15 @@ class FitProfileCatalog {
   List<EnumTypeInfo> _buildEnumTypes() {
     final out = <EnumTypeInfo>[];
     profileEnumTypeValues.forEach((type, values) {
+      final docs = profileValueDocs[type] ?? const <int, String>{};
       out.add(EnumTypeInfo._(
         type,
         profileEnumTypeNames[type] ?? type.name,
-        List.unmodifiable(values),
+        profileTypeBaseTypes[type],
+        profileTypeDocs[type],
+        List.unmodifiable(<EnumValueInfo>[
+          for (final v in values) EnumValueInfo(v.name, v.value, docs[v.value]),
+        ]),
       ));
     });
     out.sort((a, b) => a.name.compareTo(b.name));
@@ -154,13 +194,23 @@ class FitProfileCatalog {
 /// A message in the FIT profile: its global [num], its verbatim profile [name]
 /// (PascalCase, e.g. `Record`) and its [fields].
 class MessageInfo {
-  const MessageInfo._(this.num, this.name, this.fields);
+  const MessageInfo._(this.num, this.name, this.section, this.doc, this.fields);
 
   /// Global message number (e.g. 20 for `Record`).
   final int num;
 
   /// Profile name of the message, verbatim (PascalCase, e.g. `Record`).
   final String name;
+
+  /// Section of Profile.xlsx the message is listed under, verbatim (e.g.
+  /// `ACTIVITY FILE MESSAGES`). It tells where the profile documents the
+  /// message, not every file type that may contain it. Null for the few
+  /// messages listed before the first section (`file_id`, ...).
+  final String? section;
+
+  /// Profile.xlsx comment on the message (e.g. `Must be first message in
+  /// file.`), or null when it has none.
+  final String? doc;
 
   /// The message's fields, in profile order.
   final List<FieldInfo> fields;
@@ -191,8 +241,18 @@ class MessageInfo {
 /// [FitProfileCatalog.enumType]; for plain numeric fields [type] is a base type
 /// (`uint8`, ...) that has no enumeration.
 class FieldInfo {
-  const FieldInfo._(this.num, this.name, this.units, this.scale, this.offset,
-      this.type, this.isArray, this.subfields, this.components);
+  const FieldInfo._(
+      this.num,
+      this.name,
+      this.units,
+      this.scale,
+      this.offset,
+      this.type,
+      this.isArray,
+      this.arrayLength,
+      this.doc,
+      this.subfields,
+      this.components);
 
   /// Field number, unique within its message (e.g. 3 for heart rate).
   final int num;
@@ -213,8 +273,19 @@ class FieldInfo {
   /// the value tables when it is an enumeration.
   final ProfileType type;
 
-  /// Whether the field holds an array of values rather than a single scalar.
+  /// Whether the field holds an array of values rather than a single one.
+  /// Strings count as a single value unless the profile declares an array of
+  /// strings (e.g. `FieldDescription.FieldName`).
   final bool isArray;
+
+  /// Number of elements when the profile declares a fixed-size array (e.g. 3
+  /// for `GpsMetadata.Velocity`); null for single values and variable-size
+  /// arrays.
+  final int? arrayLength;
+
+  /// Profile.xlsx comment on the field (e.g. `Timer Time (excludes pauses)`),
+  /// or null when it has none.
+  final String? doc;
 
   /// Dynamic (reference) subfields the profile models for this field.
   final List<SubfieldInfo> subfields;
@@ -229,7 +300,7 @@ class FieldInfo {
 /// A named enumeration type in the profile (e.g. `sport`), exposing its
 /// [ProfileType], its verbatim [name] and its [values].
 class EnumTypeInfo {
-  EnumTypeInfo._(this.type, this.name, this.values)
+  EnumTypeInfo._(this.type, this.name, this.baseType, this.doc, this.values)
       : _byValue = {for (final v in values) v.value: v};
 
   /// The profile type this enumeration corresponds to (e.g.
@@ -238,6 +309,15 @@ class EnumTypeInfo {
 
   /// Profile name of the type, verbatim (e.g. `sport`).
   final String name;
+
+  /// FIT base type the values are stored as, verbatim (e.g. `enum`, `uint16`,
+  /// `uint32z`), or null when the documentation does not cover the type.
+  final String? baseType;
+
+  /// Profile.xlsx comment on the type (e.g. for `sportBits0`: `Bit field
+  /// corresponding to sport enum type (1 << sport).`), or null when it has
+  /// none.
+  final String? doc;
 
   /// Every named value of the enumeration, in profile order.
   final List<EnumValueInfo> values;
@@ -259,7 +339,7 @@ class EnumTypeInfo {
 /// depends on the value of another (reference) field.
 class SubfieldInfo {
   const SubfieldInfo._(this.name, this.type, this.scale, this.offset,
-      this.units, this.references, this.components);
+      this.units, this.references, this.components, this.doc);
 
   /// Profile name of the subfield, verbatim.
   final String name;
@@ -281,6 +361,9 @@ class SubfieldInfo {
 
   /// Component-expansion targets modelled on the subfield.
   final List<ComponentInfo> components;
+
+  /// Profile.xlsx comment on the subfield, or null when it has none.
+  final String? doc;
 }
 
 /// One condition of a [SubfieldInfo]: the subfield applies when the field
