@@ -158,9 +158,11 @@ Future<void> main(List<String> args) async {
       final profile = jsonDecode(_jsToJson(File(args[1]).readAsStringSync()))
           as Map<String, dynamic>;
       final docs = await _loadProfileDocs(_versionOf(profile));
-      if (docs != null) _generateProfileDocs(docs);
-      _generateFieldArrays(
-          (profile['messages'] as Map).cast<String, dynamic>(), docs);
+      if (docs != null) {
+        _generateProfileDocs(docs);
+        _generateFieldArrays(
+            (profile['messages'] as Map).cast<String, dynamic>(), docs);
+      }
     }
     stdout.writeln(_format.join(' '));
     return;
@@ -177,9 +179,12 @@ Future<void> main(List<String> args) async {
   _additiveProfileDart(messages);
   _generateMesgType(messages);
   _generateEnumType();
+  // Both registries depend on Profile.xlsx: without it, keep them as they are.
   final docs = await _loadProfileDocs(version);
-  if (docs != null) _generateProfileDocs(docs);
-  _generateFieldArrays(messages, docs);
+  if (docs != null) {
+    _generateProfileDocs(docs);
+    _generateFieldArrays(messages, docs);
+  }
 
   stderr
     ..writeln('FIT profile v$version — additive update.')
@@ -414,17 +419,19 @@ void _generateEnumType() {
 /// port's [Field] carries neither). Rewritten in whole on every run.
 ///
 /// Profile.xlsx's `Array` column ([docs]) is authoritative for the fields it
-/// documents. Otherwise profile.js's `array` flag is used, except for strings:
+/// documents. A field it doesn't document yet (the workbook can predate the
+/// profile) falls back on profile.js's `array` flag, except for strings:
 /// profile.js flags every string field as an array, while the profile documents
-/// most of them as a single value.
-void _generateFieldArrays(Map<String, dynamic> messages, _ProfileDocs? docs) {
+/// most of them as a single value. Only called when Profile.xlsx is available,
+/// so a documentation outage leaves the previous registry untouched.
+void _generateFieldArrays(Map<String, dynamic> messages, _ProfileDocs docs) {
   final arrays = StringBuffer();
   final lengths = StringBuffer();
   for (final num in messages.keys.map(int.parse).toList()..sort()) {
     final mesg = messages['$num'] as Map<String, dynamic>;
     final fields =
         ((mesg['fields'] as Map?) ?? const {}).cast<String, dynamic>();
-    final documented = docs?.fieldArrays[num] ?? const <int, String?>{};
+    final documented = docs.fieldArrays[num] ?? const <int, String?>{};
     final arrayNums = <int>[];
     final sizes = <String>[];
     for (final fnum in fields.keys.map(int.parse).toList()..sort()) {
@@ -478,9 +485,12 @@ const _toolsRepo = 'garmin/fit-sdk-tools';
 
 /// What Profile.xlsx adds on top of profile.js, keyed the way the catalog looks
 /// things up: messages and fields by number, types by their profile.js
-/// (camelCase) name, subfields by their Dart (PascalCase) name. Messages and
-/// fields are never joined by name, because some names don't round-trip
-/// between the two sources (`speed_1s` vs `speed1s`).
+/// (camelCase) name, subfields by their Dart (PascalCase) name, enum values by
+/// number then Profile.xlsx name. Messages, fields and enum values are joined by
+/// number, because names don't all round-trip between the two sources
+/// (`speed_1s` vs `speed1s`, `OHR` vs `ohr`); an enum value keeps its name only
+/// to tell apart names sharing a number (`weather_report`: `forecast` and
+/// `hourly_forecast` are both 1).
 class _ProfileDocs {
   _ProfileDocs(this.version);
 
@@ -497,15 +507,19 @@ class _ProfileDocs {
   final subfieldDocs = <int, Map<int, Map<String, String>>>{};
   final typeBaseTypes = <String, String>{};
   final typeDocs = <String, String>{};
-  final valueDocs = <String, Map<int, String>>{};
+  final valueDocs = <String, Map<int, Map<String, String>>>{};
 }
 
 void _warnDocs(String message) =>
     stderr.writeln('⚠ Profile.xlsx documentation: $message');
 
+/// Upper bound for each download, so a stalled connection can't hang an update.
+const _httpTimeout = Duration(seconds: 60);
+
 /// The Profile.xlsx documentation for profile [version], or null when it can't
 /// be obtained. Failures are reported and leave the previously generated
-/// documentation in place: documentation must never block a profile update.
+/// registries that depend on it (documentation and field arrays) in place:
+/// documentation must never block a profile update.
 Future<_ProfileDocs?> _loadProfileDocs(String version) async {
   try {
     final xlsx = await _fetchProfileXlsx(version);
@@ -514,9 +528,9 @@ Future<_ProfileDocs?> _loadProfileDocs(String version) async {
     stderr.writeln('Documentation: Profile.xlsx from $_toolsRepo ${xlsx.tag}.');
     return docs;
   } catch (e) {
-    // Deliberately broad (network, LFS mismatch, unexpected workbook or API
-    // shape): whatever goes wrong, the profile update itself must go through.
-    _warnDocs('$e — left unchanged.');
+    // Deliberately broad (network, timeout, LFS mismatch, unexpected workbook
+    // or API shape): whatever goes wrong, the profile update must go through.
+    _warnDocs('$e — documentation and field arrays left unchanged.');
     return null;
   }
 }
@@ -527,14 +541,15 @@ Future<_ProfileDocs?> _loadProfileDocs(String version) async {
 /// is a pointer whose size and SHA-256 the actual download must match.
 Future<({String tag, List<int> bytes})?> _fetchProfileXlsx(
     String version) async {
-  final client = HttpClient();
+  final client = HttpClient()..connectionTimeout = _httpTimeout;
   try {
     var tag = version;
     var raw = await _httpGet(client, _rawXlsxUrl(tag));
     if (raw == null) {
       final older = await _latestToolsTagUpTo(client, version);
       if (older == null) {
-        _warnDocs('no $_toolsRepo release up to $version — left unchanged.');
+        _warnDocs('no $_toolsRepo release up to $version — documentation and '
+            'field arrays left unchanged.');
         return null;
       }
       _warnDocs('$_toolsRepo has no $version release, using $older.');
@@ -568,20 +583,30 @@ Future<({String tag, List<int> bytes})?> _fetchProfileXlsx(
 String _rawXlsxUrl(String tag) =>
     'https://raw.githubusercontent.com/$_toolsRepo/$tag/Profile.xlsx';
 
-/// The newest fit-sdk-tools release tag that is not newer than [version].
+/// The newest fit-sdk-tools release tag that is not newer than [version]. Reads
+/// every page of the tags API (100 per page, capped at 20 pages).
 Future<String?> _latestToolsTagUpTo(HttpClient client, String version) async {
-  const url = 'https://api.github.com/repos/$_toolsRepo/tags?per_page=100';
-  final body = await _httpGet(client, url);
-  if (body == null) throw HttpException('not found', uri: Uri.parse(url));
-  final tags = (jsonDecode(utf8.decode(body)) as List)
-      .map((t) => (t as Map)['name'])
-      .whereType<String>()
+  const perPage = 100;
+  final tags = <String>[];
+  for (var page = 1; page <= 20; page++) {
+    final url = 'https://api.github.com/repos/$_toolsRepo/tags'
+        '?per_page=$perPage&page=$page';
+    final body = await _httpGet(client, url);
+    if (body == null) throw HttpException('not found', uri: Uri.parse(url));
+    final names = (jsonDecode(utf8.decode(body)) as List)
+        .map((t) => (t as Map)['name'])
+        .whereType<String>()
+        .toList();
+    tags.addAll(names);
+    if (names.length < perPage) break;
+  }
+  final candidates = tags
       .where((t) =>
           RegExp(r'^\d+\.\d+\.\d+$').hasMatch(t) &&
           _compareVersions(t, version) <= 0)
       .toList()
     ..sort(_compareVersions);
-  return tags.isEmpty ? null : tags.last;
+  return candidates.isEmpty ? null : candidates.last;
 }
 
 /// Compares dotted numeric versions (`21.205.0` < `21.212.0`).
@@ -594,17 +619,23 @@ int _compareVersions(String a, String b) {
   return x.length.compareTo(y.length);
 }
 
-/// GETs [url]: its body, or null on 404. Throws [HttpException] otherwise.
-Future<List<int>?> _httpGet(HttpClient client, String url) async {
-  final response = await (await client.getUrl(Uri.parse(url))).close();
-  if (response.statusCode != HttpStatus.ok) {
-    await response.drain<void>();
-    if (response.statusCode == HttpStatus.notFound) return null;
-    throw HttpException('HTTP ${response.statusCode}', uri: Uri.parse(url));
+/// GETs [url]: its body, or null on 404. Throws [HttpException] otherwise, and
+/// a `TimeoutException` when the whole exchange (connection, response and body)
+/// exceeds [_httpTimeout].
+Future<List<int>?> _httpGet(HttpClient client, String url) {
+  Future<List<int>?> exchange() async {
+    final response = await (await client.getUrl(Uri.parse(url))).close();
+    if (response.statusCode != HttpStatus.ok) {
+      await response.drain<void>();
+      if (response.statusCode == HttpStatus.notFound) return null;
+      throw HttpException('HTTP ${response.statusCode}', uri: Uri.parse(url));
+    }
+    final body = BytesBuilder(copy: false);
+    await response.forEach(body.add);
+    return body.takeBytes();
   }
-  final body = BytesBuilder(copy: false);
-  await response.forEach(body.add);
-  return body.takeBytes();
+
+  return exchange().timeout(_httpTimeout);
 }
 
 /// Parses Garmin's Profile.xlsx (sheets `Types` and `Messages`). Columns are
@@ -631,7 +662,9 @@ _ProfileDocs _parseProfileXlsx(String tag, List<int> bytes) {
       if (comment != null) docs.typeDocs[type] = comment;
     } else if (type != null && valueName != null && value != null) {
       final v = _parseProfileInt(value);
-      if (comment != null) (docs.valueDocs[type] ??= {})[v] = comment;
+      if (comment != null) {
+        ((docs.valueDocs[type] ??= {})[v] ??= {})[valueName] = comment;
+      }
       if (type == 'mesgNum') mesgNums[valueName] = v;
     }
   }
@@ -893,11 +926,13 @@ void _generateProfileDocs(_ProfileDocs docs) {
   b
     ..writeln('};')
     ..writeln()
-    ..writeln(
-        '/// Comment on each documented enum value, by [ProfileType] then')
-    ..writeln('/// value. Scalar types (dateTime, ...) have no value table, so')
-    ..writeln('/// their sentinel values are left out.')
-    ..writeln('const Map<ProfileType, Map<int, String>> profileValueDocs = {');
+    ..writeln('/// Comment on each documented enum value, by [ProfileType], value,')
+    ..writeln('/// then value name as Profile.xlsx spells it (e.g. `OHR`). The name')
+    ..writeln('/// only tells apart names sharing a value (`forecast` and')
+    ..writeln('/// `hourly_forecast`). Scalar types (dateTime, ...) have no value')
+    ..writeln('/// table, so their sentinel values are left out.')
+    ..writeln('const Map<ProfileType, Map<int, Map<String, String>>> '
+        'profileValueDocs = {');
   final enumValueDocs = {
     for (final e in docs.valueDocs.entries)
       if (!_scalarTypes.contains(e.key)) e.key: e.value,
@@ -905,7 +940,12 @@ void _generateProfileDocs(_ProfileDocs docs) {
   for (final (id, values) in byType(enumValueDocs)) {
     b.writeln('  ProfileType.$id: {');
     for (final v in sorted(values.keys)) {
-      b.writeln('    $v: ${_dartStr(values[v]!)},');
+      final names = values[v]!;
+      b.writeln('    $v: {');
+      for (final name in names.keys.toList()..sort()) {
+        b.writeln('      ${_dartStr(name)}: ${_dartStr(names[name]!)},');
+      }
+      b.writeln('    },');
     }
     b.writeln('  },');
   }

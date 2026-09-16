@@ -175,6 +175,17 @@ void main() {
       expect(hrZone.doc, contains('hr zone'));
     });
 
+    test('values sharing a number keep their own comment', () {
+      // weatherReport: forecast and hourlyForecast are both 1, and only
+      // forecast is documented (deprecated in favour of hourlyForecast).
+      final values = catalog.enumType(ProfileType.weatherReport)!.values;
+      final forecast = values.firstWhere((v) => v.name == 'forecast');
+      final hourly = values.firstWhere((v) => v.name == 'hourlyForecast');
+      expect(forecast.value, hourly.value);
+      expect(forecast.doc, contains('Deprecated'));
+      expect(hourly.doc, isNull);
+    });
+
     test('types carry their base type and comment', () {
       final sportBits = catalog.enumType(ProfileType.sportBits0)!;
       expect(sportBits.baseType, 'uint8z');
@@ -223,11 +234,17 @@ void main() {
         });
       });
       profileValueDocs.forEach((type, values) {
-        for (final value in values.keys) {
-          if (catalog.enumType(type)?.valueOf(value) == null) {
-            unresolved.add('value ${type.name}:$value');
-          }
-        }
+        final attached = {
+          for (final v in catalog.enumType(type)?.values ?? <EnumValueInfo>[])
+            if (v.doc != null) '${v.value}:${v.doc}',
+        };
+        values.forEach((value, docs) {
+          docs.forEach((name, doc) {
+            if (!attached.contains('$value:$doc')) {
+              unresolved.add('value ${type.name}:$value:$name');
+            }
+          });
+        });
       });
 
       // Session.TotalCycles' TotalPushes subfield was added upstream after the

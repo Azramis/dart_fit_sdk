@@ -1187,531 +1187,1391 @@ const Map<ProfileType, String> profileTypeDocs = {
       '0 - 1000 indicates % of functional threshold power; >1000 indicates watts plus 1000.',
 };
 
-/// Comment on each documented enum value, by [ProfileType] then
-/// value. Scalar types (dateTime, ...) have no value table, so
-/// their sentinel values are left out.
-const Map<ProfileType, Map<int, String>> profileValueDocs = {
+/// Comment on each documented enum value, by [ProfileType], value,
+/// then value name as Profile.xlsx spells it (e.g. `OHR`). The name
+/// only tells apart names sharing a value (`forecast` and
+/// `hourly_forecast`). Scalar types (dateTime, ...) have no value
+/// table, so their sentinel values are left out.
+const Map<ProfileType, Map<int, Map<String, String>>> profileValueDocs = {
   ProfileType.activityClass: {
-    127: '0 to 100',
+    127: {
+      'level': '0 to 100',
+    },
   },
   ProfileType.activitySubtype: {
-    1: 'Run',
-    2: 'Run',
-    3: 'Run',
-    4: 'Run',
-    5: 'Cycling',
-    6: 'Cycling',
-    7: 'Cycling',
-    8: 'Cycling',
-    9: 'Cycling',
-    10: 'Cycling',
-    11: 'Cycling',
-    12: 'Cycling',
-    13: 'Cycling',
-    14: 'Fitness Equipment',
-    15: 'Fitness Equipment',
-    16: 'Fitness Equipment',
-    17: 'Swimming',
-    18: 'Swimming',
+    1: {
+      'treadmill': 'Run',
+    },
+    2: {
+      'street': 'Run',
+    },
+    3: {
+      'trail': 'Run',
+    },
+    4: {
+      'track': 'Run',
+    },
+    5: {
+      'spin': 'Cycling',
+    },
+    6: {
+      'indoor_cycling': 'Cycling',
+    },
+    7: {
+      'road': 'Cycling',
+    },
+    8: {
+      'mountain': 'Cycling',
+    },
+    9: {
+      'downhill': 'Cycling',
+    },
+    10: {
+      'recumbent': 'Cycling',
+    },
+    11: {
+      'cyclocross': 'Cycling',
+    },
+    12: {
+      'hand_cycling': 'Cycling',
+    },
+    13: {
+      'track_cycling': 'Cycling',
+    },
+    14: {
+      'indoor_rowing': 'Fitness Equipment',
+    },
+    15: {
+      'elliptical': 'Fitness Equipment',
+    },
+    16: {
+      'stair_climbing': 'Fitness Equipment',
+    },
+    17: {
+      'lap_swimming': 'Swimming',
+    },
+    18: {
+      'open_water': 'Swimming',
+    },
   },
   ProfileType.activityType: {
-    3: 'Mulitsport transition',
-    254: 'All is for goals only to include all sports.',
+    3: {
+      'transition': 'Mulitsport transition',
+    },
+    254: {
+      'all': 'All is for goals only to include all sports.',
+    },
   },
   ProfileType.backlightTimeout: {
-    0: 'Backlight stays on forever.',
+    0: {
+      'infinite': 'Backlight stays on forever.',
+    },
   },
   ProfileType.bleDeviceType: {
-    0: 'GPS that is provided over a proprietary bluetooth service',
-    7: 'Indoor-Bike FTMS protocol',
+    0: {
+      'connected_gps':
+          'GPS that is provided over a proprietary bluetooth service',
+    },
+    7: {
+      'bike_trainer': 'Indoor-Bike FTMS protocol',
+    },
   },
   ProfileType.bodyLocation: {
-    26: 'Left anterior forearm',
-    27: 'Left posterior forearm',
-    32: 'Right anterior forearm',
-    33: 'Right posterior forearm',
+    26: {
+      'left_brachioradialis': 'Left anterior forearm',
+    },
+    27: {
+      'left_forearm_extensors': 'Left posterior forearm',
+    },
+    32: {
+      'right_brachioradialis': 'Right anterior forearm',
+    },
+    33: {
+      'right_forearm_extensors': 'Right posterior forearm',
+    },
   },
   ProfileType.cameraEventType: {
-    0: 'Start of video recording',
-    1: 'Mark of video file split (end of one file, beginning of the other)',
-    2: 'End of video recording',
-    3: 'Still photo taken',
-    7: 'Mark of video file split start',
-    11: 'Mark when a video recording has been paused',
-    13: 'Mark when a video recording has been resumed',
+    0: {
+      'video_start': 'Start of video recording',
+    },
+    1: {
+      'video_split':
+          'Mark of video file split (end of one file, beginning of the other)',
+    },
+    2: {
+      'video_end': 'End of video recording',
+    },
+    3: {
+      'photo_taken': 'Still photo taken',
+    },
+    7: {
+      'video_split_start': 'Mark of video file split start',
+    },
+    11: {
+      'video_pause': 'Mark when a video recording has been paused',
+    },
+    13: {
+      'video_resume': 'Mark when a video recording has been resumed',
+    },
   },
   ProfileType.ccrSetpointSwitchMode: {
-    0: 'User switches setpoints manually',
-    1: 'Switch automatically based on depth',
+    0: {
+      'manual': 'User switches setpoints manually',
+    },
+    1: {
+      'automatic': 'Switch automatically based on depth',
+    },
   },
   ProfileType.checksum: {
-    0: 'Allows clear of checksum for flash memory where can only write 1 to 0 without erasing sector.',
-    1: 'Set to mark checksum as valid if computes to invalid values 0 or 0xFF. Checksum can also be set to ok to save encoding computation time.',
+    0: {
+      'clear':
+          'Allows clear of checksum for flash memory where can only write 1 to 0 without erasing sector.',
+    },
+    1: {
+      'ok':
+          'Set to mark checksum as valid if computes to invalid values 0 or 0xFF. Checksum can also be set to ok to save encoding computation time.',
+    },
   },
   ProfileType.commTimeoutType: {
-    0: 'Timeout pairing to any device',
-    1: 'Timeout pairing to previously paired device',
-    2: 'Temporary loss of communications',
-    3: 'Connection closed due to extended bad communications',
+    0: {
+      'wildcard_pairing_timeout': 'Timeout pairing to any device',
+    },
+    1: {
+      'pairing_timeout': 'Timeout pairing to previously paired device',
+    },
+    2: {
+      'connection_lost': 'Temporary loss of communications',
+    },
+    3: {
+      'connection_timeout':
+          'Connection closed due to extended bad communications',
+    },
   },
   ProfileType.connectivityCapabilities: {
-    32768: 'Indicates device is in control of initiating all syncs',
-    1048576: 'Device supports delete and reorder of apps via GCM',
-    8388608: 'Device supports incident detection',
-    33554432: 'Device supports reporting wifi verification via GCM',
-    67108864: 'Device supports True Up',
-    134217728: 'Device supports Find My Watch',
-    536870912: 'Device supports LiveTrack auto start',
-    1073741824: 'Device supports LiveTrack Messaging',
-    2147483648: 'Device supports instant input feature',
+    32768: {
+      'device_initiates_sync':
+          'Indicates device is in control of initiating all syncs',
+    },
+    1048576: {
+      'connect_iq_app_managment':
+          'Device supports delete and reorder of apps via GCM',
+    },
+    8388608: {
+      'incident_detection': 'Device supports incident detection',
+    },
+    33554432: {
+      'wifi_verification':
+          'Device supports reporting wifi verification via GCM',
+    },
+    67108864: {
+      'true_up': 'Device supports True Up',
+    },
+    134217728: {
+      'find_my_watch': 'Device supports Find My Watch',
+    },
+    536870912: {
+      'live_track_auto_start': 'Device supports LiveTrack auto start',
+    },
+    1073741824: {
+      'live_track_messaging': 'Device supports LiveTrack Messaging',
+    },
+    2147483648: {
+      'instant_input': 'Device supports instant input feature',
+    },
   },
   ProfileType.coreExerciseName: {
-    47: 'Deprecated do not use',
-    54: 'Deprecated do not use',
-    68: 'Deprecated do not use',
+    47: {
+      'abdominal_leg_rotations': 'Deprecated do not use',
+    },
+    54: {
+      'criss_cross_with_ball': 'Deprecated do not use',
+    },
+    68: {
+      'snake_twist_1_and_2': 'Deprecated do not use',
+    },
   },
   ProfileType.courseCapabilities: {
-    4096: 'Denote course files to be used as flight plans',
+    4096: {
+      'aviation': 'Denote course files to be used as flight plans',
+    },
   },
   ProfileType.coursePoint: {
-    30: 'Used with UpAhead',
+    30: {
+      'general_distance': 'Used with UpAhead',
+    },
   },
   ProfileType.deviceIndex: {
-    0: 'Creator of the file is always device index 0.',
+    0: {
+      'creator': 'Creator of the file is always device index 0.',
+    },
   },
   ProfileType.displayOrientation: {
-    0: 'automatic if the device supports it',
-    3: 'portrait mode but rotated 180 degrees',
-    4: 'landscape mode but rotated 180 degrees',
+    0: {
+      'auto': 'automatic if the device supports it',
+    },
+    3: {
+      'portrait_flipped': 'portrait mode but rotated 180 degrees',
+    },
+    4: {
+      'landscape_flipped': 'landscape mode but rotated 180 degrees',
+    },
   },
   ProfileType.displayPosition: {
-    0: 'dd.dddddd',
-    1: 'dddmm.mmm',
-    2: 'dddmmss',
-    3: 'Austrian Grid (BMN)',
-    4: 'British National Grid',
-    5: 'Dutch grid system',
-    6: 'Hungarian grid system',
-    7: 'Finnish grid system Zone3 KKJ27',
-    8: 'Gausss Krueger (German)',
-    9: 'Icelandic Grid',
-    10: 'Indonesian Equatorial LCO',
-    11: 'Indonesian Irian LCO',
-    12: 'Indonesian Southern LCO',
-    13: 'India zone 0',
-    14: 'India zone IA',
-    15: 'India zone IB',
-    16: 'India zone IIA',
-    17: 'India zone IIB',
-    18: 'India zone IIIA',
-    19: 'India zone IIIB',
-    20: 'India zone IVA',
-    21: 'India zone IVB',
-    22: 'Irish Transverse Mercator',
-    23: 'Irish Grid',
-    24: 'Loran TD',
-    25: 'Maidenhead grid system',
-    26: 'MGRS grid system',
-    27: 'New Zealand grid system',
-    28: 'New Zealand Transverse Mercator',
-    29: 'Qatar National Grid',
-    30: 'Modified RT-90 (Sweden)',
-    31: 'RT-90 (Sweden)',
-    32: 'South African Grid',
-    33: 'Swiss CH-1903 grid',
-    34: 'Taiwan Grid',
-    35: 'United States National Grid',
-    36: 'UTM/UPS grid system',
-    37: 'West Malayan RSO',
-    38: 'Borneo RSO',
-    39: 'Estonian grid system',
-    40: 'Latvian Transverse Mercator',
-    41: 'Reference Grid 99 TM (Swedish)',
+    0: {
+      'degree': 'dd.dddddd',
+    },
+    1: {
+      'degree_minute': 'dddmm.mmm',
+    },
+    2: {
+      'degree_minute_second': 'dddmmss',
+    },
+    3: {
+      'austrian_grid': 'Austrian Grid (BMN)',
+    },
+    4: {
+      'british_grid': 'British National Grid',
+    },
+    5: {
+      'dutch_grid': 'Dutch grid system',
+    },
+    6: {
+      'hungarian_grid': 'Hungarian grid system',
+    },
+    7: {
+      'finnish_grid': 'Finnish grid system Zone3 KKJ27',
+    },
+    8: {
+      'german_grid': 'Gausss Krueger (German)',
+    },
+    9: {
+      'icelandic_grid': 'Icelandic Grid',
+    },
+    10: {
+      'indonesian_equatorial': 'Indonesian Equatorial LCO',
+    },
+    11: {
+      'indonesian_irian': 'Indonesian Irian LCO',
+    },
+    12: {
+      'indonesian_southern': 'Indonesian Southern LCO',
+    },
+    13: {
+      'india_zone_0': 'India zone 0',
+    },
+    14: {
+      'india_zone_IA': 'India zone IA',
+    },
+    15: {
+      'india_zone_IB': 'India zone IB',
+    },
+    16: {
+      'india_zone_IIA': 'India zone IIA',
+    },
+    17: {
+      'india_zone_IIB': 'India zone IIB',
+    },
+    18: {
+      'india_zone_IIIA': 'India zone IIIA',
+    },
+    19: {
+      'india_zone_IIIB': 'India zone IIIB',
+    },
+    20: {
+      'india_zone_IVA': 'India zone IVA',
+    },
+    21: {
+      'india_zone_IVB': 'India zone IVB',
+    },
+    22: {
+      'irish_transverse': 'Irish Transverse Mercator',
+    },
+    23: {
+      'irish_grid': 'Irish Grid',
+    },
+    24: {
+      'loran': 'Loran TD',
+    },
+    25: {
+      'maidenhead_grid': 'Maidenhead grid system',
+    },
+    26: {
+      'mgrs_grid': 'MGRS grid system',
+    },
+    27: {
+      'new_zealand_grid': 'New Zealand grid system',
+    },
+    28: {
+      'new_zealand_transverse': 'New Zealand Transverse Mercator',
+    },
+    29: {
+      'qatar_grid': 'Qatar National Grid',
+    },
+    30: {
+      'modified_swedish_grid': 'Modified RT-90 (Sweden)',
+    },
+    31: {
+      'swedish_grid': 'RT-90 (Sweden)',
+    },
+    32: {
+      'south_african_grid': 'South African Grid',
+    },
+    33: {
+      'swiss_grid': 'Swiss CH-1903 grid',
+    },
+    34: {
+      'taiwan_grid': 'Taiwan Grid',
+    },
+    35: {
+      'united_states_grid': 'United States National Grid',
+    },
+    36: {
+      'utm_ups_grid': 'UTM/UPS grid system',
+    },
+    37: {
+      'west_malayan': 'West Malayan RSO',
+    },
+    38: {
+      'borneo_rso': 'Borneo RSO',
+    },
+    39: {
+      'estonian_grid': 'Estonian grid system',
+    },
+    40: {
+      'latvian_grid': 'Latvian Transverse Mercator',
+    },
+    41: {
+      'swedish_ref_99_grid': 'Reference Grid 99 TM (Swedish)',
+    },
   },
   ProfileType.diveAlarmType: {
-    0: 'Alarm when a certain depth is crossed',
-    1: 'Alarm when a certain time has transpired',
-    2: 'Alarm when a certain ascent or descent rate is exceeded',
+    0: {
+      'depth': 'Alarm when a certain depth is crossed',
+    },
+    1: {
+      'time': 'Alarm when a certain time has transpired',
+    },
+    2: {
+      'speed': 'Alarm when a certain ascent or descent rate is exceeded',
+    },
   },
   ProfileType.diveAlert: {
-    33: 'ccr diluent has low po2',
-    34: 'a deco stop has been cleared',
-    35: 'Target Depth Apnea Alarm triggered',
-    36: 'Neutral Buoyance Apnea Alarm triggered',
-    37: 'Surface Apnea Alarm triggered',
-    38: 'High Speed Apnea Alarm triggered',
-    39: 'Low Speed Apnea Alarm triggered',
+    33: {
+      'po2_ccr_dil_low': 'ccr diluent has low po2',
+    },
+    34: {
+      'deco_stop_cleared': 'a deco stop has been cleared',
+    },
+    35: {
+      'apnea_neutral_buoyancy': 'Target Depth Apnea Alarm triggered',
+    },
+    36: {
+      'apnea_target_depth': 'Neutral Buoyance Apnea Alarm triggered',
+    },
+    37: {
+      'apnea_surface': 'Surface Apnea Alarm triggered',
+    },
+    38: {
+      'apnea_high_speed': 'High Speed Apnea Alarm triggered',
+    },
+    39: {
+      'apnea_low_speed': 'Low Speed Apnea Alarm triggered',
+    },
   },
   ProfileType.event: {
-    0: 'Group 0. Start / stop_all',
-    3: 'start / stop',
-    4: 'Start at beginning of workout. Stop at end of each step.',
-    5: 'stop_all group 0',
-    6: 'stop_all group 0',
-    7: 'start / stop group 0',
-    8: 'Stop at end of each session.',
-    9: 'Stop at end of each lap.',
-    10: 'marker',
-    11: 'marker',
-    12: 'Group 1. Start at beginning of activity if VP enabled, when VP pace is changed during activity or VP enabled mid activity. stop_disable when VP disabled.',
-    13: 'Group 0. Start / stop when in alert condition.',
-    14: 'Group 0. Start / stop when in alert condition.',
-    15: 'Group 0. Start / stop when in alert condition.',
-    16: 'Group 0. Start / stop when in alert condition.',
-    17: 'Group 0. Start / stop when in alert condition.',
-    18: 'Group 0. Start / stop when in alert condition.',
-    19: 'Group 0. Start / stop when in alert condition.',
-    20: 'Group 0. Start / stop when in alert condition.',
-    21: 'marker',
-    22: 'marker',
-    23: 'Group 1. Start if enabled mid activity (not required at start of activity). Stop when duration is reached. stop_disable if disabled.',
-    24: 'Group 1. Start if enabled mid activity (not required at start of activity). Stop when duration is reached. stop_disable if disabled.',
-    25: 'Group 1. Start if enabled mid activity (not required at start of activity). Stop when duration is reached. stop_disable if disabled.',
-    26: 'Group 1.. Stop at end of activity.',
-    27: 'marker',
-    28: 'Stop at end of each length.',
-    32: 'marker',
-    33: 'marker',
-    36: 'start/stop/marker',
-    42: 'marker',
-    43: 'marker',
-    44: 'marker',
-    45: 'Group 0. Start / stop when in alert condition.',
-    46: 'Group 0. Start / stop when in alert condition.',
-    47: 'marker',
-    54: 'marker',
-    56: 'marker',
-    57: 'marker',
-    71: 'marker',
-    72: 'marker',
-    73: 'marker',
-    75: 'start/stop/marker',
-    76: 'marker',
-    81: 'marker - tank pod has connected',
-    82: 'marker - tank pod has lost connection',
+    0: {
+      'timer': 'Group 0. Start / stop_all',
+    },
+    3: {
+      'workout': 'start / stop',
+    },
+    4: {
+      'workout_step':
+          'Start at beginning of workout. Stop at end of each step.',
+    },
+    5: {
+      'power_down': 'stop_all group 0',
+    },
+    6: {
+      'power_up': 'stop_all group 0',
+    },
+    7: {
+      'off_course': 'start / stop group 0',
+    },
+    8: {
+      'session': 'Stop at end of each session.',
+    },
+    9: {
+      'lap': 'Stop at end of each lap.',
+    },
+    10: {
+      'course_point': 'marker',
+    },
+    11: {
+      'battery': 'marker',
+    },
+    12: {
+      'virtual_partner_pace':
+          'Group 1. Start at beginning of activity if VP enabled, when VP pace is changed during activity or VP enabled mid activity. stop_disable when VP disabled.',
+    },
+    13: {
+      'hr_high_alert': 'Group 0. Start / stop when in alert condition.',
+    },
+    14: {
+      'hr_low_alert': 'Group 0. Start / stop when in alert condition.',
+    },
+    15: {
+      'speed_high_alert': 'Group 0. Start / stop when in alert condition.',
+    },
+    16: {
+      'speed_low_alert': 'Group 0. Start / stop when in alert condition.',
+    },
+    17: {
+      'cad_high_alert': 'Group 0. Start / stop when in alert condition.',
+    },
+    18: {
+      'cad_low_alert': 'Group 0. Start / stop when in alert condition.',
+    },
+    19: {
+      'power_high_alert': 'Group 0. Start / stop when in alert condition.',
+    },
+    20: {
+      'power_low_alert': 'Group 0. Start / stop when in alert condition.',
+    },
+    21: {
+      'recovery_hr': 'marker',
+    },
+    22: {
+      'battery_low': 'marker',
+    },
+    23: {
+      'time_duration_alert':
+          'Group 1. Start if enabled mid activity (not required at start of activity). Stop when duration is reached. stop_disable if disabled.',
+    },
+    24: {
+      'distance_duration_alert':
+          'Group 1. Start if enabled mid activity (not required at start of activity). Stop when duration is reached. stop_disable if disabled.',
+    },
+    25: {
+      'calorie_duration_alert':
+          'Group 1. Start if enabled mid activity (not required at start of activity). Stop when duration is reached. stop_disable if disabled.',
+    },
+    26: {
+      'activity': 'Group 1.. Stop at end of activity.',
+    },
+    27: {
+      'fitness_equipment': 'marker',
+    },
+    28: {
+      'length': 'Stop at end of each length.',
+    },
+    32: {
+      'user_marker': 'marker',
+    },
+    33: {
+      'sport_point': 'marker',
+    },
+    36: {
+      'calibration': 'start/stop/marker',
+    },
+    42: {
+      'front_gear_change': 'marker',
+    },
+    43: {
+      'rear_gear_change': 'marker',
+    },
+    44: {
+      'rider_position_change': 'marker',
+    },
+    45: {
+      'elev_high_alert': 'Group 0. Start / stop when in alert condition.',
+    },
+    46: {
+      'elev_low_alert': 'Group 0. Start / stop when in alert condition.',
+    },
+    47: {
+      'comm_timeout': 'marker',
+    },
+    54: {
+      'auto_activity_detect': 'marker',
+    },
+    56: {
+      'dive_alert': 'marker',
+    },
+    57: {
+      'dive_gas_switched': 'marker',
+    },
+    71: {
+      'tank_pressure_reserve': 'marker',
+    },
+    72: {
+      'tank_pressure_critical': 'marker',
+    },
+    73: {
+      'tank_lost': 'marker',
+    },
+    75: {
+      'radar_threat_alert': 'start/stop/marker',
+    },
+    76: {
+      'tank_battery_low': 'marker',
+    },
+    81: {
+      'tank_pod_connected': 'marker - tank pod has connected',
+    },
+    82: {
+      'tank_pod_disconnected': 'marker - tank pod has lost connection',
+    },
   },
   ProfileType.exdDescriptors: {
-    65: 'Combined gear information',
+    65: {
+      'gears': 'Combined gear information',
+    },
   },
   ProfileType.exdLayout: {
-    8: 'The EXD may display the configured concepts in any layout it sees fit.',
+    8: {
+      'dynamic':
+          'The EXD may display the configured concepts in any layout it sees fit.',
+    },
   },
   ProfileType.exerciseCategory: {
-    34: 'Exercises within workouts that use GPS/sensors rather than rep counting',
+    34: {
+      'cardio_sensors':
+          'Exercises within workouts that use GPS/sensors rather than rep counting',
+    },
   },
   ProfileType.file: {
-    1: 'Read only, single file. Must be in root directory.',
-    2: 'Read/write, single file. Directory=Settings',
-    3: 'Read/write, multiple files, file number = sport type. Directory=Sports',
-    4: 'Read/erase, multiple files. Directory=Activities',
-    5: 'Read/write/erase, multiple files. Directory=Workouts',
-    6: 'Read/write/erase, multiple files. Directory=Courses',
-    7: 'Read/write, single file. Directory=Schedules',
-    9: 'Read only, single file. Circular buffer. All message definitions at start of file. Directory=Weight',
-    10: 'Read only, single file. Directory=Totals',
-    11: 'Read/write, single file. Directory=Goals',
-    14: 'Read only. Directory=Blood Pressure',
-    15: 'Read only. Directory=Monitoring. File number=sub type.',
-    20: 'Read/erase, multiple files. Directory=Activities',
-    32: 'Read only. Directory=Monitoring. File number=identifier',
-    34: 'Read/write/erase. Multiple Files. Directory=Segments',
-    35: 'Read/write/erase. Single File. Directory=Segments',
-    40: 'Read/write/erase. Single File. Directory=Settings',
-    247: '0xF7 - 0xFE reserved for manufacturer specific file types',
-    254: '0xF7 - 0xFE reserved for manufacturer specific file types',
+    1: {
+      'device': 'Read only, single file. Must be in root directory.',
+    },
+    2: {
+      'settings': 'Read/write, single file. Directory=Settings',
+    },
+    3: {
+      'sport':
+          'Read/write, multiple files, file number = sport type. Directory=Sports',
+    },
+    4: {
+      'activity': 'Read/erase, multiple files. Directory=Activities',
+    },
+    5: {
+      'workout': 'Read/write/erase, multiple files. Directory=Workouts',
+    },
+    6: {
+      'course': 'Read/write/erase, multiple files. Directory=Courses',
+    },
+    7: {
+      'schedules': 'Read/write, single file. Directory=Schedules',
+    },
+    9: {
+      'weight':
+          'Read only, single file. Circular buffer. All message definitions at start of file. Directory=Weight',
+    },
+    10: {
+      'totals': 'Read only, single file. Directory=Totals',
+    },
+    11: {
+      'goals': 'Read/write, single file. Directory=Goals',
+    },
+    14: {
+      'blood_pressure': 'Read only. Directory=Blood Pressure',
+    },
+    15: {
+      'monitoring_a': 'Read only. Directory=Monitoring. File number=sub type.',
+    },
+    20: {
+      'activity_summary': 'Read/erase, multiple files. Directory=Activities',
+    },
+    32: {
+      'monitoring_b': 'Read only. Directory=Monitoring. File number=identifier',
+    },
+    34: {
+      'segment': 'Read/write/erase. Multiple Files. Directory=Segments',
+    },
+    35: {
+      'segment_list': 'Read/write/erase. Single File. Directory=Segments',
+    },
+    40: {
+      'exd_configuration': 'Read/write/erase. Single File. Directory=Settings',
+    },
+    247: {
+      'mfg_range_min':
+          '0xF7 - 0xFE reserved for manufacturer specific file types',
+    },
+    254: {
+      'mfg_range_max':
+          '0xF7 - 0xFE reserved for manufacturer specific file types',
+    },
   },
   ProfileType.fitnessEquipmentState: {
-    3: 'lost connection to fitness equipment',
+    3: {
+      'unknown': 'lost connection to fitness equipment',
+    },
   },
   ProfileType.garminProduct: {
-    2: 'AXH01 HRM chipset',
-    8: 'hrm_run model for HRM ANT+ messaging',
-    9: 'BSM model for ANT+ messaging',
-    10: 'BCM model for ANT+ messaging',
-    11: 'AXS01 HRM Bike Chipset model for ANT+ messaging',
-    12: 'hrm_tri model for HRM ANT+ messaging',
-    13: 'hrm4 run model for HRM ANT+ messaging',
-    14: 'fr225 model for HRM ANT+ messaging',
-    15: 'gen3_bsm model for Bike Speed ANT+ messaging',
-    16: 'gen3_bcm model for Bike Cadence ANT+ messaging',
-    255:
-        'Garmin Wearable Optical Heart Rate Sensor for ANT+ HR Profile Broadcasting',
-    717: 'Forerunner 405',
-    782: 'Forerunner 50',
-    988: 'Forerunner 60',
-    1018: 'Forerunner 310',
-    1124: 'Forerunner 110',
-    1736: 'Also Edge Touring Plus',
-    1743: 'Also HRM-Swim',
-    2567: 'Varia UT 800 SW',
-    3192: 'gen3 bike speed sensor',
-    3193: 'gen3 bike cadence sensor',
-    3299: 'HRM-Dual',
-    3300: 'HRM-Pro',
-    3578: 'Rally 100/200 Power Meter Series',
-    3702: 'Mk2 and Mk2i',
-    3865: 'Airoha AG3335M Family',
-    4105: 'Adventurer, Athlete, Captain, Golfer',
-    4265: 'Neo Smart, Tacx',
-    4266: 'Neo 2 Smart, Tacx',
-    4267: 'Neo 2T Smart, Tacx',
-    4268: 'Neo Smart Bike, Tacx',
-    4269: 'Satori Smart, Tacx',
-    4270: 'Flow Smart, Tacx',
-    4271: 'Vortex Smart, Tacx',
-    4272: 'Bushido Smart, Tacx',
-    4273: 'Genius Smart, Tacx',
-    4274: 'Flux/Flux S Smart, Tacx',
-    4275: 'Flux 2 Smart, Tacx',
-    4276: 'Magnum, Tacx',
-    4477: 'aka the Lily 2 Active',
-    4525: 'Rally 110/210',
-    5134: '47mm & 57mm',
-    10007: 'SDM4 footpod',
-    65534: 'Garmin Connect website',
+    2: {
+      'axh01': 'AXH01 HRM chipset',
+    },
+    8: {
+      'hrm_run_single_byte_product_id': 'hrm_run model for HRM ANT+ messaging',
+    },
+    9: {
+      'bsm': 'BSM model for ANT+ messaging',
+    },
+    10: {
+      'bcm': 'BCM model for ANT+ messaging',
+    },
+    11: {
+      'axs01': 'AXS01 HRM Bike Chipset model for ANT+ messaging',
+    },
+    12: {
+      'hrm_tri_single_byte_product_id': 'hrm_tri model for HRM ANT+ messaging',
+    },
+    13: {
+      'hrm4_run_single_byte_product_id':
+          'hrm4 run model for HRM ANT+ messaging',
+    },
+    14: {
+      'fr225_single_byte_product_id': 'fr225 model for HRM ANT+ messaging',
+    },
+    15: {
+      'gen3_bsm_single_byte_product_id':
+          'gen3_bsm model for Bike Speed ANT+ messaging',
+    },
+    16: {
+      'gen3_bcm_single_byte_product_id':
+          'gen3_bcm model for Bike Cadence ANT+ messaging',
+    },
+    255: {
+      'OHR':
+          'Garmin Wearable Optical Heart Rate Sensor for ANT+ HR Profile Broadcasting',
+    },
+    717: {
+      'fr405': 'Forerunner 405',
+    },
+    782: {
+      'fr50': 'Forerunner 50',
+    },
+    988: {
+      'fr60': 'Forerunner 60',
+    },
+    1018: {
+      'fr310xt': 'Forerunner 310',
+    },
+    1124: {
+      'fr110': 'Forerunner 110',
+    },
+    1736: {
+      'edge_touring': 'Also Edge Touring Plus',
+    },
+    1743: {
+      'hrm_tri': 'Also HRM-Swim',
+    },
+    2567: {
+      'varia_ut800': 'Varia UT 800 SW',
+    },
+    3192: {
+      'gen3_bsm': 'gen3 bike speed sensor',
+    },
+    3193: {
+      'gen3_bcm': 'gen3 bike cadence sensor',
+    },
+    3299: {
+      'hrm_dual': 'HRM-Dual',
+    },
+    3300: {
+      'hrm_pro': 'HRM-Pro',
+    },
+    3578: {
+      'rally_200': 'Rally 100/200 Power Meter Series',
+    },
+    3702: {
+      'descent_mk2_asia': 'Mk2 and Mk2i',
+    },
+    3865: {
+      'gnss': 'Airoha AG3335M Family',
+    },
+    4105: {
+      'marq_gen2': 'Adventurer, Athlete, Captain, Golfer',
+    },
+    4265: {
+      'tacx_neo_smart': 'Neo Smart, Tacx',
+    },
+    4266: {
+      'tacx_neo2_smart': 'Neo 2 Smart, Tacx',
+    },
+    4267: {
+      'tacx_neo2_t_smart': 'Neo 2T Smart, Tacx',
+    },
+    4268: {
+      'tacx_neo_smart_bike': 'Neo Smart Bike, Tacx',
+    },
+    4269: {
+      'tacx_satori_smart': 'Satori Smart, Tacx',
+    },
+    4270: {
+      'tacx_flow_smart': 'Flow Smart, Tacx',
+    },
+    4271: {
+      'tacx_vortex_smart': 'Vortex Smart, Tacx',
+    },
+    4272: {
+      'tacx_bushido_smart': 'Bushido Smart, Tacx',
+    },
+    4273: {
+      'tacx_genius_smart': 'Genius Smart, Tacx',
+    },
+    4274: {
+      'tacx_flux_flux_s_smart': 'Flux/Flux S Smart, Tacx',
+    },
+    4275: {
+      'tacx_flux2_smart': 'Flux 2 Smart, Tacx',
+    },
+    4276: {
+      'tacx_magnum': 'Magnum, Tacx',
+    },
+    4477: {
+      'lily_athlete': 'aka the Lily 2 Active',
+    },
+    4525: {
+      'rally_x10': 'Rally 110/210',
+    },
+    5134: {
+      'fenix9': '47mm & 57mm',
+    },
+    10007: {
+      'sdm4': 'SDM4 footpod',
+    },
+    65534: {
+      'connect': 'Garmin Connect website',
+    },
   },
   ProfileType.gasConsumptionRateType: {
-    0: 'Pressure-based Surface Air Consumption',
-    1: 'Volumetric Surface Air Consumption',
-    2: 'Respiratory Minute Volume',
+    0: {
+      'pressure_sac': 'Pressure-based Surface Air Consumption',
+    },
+    1: {
+      'volume_sac': 'Volumetric Surface Air Consumption',
+    },
+    2: {
+      'rmv': 'Respiratory Minute Volume',
+    },
   },
   ProfileType.goalSource: {
-    0: 'Device generated',
-    1: 'Social network sourced goal',
-    2: 'Manually generated',
+    0: {
+      'auto': 'Device generated',
+    },
+    1: {
+      'community': 'Social network sourced goal',
+    },
+    2: {
+      'user': 'Manually generated',
+    },
   },
   ProfileType.hipRaiseExerciseName: {
-    45: 'Deprecated do not use',
-    46: 'Deprecated do not use',
+    45: {
+      'inner_thigh_circles': 'Deprecated do not use',
+    },
+    46: {
+      'inner_thigh_side_lift': 'Deprecated do not use',
+    },
   },
   ProfileType.hyperextensionExerciseName: {
-    39: 'Deprecated do not use',
+    39: {
+      'supine_floor_barre': 'Deprecated do not use',
+    },
   },
   ProfileType.leftRightBalance: {
-    127: '% contribution',
-    128: 'data corresponds to right if set, otherwise unknown',
+    127: {
+      'mask': '% contribution',
+    },
+    128: {
+      'right': 'data corresponds to right if set, otherwise unknown',
+    },
   },
   ProfileType.leftRightBalance100: {
-    16383: '% contribution scaled by 100',
-    32768: 'data corresponds to right if set, otherwise unknown',
+    16383: {
+      'mask': '% contribution scaled by 100',
+    },
+    32768: {
+      'right': 'data corresponds to right if set, otherwise unknown',
+    },
   },
   ProfileType.lengthType: {
-    0: 'Rest period. Length with no strokes',
-    1: 'Length with strokes.',
+    0: {
+      'idle': 'Rest period. Length with no strokes',
+    },
+    1: {
+      'active': 'Length with strokes.',
+    },
   },
   ProfileType.localDeviceType: {
-    0: 'Onboard gps receiver',
-    1: 'Onboard glonass receiver',
-    2: 'Onboard gps glonass receiver',
-    3: 'Onboard sensor',
-    4: 'Onboard sensor',
-    5: 'Onboard sensor',
-    10: 'Onboard wrist HR sensor',
-    12: 'Onboard software package',
+    0: {
+      'gps': 'Onboard gps receiver',
+    },
+    1: {
+      'glonass': 'Onboard glonass receiver',
+    },
+    2: {
+      'gps_glonass': 'Onboard gps glonass receiver',
+    },
+    3: {
+      'accelerometer': 'Onboard sensor',
+    },
+    4: {
+      'barometer': 'Onboard sensor',
+    },
+    5: {
+      'temperature': 'Onboard sensor',
+    },
+    10: {
+      'whr': 'Onboard wrist HR sensor',
+    },
+    12: {
+      'sensor_hub': 'Onboard software package',
+    },
   },
   ProfileType.manufacturer: {
-    2: 'Do not use. Used by FR405 for ANTFS man id.',
-    96: 'Indoorcycling Group',
-    103: 'Limits Technology Ltd.',
-    104: 'TopAction Technology Inc.',
-    109: 'Tigrasport',
-    266: 'Amer Sports',
-    269: 'MiTAC Global Corporation (Mio Technology)',
-    270: 'COBI GmbH',
-    277: 'Falco eMotors Inc.',
-    320: 'Lishun Electric & Communication',
+    2: {
+      'garmin_fr405_antfs': 'Do not use. Used by FR405 for ANTFS man id.',
+    },
+    96: {
+      'icg': 'Indoorcycling Group',
+    },
+    103: {
+      'limits_technology': 'Limits Technology Ltd.',
+    },
+    104: {
+      'topaction_technology': 'TopAction Technology Inc.',
+    },
+    109: {
+      'tigrasport': 'Tigrasport',
+    },
+    266: {
+      'precor': 'Amer Sports',
+    },
+    269: {
+      'navman': 'MiTAC Global Corporation (Mio Technology)',
+    },
+    270: {
+      'cobi': 'COBI GmbH',
+    },
+    277: {
+      'falco_e_motors': 'Falco eMotors Inc.',
+    },
+    320: {
+      'lsec': 'Lishun Electric & Communication',
+    },
   },
   ProfileType.maxMetHeartRateSource: {
-    0: 'Wrist Heart Rate Monitor',
-    1: 'Chest Strap Heart Rate Monitor',
+    0: {
+      'whr': 'Wrist Heart Rate Monitor',
+    },
+    1: {
+      'hrm': 'Chest Strap Heart Rate Monitor',
+    },
   },
   ProfileType.mesgNum: {
-    409: 'Message number for the HSA wrist temperature data message',
-    65280: '0xFF00 - 0xFFFE reserved for manufacturer specific messages',
-    65534: '0xFF00 - 0xFFFE reserved for manufacturer specific messages',
+    409: {
+      'hsa_wrist_temperature_data':
+          'Message number for the HSA wrist temperature data message',
+    },
+    65280: {
+      'mfg_range_min':
+          '0xFF00 - 0xFFFE reserved for manufacturer specific messages',
+    },
+    65534: {
+      'mfg_range_max':
+          '0xFF00 - 0xFFFE reserved for manufacturer specific messages',
+    },
   },
   ProfileType.messageIndex: {
-    4095: 'index',
-    28672: 'reserved (default 0)',
-    32768: 'message is selected if set',
+    4095: {
+      'mask': 'index',
+    },
+    28672: {
+      'reserved': 'reserved (default 0)',
+    },
+    32768: {
+      'selected': 'message is selected if set',
+    },
   },
   ProfileType.noFlyTimeMode: {
-    0: 'Standard Diver Alert Network no-fly guidance',
-    1: 'Flat 24 hour no-fly guidance',
+    0: {
+      'standard': 'Standard Diver Alert Network no-fly guidance',
+    },
+    1: {
+      'flat_24_hours': 'Flat 24 hour no-fly guidance',
+    },
   },
   ProfileType.projectileType: {
-    0: 'Arrow projectile type',
-    1: 'Rifle cartridge projectile type',
-    2: 'Pistol cartridge projectile type',
-    3: 'Shotshell projectile type',
-    4: 'Air rifle pellet projectile type',
-    5: 'Other projectile type',
+    0: {
+      'arrow': 'Arrow projectile type',
+    },
+    1: {
+      'rifle_cartridge': 'Rifle cartridge projectile type',
+    },
+    2: {
+      'pistol_cartridge': 'Pistol cartridge projectile type',
+    },
+    3: {
+      'shotshell': 'Shotshell projectile type',
+    },
+    4: {
+      'air_rifle_pellet': 'Air rifle pellet projectile type',
+    },
+    5: {
+      'other': 'Other projectile type',
+    },
   },
   ProfileType.sensorType: {
-    2: 'Magnetometer',
+    2: {
+      'compass': 'Magnetometer',
+    },
   },
   ProfileType.sessionTrigger: {
-    1: 'User changed sport.',
-    2: 'Auto multi-sport feature is enabled and user pressed lap button to advance session.',
-    3: 'Auto sport change caused by user linking to fitness equipment.',
+    1: {
+      'manual': 'User changed sport.',
+    },
+    2: {
+      'auto_multi_sport':
+          'Auto multi-sport feature is enabled and user pressed lap button to advance session.',
+    },
+    3: {
+      'fitness_equipment':
+          'Auto sport change caused by user linking to fitness equipment.',
+    },
   },
   ProfileType.sourceType: {
-    0: 'External device connected with ANT',
-    1: 'External device connected with ANT+',
-    2: 'External device connected with BT',
-    3: 'External device connected with BLE',
-    4: 'External device connected with Wifi',
-    5: 'Onboard device',
+    0: {
+      'ant': 'External device connected with ANT',
+    },
+    1: {
+      'antplus': 'External device connected with ANT+',
+    },
+    2: {
+      'bluetooth': 'External device connected with BT',
+    },
+    3: {
+      'bluetooth_low_energy': 'External device connected with BLE',
+    },
+    4: {
+      'wifi': 'External device connected with Wifi',
+    },
+    5: {
+      'local': 'Onboard device',
+    },
   },
   ProfileType.splitType: {
-    17: 'run/walk detection running',
-    18: 'run/walk detection walking',
-    22: 'run/walk detection standing',
-    23: 'Marks the time going from ascent_split to descent_split/used in backcountry ski',
+    17: {
+      'rwd_run': 'run/walk detection running',
+    },
+    18: {
+      'rwd_walk': 'run/walk detection walking',
+    },
+    22: {
+      'rwd_stand': 'run/walk detection standing',
+    },
+    23: {
+      'transition':
+          'Marks the time going from ascent_split to descent_split/used in backcountry ski',
+    },
   },
   ProfileType.sport: {
-    3: 'Mulitsport transition',
-    56: 'Sport Shooting bits, set here for sport_bits alignment',
-    59: 'Sailing position, operating manual winches to power boat controls',
-    254: 'All is for goals only to include all sports.',
+    3: {
+      'transition': 'Mulitsport transition',
+    },
+    56: {
+      'shooting': 'Sport Shooting bits, set here for sport_bits alignment',
+    },
+    59: {
+      'grinding':
+          'Sailing position, operating manual winches to power boat controls',
+    },
+    254: {
+      'all': 'All is for goals only to include all sports.',
+    },
   },
   ProfileType.sportBits0: {
-    8: 'Mulitsport transition',
+    8: {
+      'transition': 'Mulitsport transition',
+    },
   },
   ProfileType.squatExerciseName: {
-    87: 'Deprecated do not use',
+    87: {
+      'kbs_overhead': 'Deprecated do not use',
+    },
   },
   ProfileType.strokeType: {
-    1: 'stroke was detected but cannot be identified',
+    1: {
+      'other': 'stroke was detected but cannot be identified',
+    },
   },
   ProfileType.subSport: {
-    1: 'Run/Fitness Equipment',
-    2: 'Run',
-    3: 'Run',
-    4: 'Run',
-    5: 'Cycling',
-    6: 'Cycling/Fitness Equipment',
-    7: 'Cycling',
-    8: 'Cycling',
-    9: 'Cycling',
-    10: 'Cycling',
-    11: 'Cycling',
-    12: 'Cycling',
-    13: 'Cycling',
-    14: 'Fitness Equipment',
-    15: 'Fitness Equipment',
-    16: 'Fitness Equipment',
-    17: 'Swimming',
-    18: 'Swimming',
-    19: 'Training',
-    20: 'Training',
-    21: 'Tennis',
-    22: 'Tennis',
-    23: 'Tennis',
-    25: 'Fitness Equipment',
-    26: 'Training',
-    27: 'Walking/Fitness Equipment',
-    28: 'E-Biking',
-    29: 'Cycling',
-    30: 'Walking',
-    31: 'Walking',
-    32: 'Transition',
-    33: 'Transition',
-    34: 'Transition',
-    35: 'Motorcycling',
-    36: 'Motorcycling',
-    37: 'Alpine Skiing/Snowboarding',
-    38: 'Alpine Skiing/Snowboarding',
-    39: 'Flying',
-    40: 'Flying',
-    41: 'Kayaking/Rafting',
-    42: 'Cross Country Skiing',
-    43: 'Training',
-    44: 'Fitness Equipment',
-    45: 'Run',
-    46: 'Cycling',
-    47: 'Cycling',
-    48: 'Cycling',
-    49: 'Cycling',
-    53: 'Diving',
-    54: 'Diving',
-    55: 'Diving',
-    56: 'Diving',
-    57: 'Diving',
-    59: 'Used for events where participants run, crawl through mud, climb over walls, etc.',
-    63: 'Diving w/ closed circuit rebreather',
-    65: 'Sailing',
-    66: 'Generic',
-    67: 'Ultramarathon',
-    68: 'Climbing',
-    69: 'Climbing',
-    70: 'High Intensity Interval Training',
-    71: 'Sailing position, operating manual winches to power boat controls',
-    72: 'Hunting',
-    73: 'HIIT',
-    74: 'HIIT',
-    75: 'HIIT',
-    77: 'Video Gaming, Cycling, etc.',
-    78: 'Multisport',
-    79: 'Multisport',
-    80: 'Multisport',
-    81: 'Multisport',
-    82: 'Multisport/Running',
-    83: 'DEZL trucker workout training sport',
-    84: 'Racket',
-    85: 'Racket',
-    90: 'Hockey',
-    91: 'Hockey',
-    92: 'Disc',
-    93: 'Racket',
-    94: 'Racket',
-    95: 'Racket',
-    96: 'Racket',
-    97: 'Racket',
-    99: 'Generic',
-    110: 'Flying',
-    111: 'Flying',
-    112: 'Flying',
-    113: 'Flying',
-    114: 'Flying',
-    115: 'Flying',
-    116: 'Flying',
-    117: 'Flying',
-    118: 'Flying',
-    119: 'Flying',
-    123: 'Cycling',
-    124: 'Hiking',
-    125: 'Motor sports',
-    126: 'Multisport',
-    127: 'Cycling',
+    1: {
+      'treadmill': 'Run/Fitness Equipment',
+    },
+    2: {
+      'street': 'Run',
+    },
+    3: {
+      'trail': 'Run',
+    },
+    4: {
+      'track': 'Run',
+    },
+    5: {
+      'spin': 'Cycling',
+    },
+    6: {
+      'indoor_cycling': 'Cycling/Fitness Equipment',
+    },
+    7: {
+      'road': 'Cycling',
+    },
+    8: {
+      'mountain': 'Cycling',
+    },
+    9: {
+      'downhill': 'Cycling',
+    },
+    10: {
+      'recumbent': 'Cycling',
+    },
+    11: {
+      'cyclocross': 'Cycling',
+    },
+    12: {
+      'hand_cycling': 'Cycling',
+    },
+    13: {
+      'track_cycling': 'Cycling',
+    },
+    14: {
+      'indoor_rowing': 'Fitness Equipment',
+    },
+    15: {
+      'elliptical': 'Fitness Equipment',
+    },
+    16: {
+      'stair_climbing': 'Fitness Equipment',
+    },
+    17: {
+      'lap_swimming': 'Swimming',
+    },
+    18: {
+      'open_water': 'Swimming',
+    },
+    19: {
+      'flexibility_training': 'Training',
+    },
+    20: {
+      'strength_training': 'Training',
+    },
+    21: {
+      'warm_up': 'Tennis',
+    },
+    22: {
+      'match': 'Tennis',
+    },
+    23: {
+      'exercise': 'Tennis',
+    },
+    25: {
+      'indoor_skiing': 'Fitness Equipment',
+    },
+    26: {
+      'cardio_training': 'Training',
+    },
+    27: {
+      'indoor_walking': 'Walking/Fitness Equipment',
+    },
+    28: {
+      'e_bike_fitness': 'E-Biking',
+    },
+    29: {
+      'bmx': 'Cycling',
+    },
+    30: {
+      'casual_walking': 'Walking',
+    },
+    31: {
+      'speed_walking': 'Walking',
+    },
+    32: {
+      'bike_to_run_transition': 'Transition',
+    },
+    33: {
+      'run_to_bike_transition': 'Transition',
+    },
+    34: {
+      'swim_to_bike_transition': 'Transition',
+    },
+    35: {
+      'atv': 'Motorcycling',
+    },
+    36: {
+      'motocross': 'Motorcycling',
+    },
+    37: {
+      'backcountry': 'Alpine Skiing/Snowboarding',
+    },
+    38: {
+      'resort': 'Alpine Skiing/Snowboarding',
+    },
+    39: {
+      'rc_drone': 'Flying',
+    },
+    40: {
+      'wingsuit': 'Flying',
+    },
+    41: {
+      'whitewater': 'Kayaking/Rafting',
+    },
+    42: {
+      'skate_skiing': 'Cross Country Skiing',
+    },
+    43: {
+      'yoga': 'Training',
+    },
+    44: {
+      'pilates': 'Fitness Equipment',
+    },
+    45: {
+      'indoor_running': 'Run',
+    },
+    46: {
+      'gravel_cycling': 'Cycling',
+    },
+    47: {
+      'e_bike_mountain': 'Cycling',
+    },
+    48: {
+      'commuting': 'Cycling',
+    },
+    49: {
+      'mixed_surface': 'Cycling',
+    },
+    53: {
+      'single_gas_diving': 'Diving',
+    },
+    54: {
+      'multi_gas_diving': 'Diving',
+    },
+    55: {
+      'gauge_diving': 'Diving',
+    },
+    56: {
+      'apnea_diving': 'Diving',
+    },
+    57: {
+      'apnea_hunting': 'Diving',
+    },
+    59: {
+      'obstacle':
+          'Used for events where participants run, crawl through mud, climb over walls, etc.',
+    },
+    63: {
+      'ccr_diving': 'Diving w/ closed circuit rebreather',
+    },
+    65: {
+      'sail_race': 'Sailing',
+    },
+    66: {
+      'expedition': 'Generic',
+    },
+    67: {
+      'ultra': 'Ultramarathon',
+    },
+    68: {
+      'indoor_climbing': 'Climbing',
+    },
+    69: {
+      'bouldering': 'Climbing',
+    },
+    70: {
+      'hiit': 'High Intensity Interval Training',
+    },
+    71: {
+      'indoor_grinding':
+          'Sailing position, operating manual winches to power boat controls',
+    },
+    72: {
+      'hunting_with_dogs': 'Hunting',
+    },
+    73: {
+      'amrap': 'HIIT',
+    },
+    74: {
+      'emom': 'HIIT',
+    },
+    75: {
+      'tabata': 'HIIT',
+    },
+    77: {
+      'esport': 'Video Gaming, Cycling, etc.',
+    },
+    78: {
+      'triathlon': 'Multisport',
+    },
+    79: {
+      'duathlon': 'Multisport',
+    },
+    80: {
+      'brick': 'Multisport',
+    },
+    81: {
+      'swim_run': 'Multisport',
+    },
+    82: {
+      'adventure_race': 'Multisport/Running',
+    },
+    83: {
+      'trucker_workout': 'DEZL trucker workout training sport',
+    },
+    84: {
+      'pickleball': 'Racket',
+    },
+    85: {
+      'padel': 'Racket',
+    },
+    90: {
+      'field': 'Hockey',
+    },
+    91: {
+      'ice': 'Hockey',
+    },
+    92: {
+      'ultimate': 'Disc',
+    },
+    93: {
+      'platform': 'Racket',
+    },
+    94: {
+      'squash': 'Racket',
+    },
+    95: {
+      'badminton': 'Racket',
+    },
+    96: {
+      'racquetball': 'Racket',
+    },
+    97: {
+      'table_tennis': 'Racket',
+    },
+    99: {
+      'trolling_motor': 'Generic',
+    },
+    110: {
+      'fly_canopy': 'Flying',
+    },
+    111: {
+      'fly_paraglide': 'Flying',
+    },
+    112: {
+      'fly_paramotor': 'Flying',
+    },
+    113: {
+      'fly_pressurized': 'Flying',
+    },
+    114: {
+      'fly_navigate': 'Flying',
+    },
+    115: {
+      'fly_timer': 'Flying',
+    },
+    116: {
+      'fly_altimeter': 'Flying',
+    },
+    117: {
+      'fly_wx': 'Flying',
+    },
+    118: {
+      'fly_vfr': 'Flying',
+    },
+    119: {
+      'fly_ifr': 'Flying',
+    },
+    123: {
+      'enduro': 'Cycling',
+    },
+    124: {
+      'rucking': 'Hiking',
+    },
+    125: {
+      'rally': 'Motor sports',
+    },
+    126: {
+      'pool_triathlon': 'Multisport',
+    },
+    127: {
+      'e_bike_enduro': 'Cycling',
+    },
   },
   ProfileType.swimStroke: {
-    6: 'IM is a mixed interval containing the same number of lengths for each of: Butterfly, Backstroke, Breaststroke, Freestyle, swam in that order.',
-    7: 'For repeated workout steps, a new individual medly stroke is used for each round.',
-    8: 'Reverse IM Order',
+    6: {
+      'im':
+          'IM is a mixed interval containing the same number of lengths for each of: Butterfly, Backstroke, Breaststroke, Freestyle, swam in that order.',
+    },
+    7: {
+      'im_by_round':
+          'For repeated workout steps, a new individual medly stroke is used for each round.',
+    },
+    8: {
+      'rimo': 'Reverse IM Order',
+    },
   },
   ProfileType.timeMode: {
-    1: 'Does not use a leading zero and has a colon',
-    2: 'Uses a leading zero and does not have a colon',
+    1: {
+      'hour24': 'Does not use a leading zero and has a colon',
+    },
+    2: {
+      'military': 'Uses a leading zero and does not have a colon',
+    },
   },
   ProfileType.tissueModelType: {
-    0: 'Buhlmann\'s decompression algorithm, version C',
+    0: {
+      'zhl_16c': 'Buhlmann\'s decompression algorithm, version C',
+    },
   },
   ProfileType.warmUpExerciseName: {
-    16: 'Deprecated do not use',
-    74: '90_90_hip_switch',
+    16: {
+      'scorpion': 'Deprecated do not use',
+    },
+    74: {
+      'ninety_ninety_hip_switch': '90_90_hip_switch',
+    },
   },
   ProfileType.weatherReport: {
-    1: 'Deprecated use hourly_forecast instead',
+    1: {
+      'forecast': 'Deprecated use hourly_forecast instead',
+    },
   },
   ProfileType.workoutCapabilities: {
-    32: 'For backwards compatibility. Watch should add missing id fields then clear flag.',
-    128: 'Speed source required for workout step.',
-    256: 'Heart rate source required for workout step.',
-    512: 'Distance source required for workout step.',
-    1024: 'Cadence source required for workout step.',
-    2048: 'Power source required for workout step.',
-    4096: 'Grade source required for workout step.',
-    8192: 'Resistance source required for workout step.',
+    32: {
+      'tcx':
+          'For backwards compatibility. Watch should add missing id fields then clear flag.',
+    },
+    128: {
+      'speed': 'Speed source required for workout step.',
+    },
+    256: {
+      'heart_rate': 'Heart rate source required for workout step.',
+    },
+    512: {
+      'distance': 'Distance source required for workout step.',
+    },
+    1024: {
+      'cadence': 'Cadence source required for workout step.',
+    },
+    2048: {
+      'power': 'Power source required for workout step.',
+    },
+    4096: {
+      'grade': 'Grade source required for workout step.',
+    },
+    8192: {
+      'resistance': 'Resistance source required for workout step.',
+    },
   },
 };

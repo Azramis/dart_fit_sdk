@@ -175,19 +175,40 @@ class FitProfileCatalog {
   List<EnumTypeInfo> _buildEnumTypes() {
     final out = <EnumTypeInfo>[];
     profileEnumTypeValues.forEach((type, values) {
-      final docs = profileValueDocs[type] ?? const <int, String>{};
+      final docs = profileValueDocs[type] ?? const <int, Map<String, String>>{};
+      final seen = <int>{};
+      final shared = {
+        for (final v in values)
+          if (!seen.add(v.value)) v.value,
+      };
       out.add(EnumTypeInfo._(
         type,
         profileEnumTypeNames[type] ?? type.name,
         profileTypeBaseTypes[type],
         profileTypeDocs[type],
         List.unmodifiable(<EnumValueInfo>[
-          for (final v in values) EnumValueInfo(v.name, v.value, docs[v.value]),
+          for (final v in values)
+            EnumValueInfo(v.name, v.value,
+                _valueDoc(docs[v.value], v.name, shared.contains(v.value))),
         ]),
       ));
     });
     out.sort((a, b) => a.name.compareTo(b.name));
     return List.unmodifiable(out);
+  }
+
+  /// The Profile.xlsx comment for a value, among the [docs] of its number (keyed
+  /// by the workbook's spelling, e.g. `OHR`). The number identifies the value;
+  /// its [name], compared ignoring case and underscores, is only needed when
+  /// [shared] by several names (`forecast` and `hourlyForecast` are both 1).
+  static String? _valueDoc(
+      Map<String, String>? docs, String name, bool shared) {
+    if (docs == null) return null;
+    String key(String s) => s.replaceAll('_', '').toLowerCase();
+    for (final e in docs.entries) {
+      if (key(e.key) == key(name)) return e.value;
+    }
+    return !shared && docs.length == 1 ? docs.values.single : null;
   }
 }
 
