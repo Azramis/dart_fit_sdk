@@ -302,10 +302,7 @@ void main() {
         });
       });
 
-      // Session.TotalCycles' TotalPushes subfield was added upstream after the
-      // original port, and the additive updater never adds subfields to
-      // existing fields: its comment is kept and attaches once it exists.
-      expect(unresolved.difference({'subfield 18#10.TotalPushes'}), isEmpty);
+      expect(unresolved, isEmpty);
     });
   });
 
