@@ -4798,6 +4798,26 @@ class Profile {
       Field("MetabolicCalories", 196, 132, 1.0, 0.0, "kcal", false,
           ProfileType.uint16),
     );
+    final Subfield totalRepsSubfield = Subfield(
+      "TotalReps",
+      134,
+      1.0,
+      0.0,
+      "reps",
+    );
+    totalRepsSubfield.addMap(6, 20);
+    totalRepsSubfield.addMap(5, 62);
+    newMesg.getField(10)!.subfields.add(totalRepsSubfield);
+    final Subfield totalPushesSubfield = Subfield(
+      "TotalPushes",
+      134,
+      1.0,
+      0.0,
+      "pushes",
+    );
+    totalPushesSubfield.addMap(5, 66);
+    totalPushesSubfield.addMap(5, 65);
+    newMesg.getField(10)!.subfields.add(totalPushesSubfield);
     return newMesg;
   }
 

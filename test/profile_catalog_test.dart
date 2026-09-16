@@ -134,6 +134,61 @@ void main() {
       expect(favero.references.first.value, 263);
     });
 
+    test('Session.TotalCycles exposes the TotalReps and TotalPushes subfields',
+        () {
+      // Added upstream after the original port. The updater appends them, so
+      // the port's subfields keep their SessionTotalCyclesSubfield indices.
+      final totalCycles = catalog.messageByName('session')!.fieldByNum(10)!;
+      expect(totalCycles.name, 'TotalCycles');
+      expect(totalCycles.subfields.map((s) => s.name),
+          ['TotalStrides', 'TotalStrokes', 'TotalReps', 'TotalPushes']);
+
+      List<(int, Object)> references(SubfieldInfo s) =>
+          [for (final r in s.references) (r.fieldNum, r.value)];
+      final reps = totalCycles.subfields[2];
+      expect(reps.units, 'reps');
+      expect(references(reps), [
+        (SessionMesg.fieldSubSport, SubSport.strengthTraining),
+        (SessionMesg.fieldSport, Sport.hiit),
+      ]);
+      final pushes = totalCycles.subfields[3];
+      expect(pushes.units, 'pushes');
+      expect(references(pushes), [
+        (SessionMesg.fieldSport, Sport.wheelchairPushRun),
+        (SessionMesg.fieldSport, Sport.wheelchairPushWalk),
+      ]);
+    });
+
+    test('decoded sessions resolve TotalCycles to TotalReps and TotalPushes',
+        () {
+      Mesg roundTrip(int sport) {
+        final session = Mesg.fromMesgNum(MesgNum.session)
+          ..setFieldValue(SessionMesg.fieldSport, sport)
+          ..setFieldValue(SessionMesg.fieldTotalCycles, 1200);
+        final encoder = Encode()..open();
+        encoder
+          ..writeMesgDefinition(MesgDefinition.fromMesg(session))
+          ..writeMesg(session);
+        final decoded = <Mesg>[];
+        (Decode()..onMesg = decoded.add).read(encoder.close());
+        return decoded.single;
+      }
+
+      final pushes = roundTrip(Sport.wheelchairPushRun);
+      expect(pushes.getActiveSubFieldName(SessionMesg.fieldTotalCycles),
+          'TotalPushes');
+      expect(pushes.getFieldValueByName('TotalPushes'), 1200);
+
+      final reps = roundTrip(Sport.hiit);
+      expect(reps.getActiveSubFieldName(SessionMesg.fieldTotalCycles),
+          'TotalReps');
+      expect(reps.getFieldValueByName('TotalReps'), 1200);
+
+      // The port's subfields still resolve through their generated getters.
+      expect(SessionMesg.fromMesg(roundTrip(Sport.running)).getTotalStrides(),
+          1200);
+    });
+
     test('components expose their target field and bit width', () {
       // Session.AvgSpeed expands a component into another field.
       final avgSpeed =
@@ -247,10 +302,7 @@ void main() {
         });
       });
 
-      // Session.TotalCycles' TotalPushes subfield was added upstream after the
-      // original port, and the additive updater never adds subfields to
-      // existing fields: its comment is kept and attaches once it exists.
-      expect(unresolved.difference({'subfield 18#10.TotalPushes'}), isEmpty);
+      expect(unresolved, isEmpty);
     });
   });
 
