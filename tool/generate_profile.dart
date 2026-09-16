@@ -1,7 +1,7 @@
 // Additive FIT-profile updater. Keeps every existing declaration in this repo
 // byte-for-byte and only ADDS what a newer Garmin profile introduces: new enum
-// values, new type classes, new message fields/getters, and new message classes
-// (+ their createXMesg and switch case in profile.dart).
+// values, new type classes, new message fields/getters, new subfields, and new
+// message classes (+ their createXMesg and switch case in profile.dart).
 //
 // Source: the `src/profile.js` of github.com/garmin/fit-javascript-sdk (itself
 // generated from Garmin's Profile.xlsx). Profile data is © Garmin under the FIT
@@ -566,7 +566,7 @@ void _additiveProfileDart(Map<String, dynamic> messages) {
     ref(fields);
 
     if (content.contains('static Mesg create${_pascal(name)}Mesg()')) {
-      // Existing message: append any new fields into its creator.
+      // Existing message: append any new fields and subfields into its creator.
       final have = RegExp(
         'static Mesg create${_pascal(name)}Mesg\\(\\) \\{[\\s\\S]*?return newMesg;',
       ).firstMatch(content);
@@ -577,17 +577,37 @@ void _additiveProfileDart(Map<String, dynamic> messages) {
           .allMatches(block)
           .map((m) => int.parse(m.group(1)!))
           .toSet();
+      // Subfield names double as dynamic field names, so they are unique within
+      // a message: match them across the whole creator, whichever style declared
+      // them (one of the port's, or _subfieldsSource's).
+      final existingSubfields = RegExp(r'\bSubfield\(\s*"(\w+)"')
+          .allMatches(block)
+          .map((m) => m.group(1)!)
+          .toSet();
       final adds = StringBuffer();
+      var newFields = 0, newSubfields = 0;
       for (final fnum in fields.keys.map(int.parse)) {
-        if (existingNums.contains(fnum)) continue;
-        adds.write('    newMesg.setField(${_fieldCtor(fields['$fnum'] as Map)},);\n');
+        final f = fields['$fnum'] as Map<String, dynamic>;
+        if (!existingNums.contains(fnum)) {
+          adds.write('    newMesg.setField(${_fieldCtor(f)},);\n');
+          newFields++;
+        }
+        final missing = _subfields(f)
+            .where((s) => !existingSubfields.contains(_pascal(s['name'] as String)))
+            .toList();
+        adds.write(_subfieldsSource(fnum, missing, fields));
+        newSubfields += missing.length;
       }
       if (adds.isNotEmpty) {
         content = content.replaceFirst(
           block,
           block.replaceFirst('return newMesg;', '${adds.toString()}    return newMesg;'),
         );
-        _added.add('  ~ create${_pascal(name)}Mesg (+${adds.toString().trim().split('\n').length} fields)');
+        final counts = [
+          if (newFields > 0) '+$newFields fields',
+          if (newSubfields > 0) '+$newSubfields subfields',
+        ];
+        _added.add('  ~ create${_pascal(name)}Mesg (${counts.join(', ')})');
       }
       continue;
     }
@@ -624,12 +644,57 @@ String _fieldCtor(Map f) =>
     '${_double(f['scale'])}, ${_double(f['offset'])}, "${_scalar<String>(f['units'], '')}", '
     '${f['isAccumulated'] == true}, ProfileType.${_ident(f['type'] as String)})';
 
+List<Map<String, dynamic>> _subfields(Map<String, dynamic> f) =>
+    ((f['subFields'] as List?) ?? const []).cast<Map<String, dynamic>>();
+
+/// Number of the field named [name] among a message's profile.js [fields].
+int _fieldNum(Map<String, dynamic> fields, String name) => fields.values
+    .cast<Map<String, dynamic>>()
+    .firstWhere((f) => f['name'] == name,
+        orElse: () => throw FormatException('Subfield references unknown field "$name"'))['num'] as int;
+
+/// Appends [subfields] (profile.js entries of field [fieldNum], in profile
+/// order) to `newMesg`, in the port's style for subfields with components. The
+/// field is looked up by number rather than through the port's `fieldIndex` /
+/// `subfieldIndex` counters, which appended fields don't advance; appending
+/// keeps the indices of the declared subfields, which `<Mesg><Field>Subfield`
+/// classes expose.
+String _subfieldsSource(int fieldNum, List<Map<String, dynamic>> subfields, Map<String, dynamic> fields) {
+  final b = StringBuffer();
+  for (final s in subfields) {
+    final name = s['name'] as String;
+    final v = '${name}Subfield';
+    final components = [for (final c in s['components'] as List) int.parse('$c')];
+    // With several components, profile.js scale/offset/units are per component.
+    final own = components.length < 2;
+    b.writeln('    final Subfield $v = Subfield("${_pascal(name)}", ${_baseType(s['baseType'])}, '
+        '${own ? _double(s['scale']) : '1.0'}, ${own ? _double(s['offset']) : '0.0'}, '
+        '"${own ? _scalar<String>(s['units'], '') : ''}",);');
+    // References name their field but already give the value as a number.
+    for (final ref in (s['map'] as List).cast<Map<String, dynamic>>()) {
+      b.writeln('    $v.addMap(${_fieldNum(fields, ref['name'] as String)}, ${ref['value'] as int});');
+    }
+    for (var i = 0; i < components.length; i++) {
+      // Like the port, a component accumulates when its target field does.
+      final target = fields['${components[i]}'] as Map<String, dynamic>;
+      b.writeln('    $v.addComponent(FieldComponent(${components[i]}, ${target['isAccumulated'] == true}, '
+          '${(s['bits'] as List)[i]}, ${_double((s['scale'] as List)[i])}, ${_double((s['offset'] as List)[i])}),); '
+          '// ${_snake(target['name'] as String)}');
+    }
+    b.writeln('    newMesg.getField($fieldNum)!.subfields.add($v);');
+  }
+  return b.toString();
+}
+
 String _creatorSource(String name, Map<String, dynamic> fields) {
   final b = StringBuffer()
     ..writeln('  static Mesg create${_pascal(name)}Mesg() {')
     ..writeln('    final Mesg newMesg = Mesg("${_pascal(name)}", MesgNum.${_ident(name)});');
   for (final fnum in fields.keys.map(int.parse)) {
-    b.writeln('    newMesg.setField(${_fieldCtor(fields['$fnum'] as Map)},);');
+    final f = fields['$fnum'] as Map<String, dynamic>;
+    b
+      ..writeln('    newMesg.setField(${_fieldCtor(f)},);')
+      ..write(_subfieldsSource(fnum, _subfields(f), fields));
   }
   b
     ..writeln('    return newMesg;')
