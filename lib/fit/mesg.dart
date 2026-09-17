@@ -581,20 +581,24 @@ class Mesg {
   }
 
   void setFieldValueByName(String name, Object? value, {int index = 0}) {
-    final Field? testField = getFieldByName(name);
-    final Subfield? subfield = testField?.getSubfieldByName(name);
+    // Look the name up without checking subfield references, and check them
+    // against this message below: a checked lookup returns no field rather
+    // than a subfield to reject, and never matches on the profile, which
+    // holds no values.
+    Field? field = getFieldByName(name, checkMesgSupportForSubFields: false);
+    final Field? source = field ??
+        Profile.getMesg(num)
+            .getFieldByName(name, checkMesgSupportForSubFields: false);
+    if (source == null) return;
+
+    // As in setFieldValue, only write through a subfield this message selects.
+    final Subfield? subfield = source.getSubfieldByName(name);
     if (subfield != null && !subfield.canMesgSupport(this)) return;
 
-    Field? field = getFieldByName(name, checkMesgSupportForSubFields: false);
     if (field == null) {
-      // Copy the profile's field into this message and write into the copy:
-      // the profile's Field is shared by every message of this type. The
-      // profile holds no values, so it can't select a subfield: resolve
-      // subfield names without that check, as for fields already set above.
-      final Field? profileField = Profile.getMesg(num)
-          .getFieldByName(name, checkMesgSupportForSubFields: false);
-      if (profileField == null) return;
-      field = Field.fromOther(profileField);
+      // Write into a copy: the profile's Field is shared by every message of
+      // this type.
+      field = Field.fromOther(source);
       setField(field);
     }
     field.setValueAtIndex(index, value, subfieldName: name);

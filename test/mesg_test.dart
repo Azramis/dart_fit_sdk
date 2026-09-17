@@ -22,5 +22,19 @@ void main() {
       expect(session.getTotalReps(), 30);
       expect(SessionMesg().getFieldValue(SessionMesg.fieldTotalCycles), isNull);
     });
+
+    test('only writes through a subfield this message selects', () {
+      // TotalReps is for HIIT or strength training, not running.
+      final absent = SessionMesg()
+        ..setFieldValueByName('Sport', Sport.running)
+        ..setFieldValueByName('TotalReps', 30);
+      expect(absent.getFieldValue(SessionMesg.fieldTotalCycles), isNull);
+
+      final present = SessionMesg()
+        ..setFieldValueByName('Sport', Sport.running)
+        ..setFieldValueByName('TotalCycles', 1200)
+        ..setFieldValueByName('TotalReps', 30);
+      expect(present.getTotalStrides(), 1200);
+    });
   });
 }
