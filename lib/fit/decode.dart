@@ -5,6 +5,7 @@ import 'developer_data_lookup.dart';
 import 'developer_field_description.dart';
 import 'profile/mesgs/developer_data_id_mesg.dart';
 import 'profile/mesgs/field_description_mesg.dart';
+import 'profile/mesgs/record_mesg.dart';
 import 'field.dart';
 import 'crc.dart';
 import 'fit_exception.dart';
@@ -53,14 +54,9 @@ class Decode {
     while (reader.position < reader.length - 2) {
       final int headerByte = reader.readByte();
 
-      if ((headerByte & Fit.mesgDefinitionMask) == Fit.mesgDefinitionMask) {
-        // Message Definition
-        reader.position--; // Back up to read full definition
-        final MesgDefinition mesgDef = MesgDefinition();
-        mesgDef.read(reader, lookup: _lookup);
-        _localMesgDefinitions[mesgDef.localMesgNum] = mesgDef;
-        onMesgDefinition?.call(mesgDef);
-      } else if ((headerByte & Fit.compressedHeaderMask) ==
+      // Compressed headers first, as in the C# SDK: on local messages 2 and 3
+      // they also have the definition bit set.
+      if ((headerByte & Fit.compressedHeaderMask) ==
           Fit.compressedHeaderMask) {
         // Compressed Timestamp Header
         final int timeOffset = headerByte & Fit.compressedTimeMask;
@@ -75,7 +71,8 @@ class Decode {
 
           // Add Timestamp Field
           final Mesg recordMesg = Profile.getMesg(MesgNum.record);
-          final Field? timestampProfileField = recordMesg.getFieldByName('timestamp');
+          final Field? timestampProfileField =
+              recordMesg.getField(RecordMesg.fieldTimestamp);
           if (timestampProfileField != null) {
             final Field timestampField = Field.fromOther(timestampProfileField);
             timestampField.setValue(_timestamp);
@@ -86,6 +83,14 @@ class Decode {
           _handleMetaData(newMesg);
           onMesg?.call(newMesg);
         }
+      } else if ((headerByte & Fit.mesgDefinitionMask) ==
+          Fit.mesgDefinitionMask) {
+        // Message Definition
+        reader.position--; // Back up to read full definition
+        final MesgDefinition mesgDef = MesgDefinition();
+        mesgDef.read(reader, lookup: _lookup);
+        _localMesgDefinitions[mesgDef.localMesgNum] = mesgDef;
+        onMesgDefinition?.call(mesgDef);
       } else {
         // Data Message
         final int localMesgNum = headerByte & Fit.localMesgNumMask;
@@ -94,7 +99,9 @@ class Decode {
           final Mesg newMesg = Mesg.fromDefinition(def);
           newMesg.read(reader, def);
 
-          final Field? timestampField = newMesg.getFieldByName('timestamp');
+          // The reference for compressed timestamp headers. Looked up by name,
+          // as in the C# SDK: Set and CoursePoint keep theirs outside field 253.
+          final Field? timestampField = newMesg.getFieldByName('Timestamp');
           if (timestampField != null) {
             final Object? val = timestampField.value;
             if (val is int) {
