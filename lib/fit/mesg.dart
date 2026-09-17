@@ -587,9 +587,15 @@ class Mesg {
 
     Field? field = getFieldByName(name, checkMesgSupportForSubFields: false);
     if (field == null) {
-      field = Profile.getMesg(num).getFieldByName(name);
-      if (field == null) return;
-      setField(Field.fromOther(field));
+      // Copy the profile's field into this message and write into the copy:
+      // the profile's Field is shared by every message of this type. The
+      // profile holds no values, so it can't select a subfield: resolve
+      // subfield names without that check, as for fields already set above.
+      final Field? profileField = Profile.getMesg(num)
+          .getFieldByName(name, checkMesgSupportForSubFields: false);
+      if (profileField == null) return;
+      field = Field.fromOther(profileField);
+      setField(field);
     }
     field.setValueAtIndex(index, value, subfieldName: name);
   }
