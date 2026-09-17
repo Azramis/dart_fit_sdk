@@ -136,22 +136,24 @@ void main() {
 
     test('Session.TotalCycles exposes the TotalReps and TotalPushes subfields',
         () {
-      // Added upstream after the original port. The updater appends them, so
-      // the port's subfields keep their SessionTotalCyclesSubfield indices.
+      // In Garmin's profile order (TotalReps first), which decides between
+      // overlapping subfields; SessionTotalCyclesSubfield follows it, as in
+      // Garmin's C# SDK.
       final totalCycles = catalog.messageByName('session')!.fieldByNum(10)!;
       expect(totalCycles.name, 'TotalCycles');
       expect(totalCycles.subfields.map((s) => s.name),
-          ['TotalStrides', 'TotalStrokes', 'TotalReps', 'TotalPushes']);
+          ['TotalReps', 'TotalStrides', 'TotalStrokes', 'TotalPushes']);
 
       List<(int, Object)> references(SubfieldInfo s) =>
           [for (final r in s.references) (r.fieldNum, r.value)];
-      final reps = totalCycles.subfields[2];
+      final reps = totalCycles.subfields[SessionTotalCyclesSubfield.TotalReps];
       expect(reps.units, 'reps');
       expect(references(reps), [
         (SessionMesg.fieldSubSport, SubSport.strengthTraining),
         (SessionMesg.fieldSport, Sport.hiit),
       ]);
-      final pushes = totalCycles.subfields[3];
+      final pushes =
+          totalCycles.subfields[SessionTotalCyclesSubfield.TotalPushes];
       expect(pushes.units, 'pushes');
       expect(references(pushes), [
         (SessionMesg.fieldSport, Sport.wheelchairPushRun),
@@ -161,9 +163,10 @@ void main() {
 
     test('decoded sessions resolve TotalCycles to TotalReps and TotalPushes',
         () {
-      Mesg roundTrip(int sport) {
+      Mesg roundTrip(int sport, [int subSport = SubSport.generic]) {
         final session = Mesg.fromMesgNum(MesgNum.session)
           ..setFieldValue(SessionMesg.fieldSport, sport)
+          ..setFieldValue(SessionMesg.fieldSubSport, subSport)
           ..setFieldValue(SessionMesg.fieldTotalCycles, 1200);
         final encoder = Encode()..open();
         encoder
@@ -184,9 +187,20 @@ void main() {
           'TotalReps');
       expect(reps.getFieldValueByName('TotalReps'), 1200);
 
-      // The port's subfields still resolve through their generated getters.
+      // Every subfield resolves through its typed getter.
       expect(SessionMesg.fromMesg(roundTrip(Sport.running)).getTotalStrides(),
           1200);
+      expect(SessionMesg.fromMesg(roundTrip(Sport.cycling)).getTotalStrokes(),
+          1200);
+      expect(SessionMesg.fromMesg(reps).getTotalReps(), 1200);
+      expect(SessionMesg.fromMesg(pushes).getTotalPushes(), 1200);
+
+      // When references overlap, profile order wins as in Garmin's SDKs: a
+      // running session with sub-sport strength training counts reps.
+      expect(
+          roundTrip(Sport.running, SubSport.strengthTraining)
+              .getActiveSubFieldName(SessionMesg.fieldTotalCycles),
+          'TotalReps');
     });
 
     test('components expose their target field and bit width', () {
