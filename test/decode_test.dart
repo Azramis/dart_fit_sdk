@@ -51,6 +51,23 @@ void main() {
       final record = _decode(fit.bytes()).last;
       expect(record.getFieldValue(RecordMesg.fieldTimestamp), reference + 2);
     });
+
+    test('are not mistaken for definitions on local messages 2 and 3', () {
+      // Their header bytes (0xC0-0xFF) also have the definition bit set.
+      final fit = _FitFile()
+        ..define(0, MesgNum.record, [(RecordMesg.fieldTimestamp, Fit.uint32)])
+        ..mesg(0, _uint32(reference))
+        ..define(2, MesgNum.record, [(RecordMesg.fieldHeartRate, Fit.uint8)])
+        ..define(3, MesgNum.record, [(RecordMesg.fieldCadence, Fit.uint8)])
+        ..compressed(2, 29, [120])
+        ..compressed(3, 30, [90]);
+
+      final records = _decode(fit.bytes()).skip(1);
+      expect(records.map((r) => r.getFieldValue(RecordMesg.fieldTimestamp)),
+          [reference + 1, reference + 2]);
+      expect(records.first.getFieldValue(RecordMesg.fieldHeartRate), 120);
+      expect(records.last.getFieldValue(RecordMesg.fieldCadence), 90);
+    });
   });
 }
 
