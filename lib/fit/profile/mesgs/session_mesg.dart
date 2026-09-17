@@ -5,8 +5,10 @@ import '../types/mesg_num.dart';
 import '../types/types.dart';
 
 class SessionTotalCyclesSubfield {
-  static const int TotalStrides = 0;
-  static const int TotalStrokes = 1;
+  static const int TotalReps = 0;
+  static const int TotalStrides = 1;
+  static const int TotalStrokes = 2;
+  static const int TotalPushes = 3;
   static const int active = Fit.subfieldIndexActiveSubfield;
   static const int mainField = Fit.subfieldIndexMainField;
 }
@@ -312,6 +314,15 @@ class SessionMesg extends Mesg {
     return val as int?;
   }
 
+  int? getTotalReps() {
+    final val = getFieldValue(
+      10,
+      index: 0,
+      subfieldInfo: SessionTotalCyclesSubfield.TotalReps,
+    );
+    return val as int?;
+  }
+
   int? getTotalStrides() {
     final val = getFieldValue(
       10,
@@ -326,6 +337,15 @@ class SessionMesg extends Mesg {
       10,
       index: 0,
       subfieldInfo: SessionTotalCyclesSubfield.TotalStrokes,
+    );
+    return val as int?;
+  }
+
+  int? getTotalPushes() {
+    final val = getFieldValue(
+      10,
+      index: 0,
+      subfieldInfo: SessionTotalCyclesSubfield.TotalPushes,
     );
     return val as int?;
   }

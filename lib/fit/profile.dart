@@ -3313,6 +3313,12 @@ class Profile {
     );
     subfieldIndex = 0;
     totalCyclesField.subfields.add(
+      Subfield("TotalReps", 134, 1.0, 0.0, "reps"),
+    );
+    totalCyclesField.subfields[subfieldIndex].addMap(6, 20);
+    totalCyclesField.subfields[subfieldIndex].addMap(5, 62);
+    subfieldIndex++;
+    totalCyclesField.subfields.add(
       Subfield("TotalStrides", 134, 1.0, 0.0, "strides"),
     );
     totalCyclesField.subfields[subfieldIndex].addMap(5, 1);
@@ -3325,6 +3331,12 @@ class Profile {
     totalCyclesField.subfields[subfieldIndex].addMap(5, 5);
     totalCyclesField.subfields[subfieldIndex].addMap(5, 15);
     totalCyclesField.subfields[subfieldIndex].addMap(5, 37);
+    subfieldIndex++;
+    totalCyclesField.subfields.add(
+      Subfield("TotalPushes", 134, 1.0, 0.0, "pushes"),
+    );
+    totalCyclesField.subfields[subfieldIndex].addMap(5, 66);
+    totalCyclesField.subfields[subfieldIndex].addMap(5, 65);
     subfieldIndex++;
     newMesg.setField(totalCyclesField);
     fieldIndex++;
@@ -4798,26 +4810,6 @@ class Profile {
       Field("MetabolicCalories", 196, 132, 1.0, 0.0, "kcal", false,
           ProfileType.uint16),
     );
-    final Subfield totalRepsSubfield = Subfield(
-      "TotalReps",
-      134,
-      1.0,
-      0.0,
-      "reps",
-    );
-    totalRepsSubfield.addMap(6, 20);
-    totalRepsSubfield.addMap(5, 62);
-    newMesg.getField(10)!.subfields.add(totalRepsSubfield);
-    final Subfield totalPushesSubfield = Subfield(
-      "TotalPushes",
-      134,
-      1.0,
-      0.0,
-      "pushes",
-    );
-    totalPushesSubfield.addMap(5, 66);
-    totalPushesSubfield.addMap(5, 65);
-    newMesg.getField(10)!.subfields.add(totalPushesSubfield);
     return newMesg;
   }
 
