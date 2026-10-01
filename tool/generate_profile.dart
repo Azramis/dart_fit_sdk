@@ -42,6 +42,20 @@ const _reserved = {
 
 const _classNameOverrides = {'dateTime': 'FitDateTime'};
 
+/// Identifiers the original Dart port gave to profile names starting with a
+/// digit: a `v` prefix where [_ident] uses `n` (`4iiiis` -> `v4iiiis`). The
+/// updater never renames a constant, so the list is closed. No rule can replace
+/// it: the Vermin grades are really named `v0`...`v17`.
+const _portVPrefixed = {
+  'v4iiiis', 'v1partcarbon', // manufacturer
+  'v3WayCalfRaise', 'v3WayWeightedCalfRaise', 'v3WaySingleLegCalfRaise',
+  'v3WayWeightedSingleLegCalfRaise', // calfRaiseExerciseName
+  'v45DegreeCableExternalRotation', // lateralRaiseExerciseName
+  'v45DegreePlank', 'v90DegreeStaticHold', // plankExerciseName
+  'v30DegreeLatPulldown', // pullUpExerciseName
+  'v90DegreeCableExternalRotation', // shoulderStabilityExerciseName
+};
+
 String _jsToJson(String s) {
   s = s.substring(s.indexOf('{'), s.lastIndexOf('}') + 1);
   s = s.replaceAll(RegExp(r'//[^\n]*'), '');
@@ -88,10 +102,13 @@ String _ident(String name) {
 
 /// Reverses [_ident] so profile names round-trip verbatim: its reserved-word
 /// suffix (`new_` -> `new`) and its numeric prefix (`n510a` -> `510a`, a
-/// climbing grade). No profile name starts with `n` and a digit. The port's
-/// own prefix, `v` (`v4iiiis`), stays: the Vermin grades are named `v0`...
+/// climbing grade). No profile name starts with `n` and a digit. Also drops the
+/// port's own prefix, but only on the names of [_portVPrefixed]
+/// (`v4iiiis` -> `4iiiis`): other `v` names are verbatim (Vermin's `v0`...).
 String _unident(String n) {
-  if (RegExp(r'^n[0-9]').hasMatch(n)) return n.substring(1);
+  if (_portVPrefixed.contains(n) || RegExp(r'^n[0-9]').hasMatch(n)) {
+    return n.substring(1);
+  }
   return n.endsWith('_') && _reserved.contains(n.substring(0, n.length - 1))
       ? n.substring(0, n.length - 1)
       : n;
@@ -361,7 +378,8 @@ void _generateEnumType() {
 
     final body = StringBuffer();
     for (final r in rows) {
-      // Emit the verbatim profile name, undoing _ident's reserved-word suffix.
+      // Emit the verbatim profile name, undoing the identifier's suffix or
+      // prefix (see _unident).
       body.writeln('    EnumValueInfo(${_dartStr(_unident(r.name))}, ${r.value}),');
     }
     types.add((ident: ident, name: camel, body: body.toString()));

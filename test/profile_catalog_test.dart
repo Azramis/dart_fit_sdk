@@ -118,6 +118,31 @@ void main() {
       expect(battery.values.map((v) => v.name), isNot(contains('new_')));
     });
 
+    test('value names the original port prefixed with v are verbatim', () {
+      // The port's Dart constants keep their v prefix (Manufacturer.v4iiiis),
+      // but the profile names start with the digit.
+      expect(Manufacturer.v4iiiis, 51);
+      final manufacturer = catalog.enumType(ProfileType.manufacturer)!;
+      expect(manufacturer.nameOf(51), '4iiiis');
+      expect(manufacturer.nameOf(92), '1partcarbon');
+      expect(catalog.enumType(ProfileType.calfRaiseExerciseName)!.nameOf(0),
+          '3WayCalfRaise');
+      expect(catalog.enumType(ProfileType.plankExerciseName)!.nameOf(2),
+          '90DegreeStaticHold');
+      // Vermin grades are really named v0...v17: they keep their v.
+      final vermin = catalog.enumType(ProfileType.verminGradingScale)!;
+      expect(VerminGradingScale.v0, 1);
+      expect(vermin.nameOf(1), 'v0');
+      expect(vermin.nameOf(18), 'v17');
+      // Nowhere else does a profile name start with v and a digit.
+      final vDigit = RegExp(r'^v[0-9]');
+      for (final e in catalog.enumTypes) {
+        if (e.type == ProfileType.verminGradingScale) continue;
+        expect(e.values.map((v) => v.name).where(vDigit.hasMatch), isEmpty,
+            reason: e.name);
+      }
+    });
+
     test('subfield-only types are enumerations, with verbatim names', () {
       // The climbing grade scales only type subfields of ClimbGradeValue.
       final yds = catalog.enumType(ProfileType.ydsGradingScale)!;
