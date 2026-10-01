@@ -117,6 +117,32 @@ void main() {
       expect(battery.nameOf(1), 'new');
       expect(battery.values.map((v) => v.name), isNot(contains('new_')));
     });
+
+    test('subfield-only types are enumerations, with verbatim names', () {
+      // The climbing grade scales only type subfields of ClimbGradeValue.
+      final yds = catalog.enumType(ProfileType.ydsGradingScale)!;
+      expect(yds.name, 'ydsGradingScale');
+      expect(yds.baseType, 'enum');
+      // The Dart identifier is n510a: the profile name starts with a digit.
+      expect(YdsGradingScale.n510a, 10);
+      expect(yds.valueOf(10)!.name, '510a');
+      expect(yds.valueOf(10)!.doc, '5.10a');
+      // Vermin grades are really named v0, v1...
+      expect(catalog.enumType(ProfileType.verminGradingScale)!.nameOf(1), 'v0');
+      for (final type in [
+        ProfileType.uiaaGradingScale,
+        ProfileType.frenchGradingScale,
+        ProfileType.britishAdjectivalGradingScale,
+        ProfileType.britishTechnicalGradingScale,
+        ProfileType.ewbankGradingScale,
+        ProfileType.brazilianGradingScale,
+        ProfileType.saxonGradingScale,
+        ProfileType.fontGradingScale,
+        ProfileType.dankyuGradingScale,
+      ]) {
+        expect(catalog.enumType(type), isNotNull, reason: '$type');
+      }
+    });
   });
 
   group('subfields and components', () {

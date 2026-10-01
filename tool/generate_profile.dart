@@ -85,13 +85,16 @@ String _ident(String name) {
   return n;
 }
 
-/// Reverses [_ident]'s reserved-word suffix so profile names round-trip
-/// verbatim (e.g. `new_` -> `new`). No profile value name starts with a digit,
-/// so the numeric-prefix branch never needs reversing.
-String _unident(String n) =>
-    n.endsWith('_') && _reserved.contains(n.substring(0, n.length - 1))
-        ? n.substring(0, n.length - 1)
-        : n;
+/// Reverses [_ident] so profile names round-trip verbatim: its reserved-word
+/// suffix (`new_` -> `new`) and its numeric prefix (`n510a` -> `510a`, a
+/// climbing grade). No profile name starts with `n` and a digit. The port's
+/// own prefix, `v` (`v4iiiis`), stays: the Vermin grades are named `v0`...
+String _unident(String n) {
+  if (RegExp(r'^n[0-9]').hasMatch(n)) return n.substring(1);
+  return n.endsWith('_') && _reserved.contains(n.substring(0, n.length - 1))
+      ? n.substring(0, n.length - 1)
+      : n;
+}
 
 int _baseType(dynamic n) => _baseTypeCode[n] ?? 0;
 T _scalar<T>(dynamic v, T fb) =>
@@ -1080,15 +1083,20 @@ void _additiveProfileDart(Map<String, dynamic> messages) {
   final file = File('lib/fit/profile.dart');
   var content = file.readAsStringSync();
 
-  // 1. New ProfileType enum entries for any referenced type not present.
+  // 1. New ProfileType enum entries for any referenced type not present,
+  // subfield types included: some are only used there (e.g. the climbing
+  // grade scales), and the enum catalog is keyed by ProfileType.
   final enumNames = RegExp(r'enum ProfileType \{([^}]*)\}')
       .firstMatch(content)!
       .group(1)!;
   final present = RegExp(r'\b(\w+)\b').allMatches(enumNames).map((m) => m.group(1)!).toSet();
   final referenced = <String>{};
   void ref(Map<String, dynamic> fields) {
-    for (final f in fields.values) {
-      referenced.add(_ident((f as Map)['type'] as String));
+    for (final f in fields.values.cast<Map<String, dynamic>>()) {
+      referenced.add(_ident(f['type'] as String));
+      for (final s in _subfields(f)) {
+        referenced.add(_ident(s['type'] as String));
+      }
     }
   }
 

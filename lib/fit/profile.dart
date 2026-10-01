@@ -226,9 +226,20 @@ enum ProfileType {
   napPeriodFeedback,
   napSource,
   apneaDiscipline,
+  brazilianGradingScale,
+  britishAdjectivalGradingScale,
+  britishTechnicalGradingScale,
   climbGradingScale,
+  dankyuGradingScale,
   diveSectionType,
+  ewbankGradingScale,
+  fontGradingScale,
+  frenchGradingScale,
+  saxonGradingScale,
   splitStatus,
+  uiaaGradingScale,
+  verminGradingScale,
+  ydsGradingScale,
 }
 
 class Profile {

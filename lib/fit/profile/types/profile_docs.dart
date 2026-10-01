@@ -1073,6 +1073,9 @@ const Map<ProfileType, String> profileTypeBaseTypes = {
   ProfileType.bleDeviceType: 'uint8',
   ProfileType.bodyLocation: 'enum',
   ProfileType.bpStatus: 'enum',
+  ProfileType.brazilianGradingScale: 'enum',
+  ProfileType.britishAdjectivalGradingScale: 'enum',
+  ProfileType.britishTechnicalGradingScale: 'enum',
   ProfileType.calfRaiseExerciseName: 'uint16',
   ProfileType.cameraEventType: 'enum',
   ProfileType.cameraOrientationType: 'enum',
@@ -1090,6 +1093,7 @@ const Map<ProfileType, String> profileTypeBaseTypes = {
   ProfileType.coursePoint: 'enum',
   ProfileType.crunchExerciseName: 'uint16',
   ProfileType.curlExerciseName: 'uint16',
+  ProfileType.dankyuGradingScale: 'enum',
   ProfileType.dateMode: 'enum',
   ProfileType.dateTime: 'uint32',
   ProfileType.dayOfWeek: 'enum',
@@ -1110,6 +1114,7 @@ const Map<ProfileType, String> profileTypeBaseTypes = {
   ProfileType.ellipticalExerciseName: 'uint16',
   ProfileType.event: 'enum',
   ProfileType.eventType: 'enum',
+  ProfileType.ewbankGradingScale: 'enum',
   ProfileType.exdDataUnits: 'enum',
   ProfileType.exdDescriptors: 'enum',
   ProfileType.exdDisplayType: 'enum',
@@ -1124,6 +1129,8 @@ const Map<ProfileType, String> profileTypeBaseTypes = {
   ProfileType.fitnessEquipmentState: 'enum',
   ProfileType.floorClimbExerciseName: 'uint16',
   ProfileType.flyeExerciseName: 'uint16',
+  ProfileType.fontGradingScale: 'enum',
+  ProfileType.frenchGradingScale: 'enum',
   ProfileType.garminProduct: 'uint16',
   ProfileType.gasConsumptionRateType: 'enum',
   ProfileType.gender: 'enum',
@@ -1184,6 +1191,7 @@ const Map<ProfileType, String> profileTypeBaseTypes = {
   ProfileType.runExerciseName: 'uint16',
   ProfileType.runIndoorExerciseName: 'uint16',
   ProfileType.sandbagExerciseName: 'uint16',
+  ProfileType.saxonGradingScale: 'enum',
   ProfileType.schedule: 'enum',
   ProfileType.segmentDeleteStatus: 'enum',
   ProfileType.segmentLapStatus: 'enum',
@@ -1233,7 +1241,9 @@ const Map<ProfileType, String> profileTypeBaseTypes = {
   ProfileType.totalBodyExerciseName: 'uint16',
   ProfileType.tricepsExtensionExerciseName: 'uint16',
   ProfileType.turnType: 'enum',
+  ProfileType.uiaaGradingScale: 'enum',
   ProfileType.userLocalId: 'uint16',
+  ProfileType.verminGradingScale: 'enum',
   ProfileType.warmUpExerciseName: 'uint16',
   ProfileType.watchfaceMode: 'enum',
   ProfileType.waterType: 'enum',
@@ -1248,6 +1258,7 @@ const Map<ProfileType, String> profileTypeBaseTypes = {
   ProfileType.workoutEquipment: 'enum',
   ProfileType.workoutHr: 'uint32',
   ProfileType.workoutPower: 'uint32',
+  ProfileType.ydsGradingScale: 'enum',
 };
 
 /// Comment on each documented profile type, by [ProfileType].
@@ -1387,6 +1398,201 @@ const Map<ProfileType, Map<int, Map<String, String>>> profileValueDocs = {
       'right_forearm_extensors': 'Right posterior forearm',
     },
   },
+  ProfileType.brazilianGradingScale: {
+    0: {
+      '2': '2',
+    },
+    1: {
+      '3': '3',
+    },
+    2: {
+      '3c': '3c',
+    },
+    3: {
+      '4': '4',
+    },
+    4: {
+      '5a': '5a',
+    },
+    5: {
+      '5b': '5b',
+    },
+    6: {
+      '5c': '5c',
+    },
+    7: {
+      '6a': '6a',
+    },
+    8: {
+      '6b': '6b',
+    },
+    9: {
+      '6c': '6c',
+    },
+    10: {
+      '7a': '7a',
+    },
+    11: {
+      '7b': '7b',
+    },
+    12: {
+      '7c': '7c',
+    },
+    13: {
+      '8a': '8a',
+    },
+    14: {
+      '8b': '8b',
+    },
+    15: {
+      '8c': '8c',
+    },
+    16: {
+      '9a': '9a',
+    },
+    17: {
+      '9b': '9b',
+    },
+    18: {
+      '9c': '9c',
+    },
+    19: {
+      '10a': '10a',
+    },
+    20: {
+      '10b': '10b',
+    },
+    21: {
+      '10c': '10c',
+    },
+    22: {
+      '11a': '11a',
+    },
+    23: {
+      '11b': '11b',
+    },
+    24: {
+      '11c': '11c',
+    },
+    25: {
+      '12a': '12a',
+    },
+    26: {
+      '12b': '12b',
+    },
+  },
+  ProfileType.britishAdjectivalGradingScale: {
+    0: {
+      'M': 'M',
+    },
+    1: {
+      'D': 'D',
+    },
+    2: {
+      'HD': 'HD',
+    },
+    3: {
+      'VD': 'VD',
+    },
+    4: {
+      'MS': 'MS',
+    },
+    5: {
+      'S': 'S',
+    },
+    6: {
+      'HS': 'HS',
+    },
+    7: {
+      'MVS': 'MVS',
+    },
+    8: {
+      'VS': 'VS',
+    },
+    9: {
+      'HVS': 'HVS',
+    },
+    10: {
+      'E1': 'E1',
+    },
+    11: {
+      'E2': 'E2',
+    },
+    12: {
+      'E3': 'E3',
+    },
+    13: {
+      'E4': 'E4',
+    },
+    14: {
+      'E5': 'E5',
+    },
+    15: {
+      'E6': 'E6',
+    },
+    16: {
+      'E7': 'E7',
+    },
+    17: {
+      'E8': 'E8',
+    },
+    18: {
+      'E9': 'E9',
+    },
+    19: {
+      'E10': 'E10',
+    },
+    20: {
+      'E11': 'E11',
+    },
+  },
+  ProfileType.britishTechnicalGradingScale: {
+    0: {
+      '1': '1',
+    },
+    1: {
+      '2': '2',
+    },
+    2: {
+      '3': '3',
+    },
+    3: {
+      '4a': '4a',
+    },
+    4: {
+      '4b': '4b',
+    },
+    5: {
+      '4c': '4c',
+    },
+    6: {
+      '5a': '5a',
+    },
+    7: {
+      '5b': '5b',
+    },
+    8: {
+      '5c': '5c',
+    },
+    9: {
+      '6a': '6a',
+    },
+    10: {
+      '6b': '6b',
+    },
+    11: {
+      '6c': '6c',
+    },
+    12: {
+      '7a': '7a',
+    },
+    13: {
+      '7b': '7b',
+    },
+    14: {
+      '7c': '7c',
+    },
+  },
   ProfileType.cameraEventType: {
     0: {
       'video_start': 'Start of video recording',
@@ -1500,6 +1706,44 @@ const Map<ProfileType, Map<int, Map<String, String>>> profileValueDocs = {
   ProfileType.coursePoint: {
     30: {
       'general_distance': 'Used with UpAhead',
+    },
+  },
+  ProfileType.dankyuGradingScale: {
+    0: {
+      '7_kyuu': '7 kyuu',
+    },
+    1: {
+      '6_kyuu': '6 kyuu',
+    },
+    2: {
+      '5_kyuu': '5 kyuu',
+    },
+    3: {
+      '4_kyuu': '4 kyuu',
+    },
+    4: {
+      '3_kyuu': '3 kyuu',
+    },
+    5: {
+      '2_kyuu': '2 kyuu',
+    },
+    6: {
+      '1_kyuu': '1 kyuu',
+    },
+    7: {
+      '1_dan': '1 dan',
+    },
+    8: {
+      '2_dan': '2 dan',
+    },
+    9: {
+      '3_dan': '3 dan',
+    },
+    10: {
+      '4_dan': '4 dan',
+    },
+    11: {
+      '5_dan': '5 dan',
     },
   },
   ProfileType.deviceIndex: {
@@ -1825,6 +2069,113 @@ const Map<ProfileType, Map<int, Map<String, String>>> profileValueDocs = {
       'tank_pod_disconnected': 'marker - tank pod has lost connection',
     },
   },
+  ProfileType.ewbankGradingScale: {
+    0: {
+      '4': '4',
+    },
+    1: {
+      '5': '5',
+    },
+    2: {
+      '6': '6',
+    },
+    3: {
+      '7': '7',
+    },
+    4: {
+      '8': '8',
+    },
+    5: {
+      '9': '9',
+    },
+    6: {
+      '10': '10',
+    },
+    7: {
+      '11': '11',
+    },
+    8: {
+      '12': '12',
+    },
+    9: {
+      '13': '13',
+    },
+    10: {
+      '14': '14',
+    },
+    11: {
+      '15': '15',
+    },
+    12: {
+      '16': '16',
+    },
+    13: {
+      '17': '17',
+    },
+    14: {
+      '18': '18',
+    },
+    15: {
+      '19': '19',
+    },
+    16: {
+      '20': '20',
+    },
+    17: {
+      '21': '21',
+    },
+    18: {
+      '22': '22',
+    },
+    19: {
+      '23': '23',
+    },
+    20: {
+      '24': '24',
+    },
+    21: {
+      '25': '25',
+    },
+    22: {
+      '26': '26',
+    },
+    23: {
+      '27': '27',
+    },
+    24: {
+      '28': '28',
+    },
+    25: {
+      '29': '29',
+    },
+    26: {
+      '30': '30',
+    },
+    27: {
+      '31': '31',
+    },
+    28: {
+      '32': '32',
+    },
+    29: {
+      '33': '33',
+    },
+    30: {
+      '34': '34',
+    },
+    31: {
+      '35': '35',
+    },
+    32: {
+      '36': '36',
+    },
+    33: {
+      '37': '37',
+    },
+    34: {
+      '38': '38',
+    },
+  },
   ProfileType.exdDescriptors: {
     65: {
       'gears': 'Combined gear information',
@@ -1908,6 +2259,178 @@ const Map<ProfileType, Map<int, Map<String, String>>> profileValueDocs = {
   ProfileType.fitnessEquipmentState: {
     3: {
       'unknown': 'lost connection to fitness equipment',
+    },
+  },
+  ProfileType.fontGradingScale: {
+    0: {
+      '1': '1',
+    },
+    1: {
+      '2': '2',
+    },
+    2: {
+      '3': '3',
+    },
+    3: {
+      '4': '4',
+    },
+    4: {
+      '4_plus': '4+',
+    },
+    5: {
+      '5': '5',
+    },
+    6: {
+      '5_plus': '5+',
+    },
+    7: {
+      '6a': '6A',
+    },
+    8: {
+      '6a_plus': '6A+',
+    },
+    9: {
+      '6b': '6B',
+    },
+    10: {
+      '6b_plus': '6B+',
+    },
+    11: {
+      '6c': '6C',
+    },
+    12: {
+      '6c_plus': '6C+',
+    },
+    13: {
+      '7a': '7A',
+    },
+    14: {
+      '7a_plus': '7A+',
+    },
+    15: {
+      '7b': '7B',
+    },
+    16: {
+      '7b_plus': '7B+',
+    },
+    17: {
+      '7c': '7C',
+    },
+    18: {
+      '7c_plus': '7C+',
+    },
+    19: {
+      '8a': '8A',
+    },
+    20: {
+      '8a_plus': '8A+',
+    },
+    21: {
+      '8b': '8B',
+    },
+    22: {
+      '8b_plus': '8B+',
+    },
+    23: {
+      '8c': '8C',
+    },
+    24: {
+      '8c_plus': '8C+',
+    },
+    25: {
+      '9a': '9A',
+    },
+  },
+  ProfileType.frenchGradingScale: {
+    0: {
+      '1': '1',
+    },
+    1: {
+      '2': '2',
+    },
+    2: {
+      '3': '3',
+    },
+    3: {
+      '4a': '4a',
+    },
+    4: {
+      '4b': '4b',
+    },
+    5: {
+      '4c': '4c',
+    },
+    6: {
+      '5a': '5a',
+    },
+    7: {
+      '5b': '5b',
+    },
+    8: {
+      '5c': '5c',
+    },
+    9: {
+      '6a': '6a',
+    },
+    10: {
+      '6a_plus': '6a+',
+    },
+    11: {
+      '6b': '6b',
+    },
+    12: {
+      '6b_plus': '6b+',
+    },
+    13: {
+      '6c': '6c',
+    },
+    14: {
+      '6c_plus': '6c+',
+    },
+    15: {
+      '7a': '7a',
+    },
+    16: {
+      '7a_plus': '7a+',
+    },
+    17: {
+      '7b': '7b',
+    },
+    18: {
+      '7b_plus': '7b+',
+    },
+    19: {
+      '7c': '7c',
+    },
+    20: {
+      '7c_plus': '7c+',
+    },
+    21: {
+      '8a': '8a',
+    },
+    22: {
+      '8a_plus': '8a+',
+    },
+    23: {
+      '8b': '8b',
+    },
+    24: {
+      '8b_plus': '8b+',
+    },
+    25: {
+      '8c': '8c',
+    },
+    26: {
+      '8c_plus': '8c+',
+    },
+    27: {
+      '9a': '9a',
+    },
+    28: {
+      '9a_plus': '9a+',
+    },
+    29: {
+      '9b': '9b',
     },
   },
   ProfileType.garminProduct: {
@@ -2224,6 +2747,80 @@ const Map<ProfileType, Map<int, Map<String, String>>> profileValueDocs = {
     },
     5: {
       'other': 'Other projectile type',
+    },
+  },
+  ProfileType.saxonGradingScale: {
+    0: {
+      'I': 'I',
+    },
+    1: {
+      'II': 'II',
+    },
+    2: {
+      'III': 'III',
+    },
+    3: {
+      'IV': 'IV',
+    },
+    4: {
+      'V': 'V',
+    },
+    5: {
+      'VI': 'VI',
+    },
+    6: {
+      'VII_a': 'VIIa',
+    },
+    7: {
+      'VII_b': 'VIIb',
+    },
+    8: {
+      'VII_c': 'VIIc',
+    },
+    9: {
+      'VIII_a': 'VIIIa',
+    },
+    10: {
+      'VIII_b': 'VIIIb',
+    },
+    11: {
+      'VIII_c': 'VIIIc',
+    },
+    12: {
+      'IX_a': 'IXa',
+    },
+    13: {
+      'IX_b': 'IXb',
+    },
+    14: {
+      'IX_c': 'IXc',
+    },
+    15: {
+      'X_a': 'Xa',
+    },
+    16: {
+      'X_b': 'Xb',
+    },
+    17: {
+      'X_c': 'Xc',
+    },
+    18: {
+      'XI_a': 'XIa',
+    },
+    19: {
+      'XI_b': 'XIb',
+    },
+    20: {
+      'XI_c': 'XIc',
+    },
+    21: {
+      'XII_a': 'XIIa',
+    },
+    22: {
+      'XII_b': 'XIIb',
+    },
+    23: {
+      'XII_c': 'XIIc',
     },
   },
   ProfileType.sensorType: {
@@ -2636,6 +3233,151 @@ const Map<ProfileType, Map<int, Map<String, String>>> profileValueDocs = {
       'zhl_16c': 'Buhlmann\'s decompression algorithm, version C',
     },
   },
+  ProfileType.uiaaGradingScale: {
+    0: {
+      'I': 'I',
+    },
+    1: {
+      'II': 'II',
+    },
+    2: {
+      'III': 'III',
+    },
+    3: {
+      'IV_minus': 'IV-',
+    },
+    4: {
+      'IV': 'IV',
+    },
+    5: {
+      'IV_plus': 'IV+',
+    },
+    6: {
+      'V_minus': 'V-',
+    },
+    7: {
+      'V': 'V',
+    },
+    8: {
+      'V_plus': 'V+',
+    },
+    9: {
+      'VI_minus': 'VI-',
+    },
+    10: {
+      'VI': 'VI',
+    },
+    11: {
+      'VI_plus': 'VI+',
+    },
+    12: {
+      'VII_minus': 'VII-',
+    },
+    13: {
+      'VII': 'VII',
+    },
+    14: {
+      'VII_plus': 'VII+',
+    },
+    15: {
+      'VIII_minus': 'VIII-',
+    },
+    16: {
+      'VIII': 'VIII',
+    },
+    17: {
+      'VIII_plus': 'VIII+',
+    },
+    18: {
+      'IX_minus': 'IX-',
+    },
+    19: {
+      'IX': 'IX',
+    },
+    20: {
+      'IX_plus': 'IX+',
+    },
+    21: {
+      'X_minus': 'X-',
+    },
+    22: {
+      'X': 'X',
+    },
+    23: {
+      'X_plus': 'X+',
+    },
+    24: {
+      'XI_minus': 'XI-',
+    },
+    25: {
+      'XI': 'XI',
+    },
+    26: {
+      'XI_plus': 'XI+',
+    },
+    27: {
+      'XII_minus': 'XII-',
+    },
+  },
+  ProfileType.verminGradingScale: {
+    0: {
+      'vb': 'VB',
+    },
+    1: {
+      'v0': 'V0',
+    },
+    2: {
+      'v1': 'V1',
+    },
+    3: {
+      'v2': 'V2',
+    },
+    4: {
+      'v3': 'V3',
+    },
+    5: {
+      'v4': 'V4',
+    },
+    6: {
+      'v5': 'V5',
+    },
+    7: {
+      'v6': 'V6',
+    },
+    8: {
+      'v7': 'V7',
+    },
+    9: {
+      'v8': 'V8',
+    },
+    10: {
+      'v9': 'V9',
+    },
+    11: {
+      'v10': 'V10',
+    },
+    12: {
+      'v11': 'V11',
+    },
+    13: {
+      'v12': 'V12',
+    },
+    14: {
+      'v13': 'V13',
+    },
+    15: {
+      'v14': 'V14',
+    },
+    16: {
+      'v15': 'V15',
+    },
+    17: {
+      'v16': 'V16',
+    },
+    18: {
+      'v17': 'V17',
+    },
+  },
   ProfileType.warmUpExerciseName: {
     16: {
       'scorpion': 'Deprecated do not use',
@@ -2674,6 +3416,215 @@ const Map<ProfileType, Map<int, Map<String, String>>> profileValueDocs = {
     },
     8192: {
       'resistance': 'Resistance source required for workout step.',
+    },
+  },
+  ProfileType.ydsGradingScale: {
+    0: {
+      '5_1': '5.1',
+    },
+    1: {
+      '5_2': '5.2',
+    },
+    2: {
+      '5_3': '5.3',
+    },
+    3: {
+      '5_4': '5.4',
+    },
+    4: {
+      '5_5': '5.5',
+    },
+    5: {
+      '5_6': '5.6',
+    },
+    6: {
+      '5_7': '5.7',
+    },
+    7: {
+      '5_8': '5.8',
+    },
+    8: {
+      '5_9': '5.9',
+    },
+    9: {
+      '5_10': '5.1',
+    },
+    10: {
+      '5_10a': '5.10a',
+    },
+    11: {
+      '5_10b': '5.10b',
+    },
+    12: {
+      '5_10c': '5.10c',
+    },
+    13: {
+      '5_10d': '5.10d',
+    },
+    14: {
+      '5_11': '5.11',
+    },
+    15: {
+      '5_11a': '5.11a',
+    },
+    16: {
+      '5_11b': '5.11b',
+    },
+    17: {
+      '5_11c': '5.11c',
+    },
+    18: {
+      '5_11d': '5.11d',
+    },
+    19: {
+      '5_12': '5.12',
+    },
+    20: {
+      '5_12a': '5.12a',
+    },
+    21: {
+      '5_12b': '5.12b',
+    },
+    22: {
+      '5_12c': '5.12c',
+    },
+    23: {
+      '5_12d': '5.12d',
+    },
+    24: {
+      '5_13': '5.13',
+    },
+    25: {
+      '5_13a': '5.13a',
+    },
+    26: {
+      '5_13b': '5.13b',
+    },
+    27: {
+      '5_13c': '5.13c',
+    },
+    28: {
+      '5_13d': '5.13d',
+    },
+    29: {
+      '5_14': '5.14',
+    },
+    30: {
+      '5_14a': '5.14a',
+    },
+    31: {
+      '5_14b': '5.14b',
+    },
+    32: {
+      '5_14c': '5.14c',
+    },
+    33: {
+      '5_14d': '5.14d',
+    },
+    34: {
+      '5_15': '5.15',
+    },
+    35: {
+      '5_15a': '5.15a',
+    },
+    36: {
+      '5_15b': '5.15b',
+    },
+    37: {
+      '5_15c': '5.15c',
+    },
+    38: {
+      '5_15d': '5.15d',
+    },
+    39: {
+      '5_1_minus': '5.1-',
+    },
+    40: {
+      '5_1_plus': '5.1+',
+    },
+    41: {
+      '5_2_minus': '5.2-',
+    },
+    42: {
+      '5_2_plus': '5.2+',
+    },
+    43: {
+      '5_3_minus': '5.3-',
+    },
+    44: {
+      '5_3_plus': '5.3+',
+    },
+    45: {
+      '5_4_minus': '5.4-',
+    },
+    46: {
+      '5_4_plus': '5.4+',
+    },
+    47: {
+      '5_5_minus': '5.5-',
+    },
+    48: {
+      '5_5_plus': '5.5+',
+    },
+    49: {
+      '5_6_minus': '5.6-',
+    },
+    50: {
+      '5_6_plus': '5.6+',
+    },
+    51: {
+      '5_7_minus': '5.7-',
+    },
+    52: {
+      '5_7_plus': '5.7+',
+    },
+    53: {
+      '5_8_minus': '5.8-',
+    },
+    54: {
+      '5_8_plus': '5.8+',
+    },
+    55: {
+      '5_9_minus': '5.9-',
+    },
+    56: {
+      '5_9_plus': '5.9+',
+    },
+    57: {
+      '5_10_minus': '5.10-',
+    },
+    58: {
+      '5_10_plus': '5.10+',
+    },
+    59: {
+      '5_11_minus': '5.11-',
+    },
+    60: {
+      '5_11_plus': '5.11+',
+    },
+    61: {
+      '5_12_minus': '5.12-',
+    },
+    62: {
+      '5_12_plus': '5.12+',
+    },
+    63: {
+      '5_13_minus': '5.13-',
+    },
+    64: {
+      '5_13_plus': '5.13+',
+    },
+    65: {
+      '5_14_minus': '5.14-',
+    },
+    66: {
+      '5_14_plus': '5.14+',
+    },
+    67: {
+      '5_15_minus': '5.15-',
+    },
+    68: {
+      '5_15_plus': '5.15+',
     },
   },
 };
