@@ -4,6 +4,49 @@ import '../../profile.dart';
 import '../types/mesg_num.dart';
 import '../types/types.dart';
 
+class SplitSummaryAvgCadenceSubfield {
+  static const int AvgRunningCadence = 0;
+  static const int AvgSwimmingCadence = 1;
+  static const int AvgPaddlesportCadence = 2;
+  static const int AvgPushCadence = 3;
+  static const int active = Fit.subfieldIndexActiveSubfield;
+  static const int mainField = Fit.subfieldIndexMainField;
+}
+
+class SplitSummaryMaxCadenceSubfield {
+  static const int MaxRunningCadence = 0;
+  static const int MaxSwimmingCadence = 1;
+  static const int MaxPaddlesportCadence = 2;
+  static const int MaxPushCadence = 3;
+  static const int active = Fit.subfieldIndexActiveSubfield;
+  static const int mainField = Fit.subfieldIndexMainField;
+}
+
+class SplitSummaryTotalCyclesSubfield {
+  static const int TotalStrides = 0;
+  static const int TotalStrokes = 1;
+  static const int TotalReps = 2;
+  static const int TotalPushes = 3;
+  static const int active = Fit.subfieldIndexActiveSubfield;
+  static const int mainField = Fit.subfieldIndexMainField;
+}
+
+class SplitSummaryClimbMaxGradeValueSubfield {
+  static const int ClimbMaxGradeYds = 0;
+  static const int ClimbMaxGradeUiaa = 1;
+  static const int ClimbMaxGradeFrench = 2;
+  static const int ClimbMaxGradeBritishAdjectival = 3;
+  static const int ClimbMaxGradeBritishTechnical = 4;
+  static const int ClimbMaxGradeEwbank = 5;
+  static const int ClimbMaxGradeBrazilian = 6;
+  static const int ClimbMaxGradeSaxon = 7;
+  static const int ClimbMaxGradeVermin = 8;
+  static const int ClimbMaxGradeFont = 9;
+  static const int ClimbMaxGradeDankyu = 10;
+  static const int active = Fit.subfieldIndexActiveSubfield;
+  static const int mainField = Fit.subfieldIndexMainField;
+}
+
 class SplitSummaryMesg extends Mesg {
   static const int fieldMessageIndex = 254;
   static const int fieldSplitType = 0;
@@ -258,6 +301,42 @@ class SplitSummaryMesg extends Mesg {
     return (val as num?)?.toDouble();
   }
 
+  double? getAvgRunningCadence() {
+    final val = getFieldValue(
+      14,
+      index: 0,
+      subfieldInfo: SplitSummaryAvgCadenceSubfield.AvgRunningCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getAvgSwimmingCadence() {
+    final val = getFieldValue(
+      14,
+      index: 0,
+      subfieldInfo: SplitSummaryAvgCadenceSubfield.AvgSwimmingCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getAvgPaddlesportCadence() {
+    final val = getFieldValue(
+      14,
+      index: 0,
+      subfieldInfo: SplitSummaryAvgCadenceSubfield.AvgPaddlesportCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  int? getAvgPushCadence() {
+    final val = getFieldValue(
+      14,
+      index: 0,
+      subfieldInfo: SplitSummaryAvgCadenceSubfield.AvgPushCadence,
+    );
+    return val as int?;
+  }
+
   double? getMaxCadence() {
     final val = getFieldValue(
       15,
@@ -267,11 +346,83 @@ class SplitSummaryMesg extends Mesg {
     return (val as num?)?.toDouble();
   }
 
+  double? getMaxRunningCadence() {
+    final val = getFieldValue(
+      15,
+      index: 0,
+      subfieldInfo: SplitSummaryMaxCadenceSubfield.MaxRunningCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getMaxSwimmingCadence() {
+    final val = getFieldValue(
+      15,
+      index: 0,
+      subfieldInfo: SplitSummaryMaxCadenceSubfield.MaxSwimmingCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getMaxPaddlesportCadence() {
+    final val = getFieldValue(
+      15,
+      index: 0,
+      subfieldInfo: SplitSummaryMaxCadenceSubfield.MaxPaddlesportCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  int? getMaxPushCadence() {
+    final val = getFieldValue(
+      15,
+      index: 0,
+      subfieldInfo: SplitSummaryMaxCadenceSubfield.MaxPushCadence,
+    );
+    return val as int?;
+  }
+
   int? getTotalCycles() {
     final val = getFieldValue(
       16,
       index: 0,
       subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getTotalStrides() {
+    final val = getFieldValue(
+      16,
+      index: 0,
+      subfieldInfo: SplitSummaryTotalCyclesSubfield.TotalStrides,
+    );
+    return val as int?;
+  }
+
+  int? getTotalStrokes() {
+    final val = getFieldValue(
+      16,
+      index: 0,
+      subfieldInfo: SplitSummaryTotalCyclesSubfield.TotalStrokes,
+    );
+    return val as int?;
+  }
+
+  int? getTotalReps() {
+    final val = getFieldValue(
+      16,
+      index: 0,
+      subfieldInfo: SplitSummaryTotalCyclesSubfield.TotalReps,
+    );
+    return val as int?;
+  }
+
+  int? getTotalPushes() {
+    final val = getFieldValue(
+      16,
+      index: 0,
+      subfieldInfo: SplitSummaryTotalCyclesSubfield.TotalPushes,
     );
     return val as int?;
   }
@@ -605,6 +756,108 @@ class SplitSummaryMesg extends Mesg {
       55,
       index: 0,
       subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeYds() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo: SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeYds,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeUiaa() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo: SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeUiaa,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeFrench() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo: SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeFrench,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeBritishAdjectival() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo:
+          SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeBritishAdjectival,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeBritishTechnical() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo:
+          SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeBritishTechnical,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeEwbank() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo: SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeEwbank,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeBrazilian() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo:
+          SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeBrazilian,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeSaxon() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo: SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeSaxon,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeVermin() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo: SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeVermin,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeFont() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo: SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeFont,
+    );
+    return val as int?;
+  }
+
+  int? getClimbMaxGradeDankyu() {
+    final val = getFieldValue(
+      55,
+      index: 0,
+      subfieldInfo: SplitSummaryClimbMaxGradeValueSubfield.ClimbMaxGradeDankyu,
     );
     return val as int?;
   }

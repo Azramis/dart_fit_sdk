@@ -229,6 +229,35 @@ void main() {
           'TotalReps');
     });
 
+    test('subfields added by the updater have typed getters', () {
+      // At 21.217.0, swimming sessions report their cadence in strokes/min.
+      final swim = SessionMesg()
+        ..setFieldValue(SessionMesg.fieldSport, Sport.swimming)
+        ..setFieldValue(SessionMesg.fieldAvgCadence, 30)
+        ..setFieldValue(SessionMesg.fieldMaxCadence, 42);
+      expect(swim.getActiveSubFieldName(SessionMesg.fieldAvgCadence),
+          'AvgSwimmingCadence');
+      expect(swim.getAvgSwimmingCadence(), 30);
+      expect(swim.getMaxSwimmingCadence(), 42);
+      expect(swim.getAvgRunningCadence(), isNull);
+      expect(
+          catalog
+              .messageByName('session')!
+              .fieldByNum(SessionMesg.fieldAvgCadence)!
+              .subfields[SessionAvgCadenceSubfield.AvgSwimmingCadence]
+              .name,
+          'AvgSwimmingCadence');
+
+      // A split's climbing grade is read in the scale it declares.
+      final climb = SplitMesg()
+        ..setFieldValue(
+            SplitMesg.fieldClimbGradingScale, ClimbGradingScale.french)
+        ..setFieldValue(
+            SplitMesg.fieldClimbGradeValue, FrenchGradingScale.n6aPlus);
+      expect(climb.getClimbGradeFrench(), FrenchGradingScale.n6aPlus);
+      expect(climb.getClimbGradeYds(), isNull);
+    });
+
     test('components expose their target field and bit width', () {
       // Session.AvgSpeed expands a component into another field.
       final avgSpeed =

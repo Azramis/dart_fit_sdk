@@ -7,18 +7,25 @@ import '../types/types.dart';
 class LapTotalCyclesSubfield {
   static const int TotalStrides = 0;
   static const int TotalStrokes = 1;
+  static const int TotalPushes = 2;
   static const int active = Fit.subfieldIndexActiveSubfield;
   static const int mainField = Fit.subfieldIndexMainField;
 }
 
 class LapAvgCadenceSubfield {
   static const int AvgRunningCadence = 0;
+  static const int AvgSwimmingCadence = 1;
+  static const int AvgPaddlesportCadence = 2;
+  static const int AvgPushCadence = 3;
   static const int active = Fit.subfieldIndexActiveSubfield;
   static const int mainField = Fit.subfieldIndexMainField;
 }
 
 class LapMaxCadenceSubfield {
   static const int MaxRunningCadence = 0;
+  static const int MaxSwimmingCadence = 1;
+  static const int MaxPaddlesportCadence = 2;
+  static const int MaxPushCadence = 3;
   static const int active = Fit.subfieldIndexActiveSubfield;
   static const int mainField = Fit.subfieldIndexMainField;
 }
@@ -306,6 +313,15 @@ class LapMesg extends Mesg {
     return val as int?;
   }
 
+  int? getTotalPushes() {
+    final val = getFieldValue(
+      10,
+      index: 0,
+      subfieldInfo: LapTotalCyclesSubfield.TotalPushes,
+    );
+    return val as int?;
+  }
+
   int? getTotalCalories() {
     final val = getFieldValue(
       11,
@@ -378,6 +394,33 @@ class LapMesg extends Mesg {
     return val as int?;
   }
 
+  int? getAvgSwimmingCadence() {
+    final val = getFieldValue(
+      17,
+      index: 0,
+      subfieldInfo: LapAvgCadenceSubfield.AvgSwimmingCadence,
+    );
+    return val as int?;
+  }
+
+  int? getAvgPaddlesportCadence() {
+    final val = getFieldValue(
+      17,
+      index: 0,
+      subfieldInfo: LapAvgCadenceSubfield.AvgPaddlesportCadence,
+    );
+    return val as int?;
+  }
+
+  int? getAvgPushCadence() {
+    final val = getFieldValue(
+      17,
+      index: 0,
+      subfieldInfo: LapAvgCadenceSubfield.AvgPushCadence,
+    );
+    return val as int?;
+  }
+
   int? getMaxCadence() {
     final val = getFieldValue(
       18,
@@ -392,6 +435,33 @@ class LapMesg extends Mesg {
       18,
       index: 0,
       subfieldInfo: LapMaxCadenceSubfield.MaxRunningCadence,
+    );
+    return val as int?;
+  }
+
+  int? getMaxSwimmingCadence() {
+    final val = getFieldValue(
+      18,
+      index: 0,
+      subfieldInfo: LapMaxCadenceSubfield.MaxSwimmingCadence,
+    );
+    return val as int?;
+  }
+
+  int? getMaxPaddlesportCadence() {
+    final val = getFieldValue(
+      18,
+      index: 0,
+      subfieldInfo: LapMaxCadenceSubfield.MaxPaddlesportCadence,
+    );
+    return val as int?;
+  }
+
+  int? getMaxPushCadence() {
+    final val = getFieldValue(
+      18,
+      index: 0,
+      subfieldInfo: LapMaxCadenceSubfield.MaxPushCadence,
     );
     return val as int?;
   }

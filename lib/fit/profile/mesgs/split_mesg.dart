@@ -4,6 +4,58 @@ import '../../profile.dart';
 import '../types/mesg_num.dart';
 import '../types/types.dart';
 
+class SplitAvgCadenceSubfield {
+  static const int AvgRunningCadence = 0;
+  static const int AvgSwimmingCadence = 1;
+  static const int AvgPaddlesportCadence = 2;
+  static const int AvgPushCadence = 3;
+  static const int active = Fit.subfieldIndexActiveSubfield;
+  static const int mainField = Fit.subfieldIndexMainField;
+}
+
+class SplitMaxCadenceSubfield {
+  static const int MaxRunningCadence = 0;
+  static const int MaxSwimmingCadence = 1;
+  static const int MaxPaddlesportCadence = 2;
+  static const int MaxPushCadence = 3;
+  static const int active = Fit.subfieldIndexActiveSubfield;
+  static const int mainField = Fit.subfieldIndexMainField;
+}
+
+class SplitTotalCyclesSubfield {
+  static const int TotalStrides = 0;
+  static const int TotalStrokes = 1;
+  static const int TotalReps = 2;
+  static const int TotalPushes = 3;
+  static const int active = Fit.subfieldIndexActiveSubfield;
+  static const int mainField = Fit.subfieldIndexMainField;
+}
+
+class SplitClimbGradeValueSubfield {
+  static const int ClimbGradeYds = 0;
+  static const int ClimbGradeUiaa = 1;
+  static const int ClimbGradeFrench = 2;
+  static const int ClimbGradeBritishAdjectival = 3;
+  static const int ClimbGradeBritishTechnical = 4;
+  static const int ClimbGradeEwbank = 5;
+  static const int ClimbGradeBrazilian = 6;
+  static const int ClimbGradeSaxon = 7;
+  static const int ClimbGradeVermin = 8;
+  static const int ClimbGradeFont = 9;
+  static const int ClimbGradeDankyu = 10;
+  static const int active = Fit.subfieldIndexActiveSubfield;
+  static const int mainField = Fit.subfieldIndexMainField;
+}
+
+class SplitMinCadenceSubfield {
+  static const int MinRunningCadence = 0;
+  static const int MinSwimmingCadence = 1;
+  static const int MinPaddlesportCadence = 2;
+  static const int MinPushCadence = 3;
+  static const int active = Fit.subfieldIndexActiveSubfield;
+  static const int mainField = Fit.subfieldIndexMainField;
+}
+
 class SplitMesg extends Mesg {
   static const int fieldMessageIndex = 254;
   static const int fieldSplitType = 0;
@@ -392,6 +444,42 @@ class SplitMesg extends Mesg {
     return (val as num?)?.toDouble();
   }
 
+  double? getAvgRunningCadence() {
+    final val = getFieldValue(
+      29,
+      index: 0,
+      subfieldInfo: SplitAvgCadenceSubfield.AvgRunningCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getAvgSwimmingCadence() {
+    final val = getFieldValue(
+      29,
+      index: 0,
+      subfieldInfo: SplitAvgCadenceSubfield.AvgSwimmingCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getAvgPaddlesportCadence() {
+    final val = getFieldValue(
+      29,
+      index: 0,
+      subfieldInfo: SplitAvgCadenceSubfield.AvgPaddlesportCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  int? getAvgPushCadence() {
+    final val = getFieldValue(
+      29,
+      index: 0,
+      subfieldInfo: SplitAvgCadenceSubfield.AvgPushCadence,
+    );
+    return val as int?;
+  }
+
   double? getMaxCadence() {
     final val = getFieldValue(
       30,
@@ -401,11 +489,83 @@ class SplitMesg extends Mesg {
     return (val as num?)?.toDouble();
   }
 
+  double? getMaxRunningCadence() {
+    final val = getFieldValue(
+      30,
+      index: 0,
+      subfieldInfo: SplitMaxCadenceSubfield.MaxRunningCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getMaxSwimmingCadence() {
+    final val = getFieldValue(
+      30,
+      index: 0,
+      subfieldInfo: SplitMaxCadenceSubfield.MaxSwimmingCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getMaxPaddlesportCadence() {
+    final val = getFieldValue(
+      30,
+      index: 0,
+      subfieldInfo: SplitMaxCadenceSubfield.MaxPaddlesportCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  int? getMaxPushCadence() {
+    final val = getFieldValue(
+      30,
+      index: 0,
+      subfieldInfo: SplitMaxCadenceSubfield.MaxPushCadence,
+    );
+    return val as int?;
+  }
+
   int? getTotalCycles() {
     final val = getFieldValue(
       31,
       index: 0,
       subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getTotalStrides() {
+    final val = getFieldValue(
+      31,
+      index: 0,
+      subfieldInfo: SplitTotalCyclesSubfield.TotalStrides,
+    );
+    return val as int?;
+  }
+
+  int? getTotalStrokes() {
+    final val = getFieldValue(
+      31,
+      index: 0,
+      subfieldInfo: SplitTotalCyclesSubfield.TotalStrokes,
+    );
+    return val as int?;
+  }
+
+  int? getTotalReps() {
+    final val = getFieldValue(
+      31,
+      index: 0,
+      subfieldInfo: SplitTotalCyclesSubfield.TotalReps,
+    );
+    return val as int?;
+  }
+
+  int? getTotalPushes() {
+    final val = getFieldValue(
+      31,
+      index: 0,
+      subfieldInfo: SplitTotalCyclesSubfield.TotalPushes,
     );
     return val as int?;
   }
@@ -743,6 +903,105 @@ class SplitMesg extends Mesg {
     return val as int?;
   }
 
+  int? getClimbGradeYds() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeYds,
+    );
+    return val as int?;
+  }
+
+  int? getClimbGradeUiaa() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeUiaa,
+    );
+    return val as int?;
+  }
+
+  int? getClimbGradeFrench() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeFrench,
+    );
+    return val as int?;
+  }
+
+  int? getClimbGradeBritishAdjectival() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeBritishAdjectival,
+    );
+    return val as int?;
+  }
+
+  int? getClimbGradeBritishTechnical() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeBritishTechnical,
+    );
+    return val as int?;
+  }
+
+  int? getClimbGradeEwbank() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeEwbank,
+    );
+    return val as int?;
+  }
+
+  int? getClimbGradeBrazilian() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeBrazilian,
+    );
+    return val as int?;
+  }
+
+  int? getClimbGradeSaxon() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeSaxon,
+    );
+    return val as int?;
+  }
+
+  int? getClimbGradeVermin() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeVermin,
+    );
+    return val as int?;
+  }
+
+  int? getClimbGradeFont() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeFont,
+    );
+    return val as int?;
+  }
+
+  int? getClimbGradeDankyu() {
+    final val = getFieldValue(
+      70,
+      index: 0,
+      subfieldInfo: SplitClimbGradeValueSubfield.ClimbGradeDankyu,
+    );
+    return val as int?;
+  }
+
   int? getStatus() {
     final val = getFieldValue(
       71,
@@ -822,6 +1081,42 @@ class SplitMesg extends Mesg {
       subfieldInfo: Fit.subfieldIndexMainField,
     );
     return (val as num?)?.toDouble();
+  }
+
+  double? getMinRunningCadence() {
+    final val = getFieldValue(
+      90,
+      index: 0,
+      subfieldInfo: SplitMinCadenceSubfield.MinRunningCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getMinSwimmingCadence() {
+    final val = getFieldValue(
+      90,
+      index: 0,
+      subfieldInfo: SplitMinCadenceSubfield.MinSwimmingCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  double? getMinPaddlesportCadence() {
+    final val = getFieldValue(
+      90,
+      index: 0,
+      subfieldInfo: SplitMinCadenceSubfield.MinPaddlesportCadence,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  int? getMinPushCadence() {
+    final val = getFieldValue(
+      90,
+      index: 0,
+      subfieldInfo: SplitMinCadenceSubfield.MinPushCadence,
+    );
+    return val as int?;
   }
 
   double? getAvgGradeAdjustedSpeed() {
