@@ -7,18 +7,25 @@ import '../types/types.dart';
 class LapTotalCyclesSubfield {
   static const int TotalStrides = 0;
   static const int TotalStrokes = 1;
+  static const int TotalPushes = 2;
   static const int active = Fit.subfieldIndexActiveSubfield;
   static const int mainField = Fit.subfieldIndexMainField;
 }
 
 class LapAvgCadenceSubfield {
   static const int AvgRunningCadence = 0;
+  static const int AvgSwimmingCadence = 1;
+  static const int AvgPaddlesportCadence = 2;
+  static const int AvgPushCadence = 3;
   static const int active = Fit.subfieldIndexActiveSubfield;
   static const int mainField = Fit.subfieldIndexMainField;
 }
 
 class LapMaxCadenceSubfield {
   static const int MaxRunningCadence = 0;
+  static const int MaxSwimmingCadence = 1;
+  static const int MaxPaddlesportCadence = 2;
+  static const int MaxPushCadence = 3;
   static const int active = Fit.subfieldIndexActiveSubfield;
   static const int mainField = Fit.subfieldIndexMainField;
 }
@@ -148,6 +155,16 @@ class LapMesg extends Mesg {
   static const int fieldMinCoreTemperature = 159;
   static const int fieldMaxCoreTemperature = 160;
   static const int fieldActiveTime = 70;
+  static const int fieldNecLat = 27;
+  static const int fieldNecLong = 28;
+  static const int fieldSwcLat = 29;
+  static const int fieldSwcLong = 30;
+  static const int fieldAvgSwolf = 73;
+  static const int fieldAvgStrokesPerLength = 90;
+  static const int fieldFrontGearShiftCount = 96;
+  static const int fieldRearGearShiftCount = 97;
+  static const int fieldMetabolicCalories = 155;
+  static const int fieldAvgGradeAdjustedSpeed = 161;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   LapMesg() : super.from(Profile.getMesg(MesgNum.lap));
@@ -296,6 +313,15 @@ class LapMesg extends Mesg {
     return val as int?;
   }
 
+  int? getTotalPushes() {
+    final val = getFieldValue(
+      10,
+      index: 0,
+      subfieldInfo: LapTotalCyclesSubfield.TotalPushes,
+    );
+    return val as int?;
+  }
+
   int? getTotalCalories() {
     final val = getFieldValue(
       11,
@@ -368,6 +394,33 @@ class LapMesg extends Mesg {
     return val as int?;
   }
 
+  int? getAvgSwimmingCadence() {
+    final val = getFieldValue(
+      17,
+      index: 0,
+      subfieldInfo: LapAvgCadenceSubfield.AvgSwimmingCadence,
+    );
+    return val as int?;
+  }
+
+  int? getAvgPaddlesportCadence() {
+    final val = getFieldValue(
+      17,
+      index: 0,
+      subfieldInfo: LapAvgCadenceSubfield.AvgPaddlesportCadence,
+    );
+    return val as int?;
+  }
+
+  int? getAvgPushCadence() {
+    final val = getFieldValue(
+      17,
+      index: 0,
+      subfieldInfo: LapAvgCadenceSubfield.AvgPushCadence,
+    );
+    return val as int?;
+  }
+
   int? getMaxCadence() {
     final val = getFieldValue(
       18,
@@ -382,6 +435,33 @@ class LapMesg extends Mesg {
       18,
       index: 0,
       subfieldInfo: LapMaxCadenceSubfield.MaxRunningCadence,
+    );
+    return val as int?;
+  }
+
+  int? getMaxSwimmingCadence() {
+    final val = getFieldValue(
+      18,
+      index: 0,
+      subfieldInfo: LapMaxCadenceSubfield.MaxSwimmingCadence,
+    );
+    return val as int?;
+  }
+
+  int? getMaxPaddlesportCadence() {
+    final val = getFieldValue(
+      18,
+      index: 0,
+      subfieldInfo: LapMaxCadenceSubfield.MaxPaddlesportCadence,
+    );
+    return val as int?;
+  }
+
+  int? getMaxPushCadence() {
+    final val = getFieldValue(
+      18,
+      index: 0,
+      subfieldInfo: LapMaxCadenceSubfield.MaxPushCadence,
     );
     return val as int?;
   }
@@ -1307,6 +1387,96 @@ class LapMesg extends Mesg {
   double? getActiveTime() {
     final val = getFieldValue(
       70,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  int? getNecLat() {
+    final val = getFieldValue(
+      27,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getNecLong() {
+    final val = getFieldValue(
+      28,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getSwcLat() {
+    final val = getFieldValue(
+      29,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getSwcLong() {
+    final val = getFieldValue(
+      30,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getAvgSwolf() {
+    final val = getFieldValue(
+      73,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  double? getAvgStrokesPerLength() {
+    final val = getFieldValue(
+      90,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  int? getFrontGearShiftCount() {
+    final val = getFieldValue(
+      96,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getRearGearShiftCount() {
+    final val = getFieldValue(
+      97,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getMetabolicCalories() {
+    final val = getFieldValue(
+      155,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  double? getAvgGradeAdjustedSpeed() {
+    final val = getFieldValue(
+      161,
       index: 0,
       subfieldInfo: Fit.subfieldIndexMainField,
     );

@@ -1,7 +1,8 @@
 // Additive FIT-profile updater. Keeps every existing declaration in this repo
 // byte-for-byte and only ADDS what a newer Garmin profile introduces: new enum
-// values, new type classes, new message fields/getters, new subfields, and new
-// message classes (+ their createXMesg and switch case in profile.dart).
+// values, new type classes, new message fields/getters, new subfields (+ their
+// indexes and getters), and new message classes (+ their createXMesg and
+// switch case in profile.dart).
 //
 // Sources: the `src/profile.js` of github.com/garmin/fit-javascript-sdk (itself
 // generated from Garmin's Profile.xlsx), plus that Profile.xlsx from
@@ -40,6 +41,51 @@ const _reserved = {
 };
 
 const _classNameOverrides = {'dateTime': 'FitDateTime'};
+
+/// Profile names of the original Dart port's identifiers that aren't [_ident]
+/// of them, by type. The port prefixed names starting with a digit with `v`
+/// where [_ident] uses `n` (`4iiiis` -> `v4iiiis`), and changed the case or
+/// dropped the underscores of a few others (`oHR` -> `ohr`, `stretch90_90` ->
+/// `stretch9090`). The updater never renames a constant, so the map is closed.
+/// No rule can replace it: the Vermin grades are really named `v0`...`v17`, and
+/// the other changes follow no pattern. Keyed by type, so that a later profile
+/// name equal to one of these identifiers in another type stays verbatim.
+const _portNames = <String, Map<String, String>>{
+  'calfRaiseExerciseName': {
+    'v3WayCalfRaise': '3WayCalfRaise',
+    'v3WayWeightedCalfRaise': '3WayWeightedCalfRaise',
+    'v3WaySingleLegCalfRaise': '3WaySingleLegCalfRaise',
+    'v3WayWeightedSingleLegCalfRaise': '3WayWeightedSingleLegCalfRaise',
+  },
+  'displayPosition': {
+    'indiaZoneIa': 'indiaZoneIA', 'indiaZoneIb': 'indiaZoneIB',
+    'indiaZoneIia': 'indiaZoneIIA', 'indiaZoneIib': 'indiaZoneIIB',
+    'indiaZoneIiia': 'indiaZoneIIIA', 'indiaZoneIiib': 'indiaZoneIIIB',
+    'indiaZoneIva': 'indiaZoneIVA', 'indiaZoneIvb': 'indiaZoneIVB',
+  },
+  'garminProduct': {
+    'ohr': 'oHR', 'foretrex601701': 'foretrex601_701',
+    'fenix6sSport': 'fenix6SSport', 'fenix6s': 'fenix6S',
+    'instincte40mm': 'instinctE40mm', 'instincte45mm': 'instinctE45mm',
+    'approachs44': 'approachS44', 'approachs50': 'approachS50',
+  },
+  'lateralRaiseExerciseName': {
+    'v45DegreeCableExternalRotation': '45DegreeCableExternalRotation',
+  },
+  'manufacturer': {
+    'v4iiiis': '4iiiis', 'v1partcarbon': '1partcarbon',
+    'rgtCycling': 'rGTCycling',
+  },
+  'plankExerciseName': {
+    'v45DegreePlank': '45DegreePlank',
+    'v90DegreeStaticHold': '90DegreeStaticHold',
+  },
+  'pullUpExerciseName': {'v30DegreeLatPulldown': '30DegreeLatPulldown'},
+  'shoulderStabilityExerciseName': {
+    'v90DegreeCableExternalRotation': '90DegreeCableExternalRotation',
+  },
+  'warmUpExerciseName': {'stretch9090': 'stretch90_90'},
+};
 
 String _jsToJson(String s) {
   s = s.substring(s.indexOf('{'), s.lastIndexOf('}') + 1);
@@ -85,13 +131,20 @@ String _ident(String name) {
   return n;
 }
 
-/// Reverses [_ident]'s reserved-word suffix so profile names round-trip
-/// verbatim (e.g. `new_` -> `new`). No profile value name starts with a digit,
-/// so the numeric-prefix branch never needs reversing.
-String _unident(String n) =>
-    n.endsWith('_') && _reserved.contains(n.substring(0, n.length - 1))
-        ? n.substring(0, n.length - 1)
-        : n;
+/// Reverses [_ident] so profile names round-trip verbatim: its reserved-word
+/// suffix (`new_` -> `new`) and its numeric prefix (`n510a` -> `510a`, a
+/// climbing grade). No profile name starts with `n` and a digit. The original
+/// port's own identifiers in [type] get their name from [_portNames]
+/// (`v4iiiis` -> `4iiiis`, `ohr` -> `oHR`): other `v` names are verbatim
+/// (Vermin's `v0`...).
+String _unident(String type, String n) {
+  final port = _portNames[type]?[n];
+  if (port != null) return port;
+  if (RegExp(r'^n[0-9]').hasMatch(n)) return n.substring(1);
+  return n.endsWith('_') && _reserved.contains(n.substring(0, n.length - 1))
+      ? n.substring(0, n.length - 1)
+      : n;
+}
 
 int _baseType(dynamic n) => _baseTypeCode[n] ?? 0;
 T _scalar<T>(dynamic v, T fb) =>
@@ -175,8 +228,9 @@ Future<void> main(List<String> args) async {
   final messages = (profile['messages'] as Map).cast<String, dynamic>();
 
   _additiveTypes();
-  _additiveMesgClasses(messages);
+  // profile.dart first: the mesg classes number subfields after its creators.
   _additiveProfileDart(messages);
+  _additiveMesgClasses(messages);
   _generateMesgType(messages);
   _generateEnumType();
   // Both registries depend on Profile.xlsx: without it, keep them as they are.
@@ -356,8 +410,9 @@ void _generateEnumType() {
 
     final body = StringBuffer();
     for (final r in rows) {
-      // Emit the verbatim profile name, undoing _ident's reserved-word suffix.
-      body.writeln('    EnumValueInfo(${_dartStr(_unident(r.name))}, ${r.value}),');
+      // Emit the verbatim profile name, undoing the identifier's suffix or
+      // prefix, or the port's own changes (see _unident).
+      body.writeln('    EnumValueInfo(${_dartStr(_unident(camel, r.name))}, ${r.value}),');
     }
     types.add((ident: ident, name: camel, body: body.toString()));
   }
@@ -972,17 +1027,19 @@ void _additiveMesgClasses(Map<String, dynamic> messages) {
   final dir = Directory('lib/fit/profile/mesgs');
   final index = _classIndex(dir);
   final barrel = File('${dir.path}/mesgs.dart');
+  final profileDart = File('lib/fit/profile.dart').readAsStringSync();
 
   for (final num in messages.keys.map(int.parse).toList()..sort()) {
     final mesg = messages['$num'] as Map<String, dynamic>;
     final name = mesg['name'] as String;
     final cls = '${_pascal(name)}Mesg';
     final fields = ((mesg['fields'] as Map?) ?? const {}).cast<String, dynamic>();
+    final subfields = _creatorSubfields(profileDart, name);
     final existing = index[cls];
 
     if (existing == null) {
       _write(File('${dir.path}/${_snake(name)}_mesg.dart'),
-          _mesgClassSource(name, fields));
+          _subfieldWrappers(_mesgClassSource(name, fields), name, fields, subfields).content);
       if (barrel.existsSync()) {
         _append(barrel, "export '${_snake(name)}_mesg.dart';\n");
       }
@@ -990,7 +1047,8 @@ void _additiveMesgClasses(Map<String, dynamic> messages) {
       continue;
     }
 
-    var content = existing.readAsStringSync();
+    final original = existing.readAsStringSync();
+    var content = original;
     final have = RegExp(r'field\w+\s*=\s*(\d+);')
         .allMatches(content)
         .map((m) => int.parse(m.group(1)!))
@@ -1009,10 +1067,104 @@ void _additiveMesgClasses(Map<String, dynamic> messages) {
         '${consts.toString()}  static const int fieldInvalid',
       );
       content = _beforeLastBrace(content, getters.toString());
-      _write(existing, content);
       _added.add('  ~ $cls (+${consts.toString().trim().split('\n').length} fields)');
     }
+    final wrapped = _subfieldWrappers(content, name, fields, subfields);
+    content = wrapped.content;
+    if (wrapped.added > 0) _added.add('  ~ $cls (+${wrapped.added} subfields)');
+    if (content != original) _write(existing, content);
   }
+}
+
+/// The subfields the creator of message [name] in profile.dart ([source])
+/// declares, by field number, in declaration order: a subfield's position is
+/// the index `Mesg` resolves it by. The port adds them right after their
+/// field's `Field(...)` (to a local or `newMesg.fields[fieldIndex]`, inline or
+/// through a `Subfield` local), [_subfieldsSource] to `newMesg.getField(N)`.
+Map<int, List<String>> _creatorSubfields(String source, String name) {
+  final block = RegExp(
+    'static Mesg create${_pascal(name)}Mesg\\(\\) \\{[\\s\\S]*?return newMesg;',
+  ).firstMatch(source)?.group(0) ?? '';
+  final out = <int, List<String>>{};
+  final locals = <String, String>{}; // Subfield local -> subfield name
+  var field = -1; // number of the last Field(...) declared
+  for (final m in RegExp(
+    r'\bField\(\s*"\w+"\s*,\s*(\d+)'
+    r'|\bSubfield (\w+) = Subfield\(\s*"(\w+)"'
+    r'|\.subfields\.add\(\s*Subfield\(\s*"(\w+)"'
+    r'|(?:newMesg\.getField\((\d+)\)!)?\.subfields\.add\((\w+)\)',
+  ).allMatches(block)) {
+    if (m[1] != null) {
+      field = int.parse(m[1]!);
+    } else if (m[2] != null) {
+      locals[m[2]!] = m[3]!;
+    } else {
+      final target = m[5] == null ? field : int.parse(m[5]!);
+      (out[target] ??= []).add(m[4] ?? locals[m[6]!]!);
+    }
+  }
+  return out;
+}
+
+/// Declares, in the source [content] of message [name]'s class, the
+/// [subfields] its creator adds (see [_creatorSubfields]): each field's
+/// `<Mesg><Field>Subfield` class gains the index of each new subfield, and the
+/// message a typed getter for it, after the other getters of its field. What
+/// is already declared is kept; an index that disagrees with the creator is
+/// reported. Returns the new source and the number of subfields declared.
+({String content, int added}) _subfieldWrappers(String content, String name,
+    Map<String, dynamic> fields, Map<int, List<String>> subfields) {
+  final mesg = '${_pascal(name)}Mesg';
+  var added = 0;
+  for (final MapEntry(key: fnum, value: names) in subfields.entries) {
+    final f = fields['$fnum'] as Map<String, dynamic>;
+    final cls = '${_pascal(name)}${_pascal(f['name'] as String)}Subfield';
+    final decl = RegExp('class $cls \\{[^}]*\\}').firstMatch(content)?.group(0);
+    final have = {
+      for (final m in RegExp(r'static const int (\w+) = (\d+);').allMatches(decl ?? ''))
+        m[1]!: int.parse(m[2]!),
+    };
+    final profile = {for (final s in _subfields(f)) _pascal(s['name'] as String): s};
+    final consts = StringBuffer();
+    final getters = StringBuffer();
+    final declared = <String>{};
+    for (final (i, sub) in names.indexed) {
+      final at = have[sub];
+      if (at == null) {
+        consts.writeln('  static const int $sub = $i;');
+        declared.add(sub);
+      } else if (at != i) {
+        stderr.writeln('Warning: $cls.$sub is $at, but create${_pascal(name)}Mesg declares it at $i.');
+      }
+      final s = profile[sub];
+      if (s == null || RegExp('\\bget$sub\\(\\)').hasMatch(content)) continue;
+      getters.write(_getterSource(name, s, fnum, info: '$cls.$sub'));
+      declared.add(sub);
+    }
+    added += declared.length;
+    if (consts.isNotEmpty) {
+      content = decl == null
+          ? content.replaceFirst(
+              'class $mesg extends Mesg {',
+              'class $cls {\n$consts'
+                  '  static const int active = Fit.subfieldIndexActiveSubfield;\n'
+                  '  static const int mainField = Fit.subfieldIndexMainField;\n'
+                  '}\n\nclass $mesg extends Mesg {')
+          : content.replaceFirst(decl,
+              decl.replaceFirst('  static const int active', '$consts  static const int active'));
+    }
+    if (getters.isEmpty) continue;
+    // After the end (`\n  }\n`) of the last getter reading this field.
+    final reads = RegExp('getFieldValue\\(\\s*$fnum\\s*,').allMatches(content);
+    if (reads.isEmpty) {
+      content = _beforeLastBrace(content, getters.toString());
+      continue;
+    }
+    final at = content.indexOf('\n  }\n', reads.last.end) + '\n  }\n'.length;
+    content = '${content.substring(0, at)}\n${getters.toString().trimRight()}\n'
+        '${content.substring(at)}';
+  }
+  return (content: content, added: added);
 }
 
 /// Builds the full source of a brand-new mesg class.
@@ -1043,9 +1195,12 @@ String _mesgClassSource(String name, Map<String, dynamic> fields) {
   return b.toString();
 }
 
-String _getterSource(String mesg, Map<String, dynamic> f, int fnum) {
+/// The getter of field [fnum], or of one of its subfields given its [info]
+/// index (e.g. `SessionAvgCadenceSubfield.AvgRunningCadence`).
+String _getterSource(String mesg, Map<String, dynamic> f, int fnum,
+    {String info = 'Fit.subfieldIndexMainField'}) {
   final b = StringBuffer();
-  final g = _getter(f, fnum, 'Fit.subfieldIndexMainField');
+  final g = _getter(f, fnum, info);
   b
     ..writeln('  ${g.type}? get${_pascal(f['name'] as String)}() {')
     ..writeln('    ${g.body}')
@@ -1080,15 +1235,20 @@ void _additiveProfileDart(Map<String, dynamic> messages) {
   final file = File('lib/fit/profile.dart');
   var content = file.readAsStringSync();
 
-  // 1. New ProfileType enum entries for any referenced type not present.
+  // 1. New ProfileType enum entries for any referenced type not present,
+  // subfield types included: some are only used there (e.g. the climbing
+  // grade scales), and the enum catalog is keyed by ProfileType.
   final enumNames = RegExp(r'enum ProfileType \{([^}]*)\}')
       .firstMatch(content)!
       .group(1)!;
   final present = RegExp(r'\b(\w+)\b').allMatches(enumNames).map((m) => m.group(1)!).toSet();
   final referenced = <String>{};
   void ref(Map<String, dynamic> fields) {
-    for (final f in fields.values) {
-      referenced.add(_ident((f as Map)['type'] as String));
+    for (final f in fields.values.cast<Map<String, dynamic>>()) {
+      referenced.add(_ident(f['type'] as String));
+      for (final s in _subfields(f)) {
+        referenced.add(_ident(s['type'] as String));
+      }
     }
   }
 

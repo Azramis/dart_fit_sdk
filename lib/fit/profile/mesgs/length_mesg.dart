@@ -27,6 +27,7 @@ class LengthMesg extends Mesg {
   static const int fieldEnhancedMaxRespirationRate = 23;
   static const int fieldAvgRespirationRate = 24;
   static const int fieldMaxRespirationRate = 25;
+  static const int fieldMetabolicCalories = 26;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   LengthMesg() : super.from(Profile.getMesg(MesgNum.length));
@@ -232,6 +233,15 @@ class LengthMesg extends Mesg {
   int? getMaxRespirationRate() {
     final val = getFieldValue(
       25,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getMetabolicCalories() {
+    final val = getFieldValue(
+      26,
       index: 0,
       subfieldInfo: Fit.subfieldIndexMainField,
     );

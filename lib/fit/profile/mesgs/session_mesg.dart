@@ -15,12 +15,18 @@ class SessionTotalCyclesSubfield {
 
 class SessionAvgCadenceSubfield {
   static const int AvgRunningCadence = 0;
+  static const int AvgSwimmingCadence = 1;
+  static const int AvgPaddlesportCadence = 2;
+  static const int AvgPushCadence = 3;
   static const int active = Fit.subfieldIndexActiveSubfield;
   static const int mainField = Fit.subfieldIndexMainField;
 }
 
 class SessionMaxCadenceSubfield {
   static const int MaxRunningCadence = 0;
+  static const int MaxSwimmingCadence = 1;
+  static const int MaxPaddlesportCadence = 2;
+  static const int MaxPushCadence = 3;
   static const int active = Fit.subfieldIndexActiveSubfield;
   static const int mainField = Fit.subfieldIndexMainField;
 }
@@ -184,6 +190,12 @@ class SessionMesg extends Mesg {
   static const int fieldMaxCoreTemperature = 210;
   static const int fieldActiveTime = 78;
   static const int fieldMetabolicCalories = 196;
+  static const int fieldAvgStrokesPerLength = 79;
+  static const int fieldAvgSwolf = 80;
+  static const int fieldNumSegmentLaps = 106;
+  static const int fieldFrontGearShiftCount = 107;
+  static const int fieldRearGearShiftCount = 108;
+  static const int fieldAvgGradeAdjustedSpeed = 211;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   SessionMesg() : super.from(Profile.getMesg(MesgNum.session));
@@ -422,6 +434,33 @@ class SessionMesg extends Mesg {
     return val as int?;
   }
 
+  int? getAvgSwimmingCadence() {
+    final val = getFieldValue(
+      18,
+      index: 0,
+      subfieldInfo: SessionAvgCadenceSubfield.AvgSwimmingCadence,
+    );
+    return val as int?;
+  }
+
+  int? getAvgPaddlesportCadence() {
+    final val = getFieldValue(
+      18,
+      index: 0,
+      subfieldInfo: SessionAvgCadenceSubfield.AvgPaddlesportCadence,
+    );
+    return val as int?;
+  }
+
+  int? getAvgPushCadence() {
+    final val = getFieldValue(
+      18,
+      index: 0,
+      subfieldInfo: SessionAvgCadenceSubfield.AvgPushCadence,
+    );
+    return val as int?;
+  }
+
   int? getMaxCadence() {
     final val = getFieldValue(
       19,
@@ -436,6 +475,33 @@ class SessionMesg extends Mesg {
       19,
       index: 0,
       subfieldInfo: SessionMaxCadenceSubfield.MaxRunningCadence,
+    );
+    return val as int?;
+  }
+
+  int? getMaxSwimmingCadence() {
+    final val = getFieldValue(
+      19,
+      index: 0,
+      subfieldInfo: SessionMaxCadenceSubfield.MaxSwimmingCadence,
+    );
+    return val as int?;
+  }
+
+  int? getMaxPaddlesportCadence() {
+    final val = getFieldValue(
+      19,
+      index: 0,
+      subfieldInfo: SessionMaxCadenceSubfield.MaxPaddlesportCadence,
+    );
+    return val as int?;
+  }
+
+  int? getMaxPushCadence() {
+    final val = getFieldValue(
+      19,
+      index: 0,
+      subfieldInfo: SessionMaxCadenceSubfield.MaxPushCadence,
     );
     return val as int?;
   }
@@ -1671,5 +1737,59 @@ class SessionMesg extends Mesg {
       subfieldInfo: Fit.subfieldIndexMainField,
     );
     return val as int?;
+  }
+
+  double? getAvgStrokesPerLength() {
+    final val = getFieldValue(
+      79,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  int? getAvgSwolf() {
+    final val = getFieldValue(
+      80,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getNumSegmentLaps() {
+    final val = getFieldValue(
+      106,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getFrontGearShiftCount() {
+    final val = getFieldValue(
+      107,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getRearGearShiftCount() {
+    final val = getFieldValue(
+      108,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  double? getAvgGradeAdjustedSpeed() {
+    final val = getFieldValue(
+      211,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
   }
 }

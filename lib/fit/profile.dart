@@ -225,6 +225,21 @@ enum ProfileType {
   numTypes,
   napPeriodFeedback,
   napSource,
+  apneaDiscipline,
+  brazilianGradingScale,
+  britishAdjectivalGradingScale,
+  britishTechnicalGradingScale,
+  climbGradingScale,
+  dankyuGradingScale,
+  diveSectionType,
+  ewbankGradingScale,
+  fontGradingScale,
+  frenchGradingScale,
+  saxonGradingScale,
+  splitStatus,
+  uiaaGradingScale,
+  verminGradingScale,
+  ydsGradingScale,
 }
 
 class Profile {
@@ -656,6 +671,9 @@ class Profile {
         break;
       case MesgNum.napEvent:
         newMesg = createNapEventMesg();
+        break;
+      case MesgNum.battery:
+        newMesg = createBatteryMesg();
         break;
       default:
         break;
@@ -4810,6 +4828,87 @@ class Profile {
       Field("MetabolicCalories", 196, 132, 1.0, 0.0, "kcal", false,
           ProfileType.uint16),
     );
+    final Subfield avgSwimmingCadenceSubfield = Subfield(
+      "AvgSwimmingCadence",
+      2,
+      1.0,
+      0.0,
+      "strokes/min",
+    );
+    avgSwimmingCadenceSubfield.addMap(5, 5);
+    newMesg.getField(18)!.subfields.add(avgSwimmingCadenceSubfield);
+    final Subfield avgPaddlesportCadenceSubfield = Subfield(
+      "AvgPaddlesportCadence",
+      2,
+      1.0,
+      0.0,
+      "strokes/min",
+    );
+    avgPaddlesportCadenceSubfield.addMap(5, 15);
+    avgPaddlesportCadenceSubfield.addMap(5, 37);
+    newMesg.getField(18)!.subfields.add(avgPaddlesportCadenceSubfield);
+    final Subfield avgPushCadenceSubfield = Subfield(
+      "AvgPushCadence",
+      2,
+      1.0,
+      0.0,
+      "pushes/min",
+    );
+    avgPushCadenceSubfield.addMap(5, 66);
+    avgPushCadenceSubfield.addMap(5, 65);
+    newMesg.getField(18)!.subfields.add(avgPushCadenceSubfield);
+    final Subfield maxSwimmingCadenceSubfield = Subfield(
+      "MaxSwimmingCadence",
+      2,
+      1.0,
+      0.0,
+      "strokes/min",
+    );
+    maxSwimmingCadenceSubfield.addMap(5, 5);
+    newMesg.getField(19)!.subfields.add(maxSwimmingCadenceSubfield);
+    final Subfield maxPaddlesportCadenceSubfield = Subfield(
+      "MaxPaddlesportCadence",
+      2,
+      1.0,
+      0.0,
+      "strokes/min",
+    );
+    maxPaddlesportCadenceSubfield.addMap(5, 15);
+    maxPaddlesportCadenceSubfield.addMap(5, 37);
+    newMesg.getField(19)!.subfields.add(maxPaddlesportCadenceSubfield);
+    final Subfield maxPushCadenceSubfield = Subfield(
+      "MaxPushCadence",
+      2,
+      1.0,
+      0.0,
+      "pushes/min",
+    );
+    maxPushCadenceSubfield.addMap(5, 66);
+    maxPushCadenceSubfield.addMap(5, 65);
+    newMesg.getField(19)!.subfields.add(maxPushCadenceSubfield);
+    newMesg.setField(
+      Field("AvgStrokesPerLength", 79, 132, 10.0, 0.0, "strokes/length", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgSwolf", 80, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field(
+          "NumSegmentLaps", 106, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("FrontGearShiftCount", 107, 132, 1.0, 0.0, "", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("RearGearShiftCount", 108, 132, 1.0, 0.0, "", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgGradeAdjustedSpeed", 211, 134, 1000.0, 0.0, "m/s", false,
+          ProfileType.uint32),
+    );
     return newMesg;
   }
 
@@ -6107,6 +6206,113 @@ class Profile {
     newMesg.setField(
       Field("ActiveTime", 70, 134, 1000.0, 0.0, "s", false, ProfileType.uint32),
     );
+    final Subfield totalPushesSubfield = Subfield(
+      "TotalPushes",
+      134,
+      1.0,
+      0.0,
+      "pushes",
+    );
+    totalPushesSubfield.addMap(25, 66);
+    totalPushesSubfield.addMap(25, 65);
+    newMesg.getField(10)!.subfields.add(totalPushesSubfield);
+    final Subfield avgSwimmingCadenceSubfield = Subfield(
+      "AvgSwimmingCadence",
+      2,
+      1.0,
+      0.0,
+      "strokes/min",
+    );
+    avgSwimmingCadenceSubfield.addMap(25, 5);
+    newMesg.getField(17)!.subfields.add(avgSwimmingCadenceSubfield);
+    final Subfield avgPaddlesportCadenceSubfield = Subfield(
+      "AvgPaddlesportCadence",
+      2,
+      1.0,
+      0.0,
+      "strokes/min",
+    );
+    avgPaddlesportCadenceSubfield.addMap(25, 15);
+    avgPaddlesportCadenceSubfield.addMap(25, 37);
+    newMesg.getField(17)!.subfields.add(avgPaddlesportCadenceSubfield);
+    final Subfield avgPushCadenceSubfield = Subfield(
+      "AvgPushCadence",
+      2,
+      1.0,
+      0.0,
+      "pushes/min",
+    );
+    avgPushCadenceSubfield.addMap(25, 66);
+    avgPushCadenceSubfield.addMap(25, 65);
+    newMesg.getField(17)!.subfields.add(avgPushCadenceSubfield);
+    final Subfield maxSwimmingCadenceSubfield = Subfield(
+      "MaxSwimmingCadence",
+      2,
+      1.0,
+      0.0,
+      "strokes/min",
+    );
+    maxSwimmingCadenceSubfield.addMap(25, 5);
+    newMesg.getField(18)!.subfields.add(maxSwimmingCadenceSubfield);
+    final Subfield maxPaddlesportCadenceSubfield = Subfield(
+      "MaxPaddlesportCadence",
+      2,
+      1.0,
+      0.0,
+      "strokes/min",
+    );
+    maxPaddlesportCadenceSubfield.addMap(25, 15);
+    maxPaddlesportCadenceSubfield.addMap(25, 37);
+    newMesg.getField(18)!.subfields.add(maxPaddlesportCadenceSubfield);
+    final Subfield maxPushCadenceSubfield = Subfield(
+      "MaxPushCadence",
+      2,
+      1.0,
+      0.0,
+      "pushes/min",
+    );
+    maxPushCadenceSubfield.addMap(25, 66);
+    maxPushCadenceSubfield.addMap(25, 65);
+    newMesg.getField(18)!.subfields.add(maxPushCadenceSubfield);
+    newMesg.setField(
+      Field("NecLat", 27, 133, 1.0, 0.0, "semicircles", false,
+          ProfileType.sint32),
+    );
+    newMesg.setField(
+      Field("NecLong", 28, 133, 1.0, 0.0, "semicircles", false,
+          ProfileType.sint32),
+    );
+    newMesg.setField(
+      Field("SwcLat", 29, 133, 1.0, 0.0, "semicircles", false,
+          ProfileType.sint32),
+    );
+    newMesg.setField(
+      Field("SwcLong", 30, 133, 1.0, 0.0, "semicircles", false,
+          ProfileType.sint32),
+    );
+    newMesg.setField(
+      Field("AvgSwolf", 73, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgStrokesPerLength", 90, 132, 10.0, 0.0, "strokes / length",
+          false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("FrontGearShiftCount", 96, 132, 1.0, 0.0, "", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("RearGearShiftCount", 97, 132, 1.0, 0.0, "", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("MetabolicCalories", 155, 132, 1.0, 0.0, "kcal", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgGradeAdjustedSpeed", 161, 134, 1000.0, 0.0, "m/s", false,
+          ProfileType.uint32),
+    );
     return newMesg;
   }
 
@@ -6324,6 +6530,10 @@ class Profile {
     newMesg.setField(lengthMaxRespirationRateField);
     fieldIndex++;
 
+    newMesg.setField(
+      Field("MetabolicCalories", 26, 132, 1.0, 0.0, "kcal", false,
+          ProfileType.uint16),
+    );
     return newMesg;
   }
 
@@ -8355,6 +8565,10 @@ class Profile {
     );
     fieldIndex++;
 
+    newMesg.setField(
+      Field("EnhancedAltitude", 3, 134, 5.0, 500.0, "m", false,
+          ProfileType.uint32),
+    );
     return newMesg;
   }
 
@@ -9220,6 +9434,552 @@ class Profile {
     newMesg.setField(
       Field("ActiveTime", 78, 134, 1000.0, 0.0, "s", false, ProfileType.uint32),
     );
+    newMesg.setField(
+      Field("Timestamp", 253, 134, 1.0, 0.0, "s", false, ProfileType.dateTime),
+    );
+    newMesg.setField(
+      Field("Sport", 11, 0, 1.0, 0.0, "", false, ProfileType.sport),
+    );
+    newMesg.setField(
+      Field("SubSport", 12, 0, 1.0, 0.0, "", false, ProfileType.subSport),
+    );
+    newMesg.setField(
+      Field("AvgHeartRate", 15, 2, 1.0, 0.0, "bpm", false, ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("MaxHeartRate", 16, 2, 1.0, 0.0, "bpm", false, ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("NecLat", 17, 133, 1.0, 0.0, "semicircles", false,
+          ProfileType.sint32),
+    );
+    newMesg.setField(
+      Field("NecLong", 18, 133, 1.0, 0.0, "semicircles", false,
+          ProfileType.sint32),
+    );
+    newMesg.setField(
+      Field("SwcLat", 19, 133, 1.0, 0.0, "semicircles", false,
+          ProfileType.sint32),
+    );
+    newMesg.setField(
+      Field("SwcLong", 20, 133, 1.0, 0.0, "semicircles", false,
+          ProfileType.sint32),
+    );
+    newMesg.setField(
+      Field(
+          "AvgCadence", 29, 132, 128.0, 0.0, "rpm", false, ProfileType.uint16),
+    );
+    final Subfield avgRunningCadenceSubfield = Subfield(
+      "AvgRunningCadence",
+      132,
+      128.0,
+      0.0,
+      "strides/min",
+    );
+    avgRunningCadenceSubfield.addMap(11, 1);
+    newMesg.getField(29)!.subfields.add(avgRunningCadenceSubfield);
+    final Subfield avgSwimmingCadenceSubfield = Subfield(
+      "AvgSwimmingCadence",
+      132,
+      128.0,
+      0.0,
+      "strokes/min",
+    );
+    avgSwimmingCadenceSubfield.addMap(11, 5);
+    newMesg.getField(29)!.subfields.add(avgSwimmingCadenceSubfield);
+    final Subfield avgPaddlesportCadenceSubfield = Subfield(
+      "AvgPaddlesportCadence",
+      132,
+      128.0,
+      0.0,
+      "strokes/min",
+    );
+    avgPaddlesportCadenceSubfield.addMap(11, 15);
+    avgPaddlesportCadenceSubfield.addMap(11, 37);
+    newMesg.getField(29)!.subfields.add(avgPaddlesportCadenceSubfield);
+    final Subfield avgPushCadenceSubfield = Subfield(
+      "AvgPushCadence",
+      132,
+      1.0,
+      0.0,
+      "pushes/min",
+    );
+    avgPushCadenceSubfield.addMap(11, 66);
+    avgPushCadenceSubfield.addMap(11, 65);
+    newMesg.getField(29)!.subfields.add(avgPushCadenceSubfield);
+    newMesg.setField(
+      Field(
+          "MaxCadence", 30, 132, 128.0, 0.0, "rpm", false, ProfileType.uint16),
+    );
+    final Subfield maxRunningCadenceSubfield = Subfield(
+      "MaxRunningCadence",
+      132,
+      128.0,
+      0.0,
+      "strides/min",
+    );
+    maxRunningCadenceSubfield.addMap(11, 1);
+    newMesg.getField(30)!.subfields.add(maxRunningCadenceSubfield);
+    final Subfield maxSwimmingCadenceSubfield = Subfield(
+      "MaxSwimmingCadence",
+      132,
+      128.0,
+      0.0,
+      "strokes/min",
+    );
+    maxSwimmingCadenceSubfield.addMap(11, 5);
+    newMesg.getField(30)!.subfields.add(maxSwimmingCadenceSubfield);
+    final Subfield maxPaddlesportCadenceSubfield = Subfield(
+      "MaxPaddlesportCadence",
+      132,
+      128.0,
+      0.0,
+      "strokes/min",
+    );
+    maxPaddlesportCadenceSubfield.addMap(11, 15);
+    maxPaddlesportCadenceSubfield.addMap(11, 37);
+    newMesg.getField(30)!.subfields.add(maxPaddlesportCadenceSubfield);
+    final Subfield maxPushCadenceSubfield = Subfield(
+      "MaxPushCadence",
+      132,
+      1.0,
+      0.0,
+      "pushes/min",
+    );
+    maxPushCadenceSubfield.addMap(11, 66);
+    maxPushCadenceSubfield.addMap(11, 65);
+    newMesg.getField(30)!.subfields.add(maxPushCadenceSubfield);
+    newMesg.setField(
+      Field("TotalCycles", 31, 134, 1.0, 0.0, "cycles", false,
+          ProfileType.uint32),
+    );
+    final Subfield totalStridesSubfield = Subfield(
+      "TotalStrides",
+      134,
+      1.0,
+      0.0,
+      "strides",
+    );
+    totalStridesSubfield.addMap(11, 1);
+    totalStridesSubfield.addMap(11, 11);
+    newMesg.getField(31)!.subfields.add(totalStridesSubfield);
+    final Subfield totalStrokesSubfield = Subfield(
+      "TotalStrokes",
+      134,
+      1.0,
+      0.0,
+      "strokes",
+    );
+    totalStrokesSubfield.addMap(11, 2);
+    totalStrokesSubfield.addMap(11, 5);
+    totalStrokesSubfield.addMap(11, 15);
+    totalStrokesSubfield.addMap(11, 37);
+    newMesg.getField(31)!.subfields.add(totalStrokesSubfield);
+    final Subfield totalRepsSubfield = Subfield(
+      "TotalReps",
+      134,
+      1.0,
+      0.0,
+      "reps",
+    );
+    totalRepsSubfield.addMap(11, 62);
+    newMesg.getField(31)!.subfields.add(totalRepsSubfield);
+    final Subfield totalPushesSubfield = Subfield(
+      "TotalPushes",
+      134,
+      1.0,
+      0.0,
+      "pushes",
+    );
+    totalPushesSubfield.addMap(11, 66);
+    totalPushesSubfield.addMap(11, 65);
+    newMesg.getField(31)!.subfields.add(totalPushesSubfield);
+    newMesg.setField(
+      Field("AvgTemperature", 32, 1, 1.0, 0.0, "C", false, ProfileType.sint8),
+    );
+    newMesg.setField(
+      Field("MaxTemperature", 33, 1, 1.0, 0.0, "C", false, ProfileType.sint8),
+    );
+    newMesg.setField(
+      Field("MinTemperature", 34, 1, 1.0, 0.0, "C", false, ProfileType.sint8),
+    );
+    newMesg.setField(
+      Field("AvgVerticalOscillation", 35, 132, 10.0, 0.0, "mm", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgVerticalRatio", 36, 132, 100.0, 0.0, "percent", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field(
+          "AvgStanceTime", 37, 132, 10.0, 0.0, "ms", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgStanceTimeBalance", 38, 132, 100.0, 0.0, "percent", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field(
+          "AvgStepLength", 39, 132, 10.0, 0.0, "mm", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgPower", 40, 132, 1.0, 0.0, "watts", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("MaxPower", 41, 132, 1.0, 0.0, "watts", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("NormalizedPower", 42, 132, 1.0, 0.0, "watts", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("LeftRightBalance", 43, 132, 1.0, 0.0, "", false,
+          ProfileType.leftRightBalance100),
+    );
+    newMesg.setField(
+      Field(
+          "TimeStanding", 44, 134, 1000.0, 0.0, "s", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("AvgLeftPco", 45, 1, 1.0, 0.0, "mm", false, ProfileType.sint8),
+    );
+    newMesg.setField(
+      Field("AvgRightPco", 46, 1, 1.0, 0.0, "mm", false, ProfileType.sint8),
+    );
+    newMesg.setField(
+      Field("AvgLeftPowerPhase", 47, 2, 0.7111111, 0.0, "degrees", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgLeftPowerPhasePeak", 48, 2, 0.7111111, 0.0, "degrees", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgRightPowerPhase", 49, 2, 0.7111111, 0.0, "degrees", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgRightPowerPhasePeak", 50, 2, 0.7111111, 0.0, "degrees", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgPowerPosition", 51, 132, 1.0, 0.0, "watts", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("MaxPowerPosition", 52, 132, 1.0, 0.0, "watts", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgLeftTorqueEffectiveness", 53, 2, 2.0, 0.0, "percent", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgRightTorqueEffectiveness", 54, 2, 2.0, 0.0, "percent", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgLeftPedalSmoothness", 55, 2, 2.0, 0.0, "percent", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgRightPedalSmoothness", 56, 2, 2.0, 0.0, "percent", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgCombinedPedalSmoothness", 57, 2, 2.0, 0.0, "percent", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgFlow", 58, 136, 1.0, 0.0, "Flow", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field(
+          "TotalGrit", 59, 136, 1.0, 0.0, "kGrit", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("SwimStroke", 62, 0, 1.0, 0.0, "", false, ProfileType.swimStroke),
+    );
+    newMesg.setField(
+      Field("NumActiveLengths", 63, 132, 1.0, 0.0, "lengths", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgSwolf", 64, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgStrokeDistance", 65, 132, 100.0, 0.0, "m", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgStrokesPerLength", 66, 132, 10.0, 0.0, "strokes / length",
+          false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("FirstLapIndex", 67, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("NumLaps", 68, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("ClimbGradingScale", 69, 0, 1.0, 0.0, "", false,
+          ProfileType.climbGradingScale),
+    );
+    newMesg.setField(
+      Field(
+          "ClimbGradeValue", 70, 134, 1.0, 0.0, "", false, ProfileType.uint32),
+    );
+    final Subfield climbGradeYdsSubfield = Subfield(
+      "ClimbGradeYds",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeYdsSubfield.addMap(69, 0);
+    newMesg.getField(70)!.subfields.add(climbGradeYdsSubfield);
+    final Subfield climbGradeUiaaSubfield = Subfield(
+      "ClimbGradeUiaa",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeUiaaSubfield.addMap(69, 1);
+    newMesg.getField(70)!.subfields.add(climbGradeUiaaSubfield);
+    final Subfield climbGradeFrenchSubfield = Subfield(
+      "ClimbGradeFrench",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeFrenchSubfield.addMap(69, 2);
+    newMesg.getField(70)!.subfields.add(climbGradeFrenchSubfield);
+    final Subfield climbGradeBritishAdjectivalSubfield = Subfield(
+      "ClimbGradeBritishAdjectival",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeBritishAdjectivalSubfield.addMap(69, 3);
+    newMesg.getField(70)!.subfields.add(climbGradeBritishAdjectivalSubfield);
+    final Subfield climbGradeBritishTechnicalSubfield = Subfield(
+      "ClimbGradeBritishTechnical",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeBritishTechnicalSubfield.addMap(69, 4);
+    newMesg.getField(70)!.subfields.add(climbGradeBritishTechnicalSubfield);
+    final Subfield climbGradeEwbankSubfield = Subfield(
+      "ClimbGradeEwbank",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeEwbankSubfield.addMap(69, 5);
+    newMesg.getField(70)!.subfields.add(climbGradeEwbankSubfield);
+    final Subfield climbGradeBrazilianSubfield = Subfield(
+      "ClimbGradeBrazilian",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeBrazilianSubfield.addMap(69, 6);
+    newMesg.getField(70)!.subfields.add(climbGradeBrazilianSubfield);
+    final Subfield climbGradeSaxonSubfield = Subfield(
+      "ClimbGradeSaxon",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeSaxonSubfield.addMap(69, 7);
+    newMesg.getField(70)!.subfields.add(climbGradeSaxonSubfield);
+    final Subfield climbGradeVerminSubfield = Subfield(
+      "ClimbGradeVermin",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeVerminSubfield.addMap(69, 8);
+    newMesg.getField(70)!.subfields.add(climbGradeVerminSubfield);
+    final Subfield climbGradeFontSubfield = Subfield(
+      "ClimbGradeFont",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeFontSubfield.addMap(69, 9);
+    newMesg.getField(70)!.subfields.add(climbGradeFontSubfield);
+    final Subfield climbGradeDankyuSubfield = Subfield(
+      "ClimbGradeDankyu",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbGradeDankyuSubfield.addMap(69, 10);
+    newMesg.getField(70)!.subfields.add(climbGradeDankyuSubfield);
+    newMesg.setField(
+      Field("Status", 71, 0, 1.0, 0.0, "", false, ProfileType.splitStatus),
+    );
+    newMesg.setField(
+      Field("NumFalls", 72, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("ClimbSend", 73, 0, 1.0, 0.0, "", false, ProfileType.bool_),
+    );
+    newMesg.setField(
+      Field("MetabolicCalories", 79, 132, 1.0, 0.0, "kcal", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("TotalFractionalAscent", 80, 2, 100.0, 0.0, "m", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("TotalFractionalDescent", 81, 2, 100.0, 0.0, "m", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgGrade", 88, 131, 100.0, 0.0, "%", false, ProfileType.sint16),
+    );
+    newMesg.setField(
+      Field("MaxGrade", 89, 131, 100.0, 0.0, "%", false, ProfileType.sint16),
+    );
+    newMesg.setField(
+      Field(
+          "MinCadence", 90, 132, 128.0, 0.0, "rpm", false, ProfileType.uint16),
+    );
+    final Subfield minRunningCadenceSubfield = Subfield(
+      "MinRunningCadence",
+      132,
+      128.0,
+      0.0,
+      "strides/min",
+    );
+    minRunningCadenceSubfield.addMap(11, 1);
+    newMesg.getField(90)!.subfields.add(minRunningCadenceSubfield);
+    final Subfield minSwimmingCadenceSubfield = Subfield(
+      "MinSwimmingCadence",
+      132,
+      128.0,
+      0.0,
+      "strokes/min",
+    );
+    minSwimmingCadenceSubfield.addMap(11, 5);
+    newMesg.getField(90)!.subfields.add(minSwimmingCadenceSubfield);
+    final Subfield minPaddlesportCadenceSubfield = Subfield(
+      "MinPaddlesportCadence",
+      132,
+      128.0,
+      0.0,
+      "strokes/min",
+    );
+    minPaddlesportCadenceSubfield.addMap(11, 15);
+    minPaddlesportCadenceSubfield.addMap(11, 37);
+    newMesg.getField(90)!.subfields.add(minPaddlesportCadenceSubfield);
+    final Subfield minPushCadenceSubfield = Subfield(
+      "MinPushCadence",
+      132,
+      1.0,
+      0.0,
+      "pushes/min",
+    );
+    minPushCadenceSubfield.addMap(11, 66);
+    minPushCadenceSubfield.addMap(11, 65);
+    newMesg.getField(90)!.subfields.add(minPushCadenceSubfield);
+    newMesg.setField(
+      Field("AvgGradeAdjustedSpeed", 93, 134, 1000.0, 0.0, "m/s", false,
+          ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("AvgStress", 94, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgVam", 99, 132, 1000.0, 0.0, "m/s", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("JumpCount", 104, 2, 1.0, 0.0, "", false, ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("DiveSectionType", 112, 0, 1.0, 0.0, "", false,
+          ProfileType.diveSectionType),
+    );
+    newMesg.setField(
+      Field("AvgAscentRate", 113, 134, 1000.0, 0.0, "m/s", false,
+          ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("MaxAscentRate", 114, 134, 1000.0, 0.0, "m/s", false,
+          ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("AvgDescentRate", 115, 134, 1000.0, 0.0, "m/s", false,
+          ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("MaxDescentRate", 116, 134, 1000.0, 0.0, "m/s", false,
+          ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("TotalAscentTime", 117, 134, 1000.0, 0.0, "s", false,
+          ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("TotalDescentTime", 118, 134, 1000.0, 0.0, "s", false,
+          ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("TotalHangTime", 119, 134, 1000.0, 0.0, "s", false,
+          ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("ApneaDiscipline", 120, 0, 1.0, 0.0, "", false,
+          ProfileType.apneaDiscipline),
+    );
+    newMesg.setField(
+      Field("AvgDepth", 121, 134, 1000.0, 0.0, "m", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("MaxDepth", 122, 134, 1000.0, 0.0, "m", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("MinHeartRate", 124, 2, 1.0, 0.0, "bpm", false, ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("SurfaceInterval", 127, 134, 1.0, 0.0, "s", false,
+          ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("TotalFractionalCycles", 142, 2, 128.0, 0.0, "cycles", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgStanceTimePercent", 144, 132, 100.0, 0.0, "percent", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("TotalAnaerobicTrainingEffect", 168, 2, 10.0, 0.0, "", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("FrontGearShiftCount", 169, 132, 1.0, 0.0, "", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("RearGearShiftCount", 170, 132, 1.0, 0.0, "", false,
+          ProfileType.uint16),
+    );
     return newMesg;
   }
 
@@ -9340,6 +10100,434 @@ class Profile {
 
     newMesg.setField(
       Field("ActiveTime", 65, 134, 1000.0, 0.0, "s", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("Timestamp", 253, 134, 1.0, 0.0, "s", false, ProfileType.dateTime),
+    );
+    newMesg.setField(
+      Field("Sport", 1, 0, 1.0, 0.0, "", false, ProfileType.sport),
+    );
+    newMesg.setField(
+      Field("SubSport", 2, 0, 1.0, 0.0, "", false, ProfileType.subSport),
+    );
+    newMesg.setField(
+      Field(
+          "AvgCadence", 14, 132, 128.0, 0.0, "rpm", false, ProfileType.uint16),
+    );
+    final Subfield avgRunningCadenceSubfield = Subfield(
+      "AvgRunningCadence",
+      132,
+      128.0,
+      0.0,
+      "strides/min",
+    );
+    avgRunningCadenceSubfield.addMap(1, 1);
+    newMesg.getField(14)!.subfields.add(avgRunningCadenceSubfield);
+    final Subfield avgSwimmingCadenceSubfield = Subfield(
+      "AvgSwimmingCadence",
+      132,
+      128.0,
+      0.0,
+      "strokes/min",
+    );
+    avgSwimmingCadenceSubfield.addMap(1, 5);
+    newMesg.getField(14)!.subfields.add(avgSwimmingCadenceSubfield);
+    final Subfield avgPaddlesportCadenceSubfield = Subfield(
+      "AvgPaddlesportCadence",
+      132,
+      128.0,
+      0.0,
+      "strokes/min",
+    );
+    avgPaddlesportCadenceSubfield.addMap(1, 15);
+    avgPaddlesportCadenceSubfield.addMap(1, 37);
+    newMesg.getField(14)!.subfields.add(avgPaddlesportCadenceSubfield);
+    final Subfield avgPushCadenceSubfield = Subfield(
+      "AvgPushCadence",
+      132,
+      1.0,
+      0.0,
+      "pushes/min",
+    );
+    avgPushCadenceSubfield.addMap(1, 66);
+    avgPushCadenceSubfield.addMap(1, 65);
+    newMesg.getField(14)!.subfields.add(avgPushCadenceSubfield);
+    newMesg.setField(
+      Field(
+          "MaxCadence", 15, 132, 128.0, 0.0, "rpm", false, ProfileType.uint16),
+    );
+    final Subfield maxRunningCadenceSubfield = Subfield(
+      "MaxRunningCadence",
+      132,
+      128.0,
+      0.0,
+      "strides/min",
+    );
+    maxRunningCadenceSubfield.addMap(1, 1);
+    newMesg.getField(15)!.subfields.add(maxRunningCadenceSubfield);
+    final Subfield maxSwimmingCadenceSubfield = Subfield(
+      "MaxSwimmingCadence",
+      132,
+      128.0,
+      0.0,
+      "strokes/min",
+    );
+    maxSwimmingCadenceSubfield.addMap(1, 5);
+    newMesg.getField(15)!.subfields.add(maxSwimmingCadenceSubfield);
+    final Subfield maxPaddlesportCadenceSubfield = Subfield(
+      "MaxPaddlesportCadence",
+      132,
+      128.0,
+      0.0,
+      "strokes/min",
+    );
+    maxPaddlesportCadenceSubfield.addMap(1, 15);
+    maxPaddlesportCadenceSubfield.addMap(1, 37);
+    newMesg.getField(15)!.subfields.add(maxPaddlesportCadenceSubfield);
+    final Subfield maxPushCadenceSubfield = Subfield(
+      "MaxPushCadence",
+      132,
+      1.0,
+      0.0,
+      "pushes/min",
+    );
+    maxPushCadenceSubfield.addMap(1, 66);
+    maxPushCadenceSubfield.addMap(1, 65);
+    newMesg.getField(15)!.subfields.add(maxPushCadenceSubfield);
+    newMesg.setField(
+      Field("TotalCycles", 16, 134, 1.0, 0.0, "cycles", false,
+          ProfileType.uint32),
+    );
+    final Subfield totalStridesSubfield = Subfield(
+      "TotalStrides",
+      134,
+      1.0,
+      0.0,
+      "strides",
+    );
+    totalStridesSubfield.addMap(1, 1);
+    totalStridesSubfield.addMap(1, 11);
+    newMesg.getField(16)!.subfields.add(totalStridesSubfield);
+    final Subfield totalStrokesSubfield = Subfield(
+      "TotalStrokes",
+      134,
+      1.0,
+      0.0,
+      "strokes",
+    );
+    totalStrokesSubfield.addMap(1, 2);
+    totalStrokesSubfield.addMap(1, 5);
+    totalStrokesSubfield.addMap(1, 15);
+    totalStrokesSubfield.addMap(1, 37);
+    newMesg.getField(16)!.subfields.add(totalStrokesSubfield);
+    final Subfield totalRepsSubfield = Subfield(
+      "TotalReps",
+      134,
+      1.0,
+      0.0,
+      "reps",
+    );
+    totalRepsSubfield.addMap(1, 62);
+    newMesg.getField(16)!.subfields.add(totalRepsSubfield);
+    final Subfield totalPushesSubfield = Subfield(
+      "TotalPushes",
+      134,
+      1.0,
+      0.0,
+      "pushes",
+    );
+    totalPushesSubfield.addMap(1, 66);
+    totalPushesSubfield.addMap(1, 65);
+    newMesg.getField(16)!.subfields.add(totalPushesSubfield);
+    newMesg.setField(
+      Field("AvgTemperature", 17, 1, 1.0, 0.0, "C", false, ProfileType.sint8),
+    );
+    newMesg.setField(
+      Field("MaxTemperature", 18, 1, 1.0, 0.0, "C", false, ProfileType.sint8),
+    );
+    newMesg.setField(
+      Field("MinTemperature", 19, 1, 1.0, 0.0, "C", false, ProfileType.sint8),
+    );
+    newMesg.setField(
+      Field("AvgVerticalOscillation", 20, 132, 10.0, 0.0, "mm", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgVerticalRatio", 21, 132, 100.0, 0.0, "percent", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field(
+          "AvgStanceTime", 22, 132, 10.0, 0.0, "ms", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgStanceTimeBalance", 23, 132, 100.0, 0.0, "percent", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field(
+          "AvgStepLength", 24, 132, 10.0, 0.0, "mm", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgPower", 25, 132, 1.0, 0.0, "watts", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("MaxPower", 26, 132, 1.0, 0.0, "watts", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("NormalizedPower", 27, 132, 1.0, 0.0, "watts", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("LeftRightBalance", 28, 132, 1.0, 0.0, "", false,
+          ProfileType.leftRightBalance100),
+    );
+    newMesg.setField(
+      Field(
+          "TimeStanding", 29, 134, 1000.0, 0.0, "s", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("AvgLeftPco", 30, 1, 1.0, 0.0, "mm", false, ProfileType.sint8),
+    );
+    newMesg.setField(
+      Field("AvgRightPco", 31, 1, 1.0, 0.0, "mm", false, ProfileType.sint8),
+    );
+    newMesg.setField(
+      Field("AvgLeftPowerPhase", 32, 2, 0.7111111, 0.0, "degrees", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgLeftPowerPhasePeak", 33, 2, 0.7111111, 0.0, "degrees", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgRightPowerPhase", 34, 2, 0.7111111, 0.0, "degrees", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgRightPowerPhasePeak", 35, 2, 0.7111111, 0.0, "degrees", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgPowerPosition", 36, 132, 1.0, 0.0, "watts", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("MaxPowerPosition", 37, 132, 1.0, 0.0, "watts", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgLeftTorqueEffectiveness", 38, 2, 2.0, 0.0, "percent", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgRightTorqueEffectiveness", 39, 2, 2.0, 0.0, "percent", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgLeftPedalSmoothness", 40, 2, 2.0, 0.0, "percent", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgRightPedalSmoothness", 41, 2, 2.0, 0.0, "percent", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgCombinedPedalSmoothness", 42, 2, 2.0, 0.0, "percent", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgFlow", 43, 136, 1.0, 0.0, "Flow", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field(
+          "TotalGrit", 44, 136, 1.0, 0.0, "kGrit", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("SwimStroke", 47, 0, 1.0, 0.0, "", false, ProfileType.swimStroke),
+    );
+    newMesg.setField(
+      Field("NumActiveLengths", 48, 132, 1.0, 0.0, "lengths", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgSwolf", 49, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgStrokeDistance", 50, 132, 100.0, 0.0, "m", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgStrokesPerLength", 51, 132, 10.0, 0.0, "strokes / length",
+          false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("AvgAscent", 52, 132, 1.0, 0.0, "m", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("MaxAscent", 53, 132, 1.0, 0.0, "m", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("ClimbGradingScale", 54, 0, 1.0, 0.0, "", false,
+          ProfileType.climbGradingScale),
+    );
+    newMesg.setField(
+      Field("ClimbMaxGradeValue", 55, 134, 1.0, 0.0, "", false,
+          ProfileType.uint32),
+    );
+    final Subfield climbMaxGradeYdsSubfield = Subfield(
+      "ClimbMaxGradeYds",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeYdsSubfield.addMap(54, 0);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeYdsSubfield);
+    final Subfield climbMaxGradeUiaaSubfield = Subfield(
+      "ClimbMaxGradeUiaa",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeUiaaSubfield.addMap(54, 1);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeUiaaSubfield);
+    final Subfield climbMaxGradeFrenchSubfield = Subfield(
+      "ClimbMaxGradeFrench",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeFrenchSubfield.addMap(54, 2);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeFrenchSubfield);
+    final Subfield climbMaxGradeBritishAdjectivalSubfield = Subfield(
+      "ClimbMaxGradeBritishAdjectival",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeBritishAdjectivalSubfield.addMap(54, 3);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeBritishAdjectivalSubfield);
+    final Subfield climbMaxGradeBritishTechnicalSubfield = Subfield(
+      "ClimbMaxGradeBritishTechnical",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeBritishTechnicalSubfield.addMap(54, 4);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeBritishTechnicalSubfield);
+    final Subfield climbMaxGradeEwbankSubfield = Subfield(
+      "ClimbMaxGradeEwbank",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeEwbankSubfield.addMap(54, 5);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeEwbankSubfield);
+    final Subfield climbMaxGradeBrazilianSubfield = Subfield(
+      "ClimbMaxGradeBrazilian",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeBrazilianSubfield.addMap(54, 6);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeBrazilianSubfield);
+    final Subfield climbMaxGradeSaxonSubfield = Subfield(
+      "ClimbMaxGradeSaxon",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeSaxonSubfield.addMap(54, 7);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeSaxonSubfield);
+    final Subfield climbMaxGradeVerminSubfield = Subfield(
+      "ClimbMaxGradeVermin",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeVerminSubfield.addMap(54, 8);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeVerminSubfield);
+    final Subfield climbMaxGradeFontSubfield = Subfield(
+      "ClimbMaxGradeFont",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeFontSubfield.addMap(54, 9);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeFontSubfield);
+    final Subfield climbMaxGradeDankyuSubfield = Subfield(
+      "ClimbMaxGradeDankyu",
+      0,
+      1.0,
+      0.0,
+      "",
+    );
+    climbMaxGradeDankyuSubfield.addMap(54, 10);
+    newMesg.getField(55)!.subfields.add(climbMaxGradeDankyuSubfield);
+    newMesg.setField(
+      Field("NumFalls", 56, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("NumClimbsAttempted", 58, 132, 1.0, 0.0, "", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("NumClimbsCompleted", 59, 132, 1.0, 0.0, "", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("MaxDistance", 60, 134, 100.0, 0.0, "m", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("MetabolicCalories", 64, 132, 1.0, 0.0, "kcal", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("TotalFractionalAscent", 66, 2, 100.0, 0.0, "m", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("TotalFractionalDescent", 67, 2, 100.0, 0.0, "m", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgFractionalAscent", 68, 2, 100.0, 0.0, "m", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("MaxFractionalAscent", 69, 2, 100.0, 0.0, "m", false,
+          ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgGradeAdjustedSpeed", 71, 134, 1000.0, 0.0, "m/s", false,
+          ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("AvgStress", 72, 132, 1.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("StartTime", 79, 134, 1.0, 0.0, "", false, ProfileType.dateTime),
+    );
+    newMesg.setField(
+      Field("MinHeartRate", 87, 2, 1.0, 0.0, "bpm", false, ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("AvgStanceTimePercent", 91, 132, 100.0, 0.0, "percent", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("MaxTotalTimerTime", 101, 134, 1000.0, 0.0, "s", false,
+          ProfileType.uint32),
     );
     return newMesg;
   }
@@ -10752,6 +11940,10 @@ class Profile {
     );
     fieldIndex++;
 
+    newMesg.setField(
+      Field("MetabolicCalories", 88, 132, 1.0, 0.0, "kcal", false,
+          ProfileType.uint16),
+    );
     return newMesg;
   }
 
@@ -14019,6 +15211,17 @@ class Profile {
     newMesg.setField(
       Field(
           "UpdateTimestamp", 7, 134, 1.0, 0.0, "", false, ProfileType.dateTime),
+    );
+    return newMesg;
+  }
+
+  static Mesg createBatteryMesg() {
+    final Mesg newMesg = Mesg("Battery", MesgNum.battery);
+    newMesg.setField(
+      Field("Timestamp", 253, 134, 1.0, 0.0, "", false, ProfileType.dateTime),
+    );
+    newMesg.setField(
+      Field("Capacity", 2, 2, 1.0, 0.0, "%", false, ProfileType.uint8),
     );
     return newMesg;
   }
