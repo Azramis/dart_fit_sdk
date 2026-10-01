@@ -1,0 +1,32 @@
+class FrenchGradingScale {
+  static const int n1 = 0;
+  static const int n2 = 1;
+  static const int n3 = 2;
+  static const int n4a = 3;
+  static const int n4b = 4;
+  static const int n4c = 5;
+  static const int n5a = 6;
+  static const int n5b = 7;
+  static const int n5c = 8;
+  static const int n6a = 9;
+  static const int n6aPlus = 10;
+  static const int n6b = 11;
+  static const int n6bPlus = 12;
+  static const int n6c = 13;
+  static const int n6cPlus = 14;
+  static const int n7a = 15;
+  static const int n7aPlus = 16;
+  static const int n7b = 17;
+  static const int n7bPlus = 18;
+  static const int n7c = 19;
+  static const int n7cPlus = 20;
+  static const int n8a = 21;
+  static const int n8aPlus = 22;
+  static const int n8b = 23;
+  static const int n8bPlus = 24;
+  static const int n8c = 25;
+  static const int n8cPlus = 26;
+  static const int n9a = 27;
+  static const int n9aPlus = 28;
+  static const int n9b = 29;
+}

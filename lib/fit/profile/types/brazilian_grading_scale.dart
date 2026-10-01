@@ -1,0 +1,29 @@
+class BrazilianGradingScale {
+  static const int n2 = 0;
+  static const int n3 = 1;
+  static const int n3c = 2;
+  static const int n4 = 3;
+  static const int n5a = 4;
+  static const int n5b = 5;
+  static const int n5c = 6;
+  static const int n6a = 7;
+  static const int n6b = 8;
+  static const int n6c = 9;
+  static const int n7a = 10;
+  static const int n7b = 11;
+  static const int n7c = 12;
+  static const int n8a = 13;
+  static const int n8b = 14;
+  static const int n8c = 15;
+  static const int n9a = 16;
+  static const int n9b = 17;
+  static const int n9c = 18;
+  static const int n10a = 19;
+  static const int n10b = 20;
+  static const int n10c = 21;
+  static const int n11a = 22;
+  static const int n11b = 23;
+  static const int n11c = 24;
+  static const int n12a = 25;
+  static const int n12b = 26;
+}

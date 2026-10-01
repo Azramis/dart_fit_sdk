@@ -106,6 +106,7 @@ class SegmentLapMesg extends Mesg {
   static const int fieldEnhancedAvgAltitude = 91;
   static const int fieldEnhancedMaxAltitude = 92;
   static const int fieldEnhancedMinAltitude = 93;
+  static const int fieldMetabolicCalories = 88;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   SegmentLapMesg() : super.from(Profile.getMesg(MesgNum.segmentLap));
@@ -981,5 +982,14 @@ class SegmentLapMesg extends Mesg {
       subfieldInfo: Fit.subfieldIndexMainField,
     );
     return (val as num?)?.toDouble();
+  }
+
+  int? getMetabolicCalories() {
+    final val = getFieldValue(
+      88,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
   }
 }

@@ -184,6 +184,12 @@ class SessionMesg extends Mesg {
   static const int fieldMaxCoreTemperature = 210;
   static const int fieldActiveTime = 78;
   static const int fieldMetabolicCalories = 196;
+  static const int fieldAvgStrokesPerLength = 79;
+  static const int fieldAvgSwolf = 80;
+  static const int fieldNumSegmentLaps = 106;
+  static const int fieldFrontGearShiftCount = 107;
+  static const int fieldRearGearShiftCount = 108;
+  static const int fieldAvgGradeAdjustedSpeed = 211;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   SessionMesg() : super.from(Profile.getMesg(MesgNum.session));
@@ -1671,5 +1677,59 @@ class SessionMesg extends Mesg {
       subfieldInfo: Fit.subfieldIndexMainField,
     );
     return val as int?;
+  }
+
+  double? getAvgStrokesPerLength() {
+    final val = getFieldValue(
+      79,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
+  }
+
+  int? getAvgSwolf() {
+    final val = getFieldValue(
+      80,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getNumSegmentLaps() {
+    final val = getFieldValue(
+      106,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getFrontGearShiftCount() {
+    final val = getFieldValue(
+      107,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  int? getRearGearShiftCount() {
+    final val = getFieldValue(
+      108,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return val as int?;
+  }
+
+  double? getAvgGradeAdjustedSpeed() {
+    final val = getFieldValue(
+      211,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
   }
 }

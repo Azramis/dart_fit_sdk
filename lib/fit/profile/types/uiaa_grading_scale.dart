@@ -1,0 +1,30 @@
+class UiaaGradingScale {
+  static const int i = 0;
+  static const int iI = 1;
+  static const int iII = 2;
+  static const int iVMinus = 3;
+  static const int iV = 4;
+  static const int iVPlus = 5;
+  static const int vMinus = 6;
+  static const int v = 7;
+  static const int vPlus = 8;
+  static const int vIMinus = 9;
+  static const int vI = 10;
+  static const int vIPlus = 11;
+  static const int vIIMinus = 12;
+  static const int vII = 13;
+  static const int vIIPlus = 14;
+  static const int vIIIMinus = 15;
+  static const int vIII = 16;
+  static const int vIIIPlus = 17;
+  static const int iXMinus = 18;
+  static const int iX = 19;
+  static const int iXPlus = 20;
+  static const int xMinus = 21;
+  static const int x = 22;
+  static const int xPlus = 23;
+  static const int xIMinus = 24;
+  static const int xI = 25;
+  static const int xIPlus = 26;
+  static const int xIIMinus = 27;
+}

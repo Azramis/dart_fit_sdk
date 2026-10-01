@@ -1,0 +1,37 @@
+class EwbankGradingScale {
+  static const int n4 = 0;
+  static const int n5 = 1;
+  static const int n6 = 2;
+  static const int n7 = 3;
+  static const int n8 = 4;
+  static const int n9 = 5;
+  static const int n10 = 6;
+  static const int n11 = 7;
+  static const int n12 = 8;
+  static const int n13 = 9;
+  static const int n14 = 10;
+  static const int n15 = 11;
+  static const int n16 = 12;
+  static const int n17 = 13;
+  static const int n18 = 14;
+  static const int n19 = 15;
+  static const int n20 = 16;
+  static const int n21 = 17;
+  static const int n22 = 18;
+  static const int n23 = 19;
+  static const int n24 = 20;
+  static const int n25 = 21;
+  static const int n26 = 22;
+  static const int n27 = 23;
+  static const int n28 = 24;
+  static const int n29 = 25;
+  static const int n30 = 26;
+  static const int n31 = 27;
+  static const int n32 = 28;
+  static const int n33 = 29;
+  static const int n34 = 30;
+  static const int n35 = 31;
+  static const int n36 = 32;
+  static const int n37 = 33;
+  static const int n38 = 34;
+}

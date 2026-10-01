@@ -55,6 +55,7 @@ enum MesgType {
   antChannelId('AntChannelId', 'ant_channel_id', MesgNum.antChannelId),
   length('Length', 'length', MesgNum.length),
   monitoringInfo('MonitoringInfo', 'monitoring_info', MesgNum.monitoringInfo),
+  battery('Battery', 'battery', MesgNum.battery),
   pad('Pad', 'pad', MesgNum.pad),
   slaveDevice('SlaveDevice', 'slave_device', MesgNum.slaveDevice),
   connectivity('Connectivity', 'connectivity', MesgNum.connectivity),

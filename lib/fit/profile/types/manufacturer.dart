@@ -254,4 +254,6 @@ class Manufacturer {
   static const int cadenceApp = 350;
   static const int unaWatch = 351;
   static const int tymewear = 352;
+  static const int exposureLights = 353;
+  static const int fortoCycling = 354;
 }

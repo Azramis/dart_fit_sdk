@@ -9,6 +9,7 @@ class BarometerDataMesg extends Mesg {
   static const int fieldTimestampMs = 0;
   static const int fieldSampleTimeOffset = 1;
   static const int fieldBaroPres = 2;
+  static const int fieldEnhancedAltitude = 3;
   static const int fieldInvalid = Fit.fieldNumInvalid;
 
   BarometerDataMesg() : super.from(Profile.getMesg(MesgNum.barometerData));
@@ -52,5 +53,14 @@ class BarometerDataMesg extends Mesg {
       subfieldInfo: Fit.subfieldIndexMainField,
     );
     return val as int?;
+  }
+
+  double? getEnhancedAltitude() {
+    final val = getFieldValue(
+      3,
+      index: 0,
+      subfieldInfo: Fit.subfieldIndexMainField,
+    );
+    return (val as num?)?.toDouble();
   }
 }
