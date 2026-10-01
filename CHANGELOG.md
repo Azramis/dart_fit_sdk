@@ -55,6 +55,21 @@
 
 ## 0.6.0
 
+* **FIT profile 21.217.0** (from 21.214.0, additive):
+  * The `Battery` message (`BatteryMesg`, `MesgNum.battery` = 104).
+  * 15 types:
+    * `ClimbGradingScale`, with its 11 grading scales: YDS, UIAA, French, British adjectival and technical, Ewbank, Brazilian, Saxon, Vermin, Font and Dankyu.
+    * `SplitStatus`, `DiveSectionType` and `ApneaDiscipline`.
+  * The manufacturers `exposureLights` (353) and `fortoCycling` (354).
+  * New fields and subfields on `Session`, `Lap`, `Length`, `SegmentLap`, `BarometerData`, `Split` and `SplitSummary`. Examples: swimming, paddlesport and push cadences, and climbing grades on splits.
+* **Subfield-only types in `ProfileType`**: the profile updater only gave `ProfileType` values to the types of fields. Types that only subfields use now get one too.
+  * The 11 climbing grade scales only type subfields of `ClimbGradeValue` (`Split`, `SplitSummary`). They are now in `FitProfileCatalog.enumTypes`, with their values, base types and docs.
+  * Their values are the first generated names that start with a digit. Their Dart constants take an `n` prefix (`YdsGradingScale.n510a` for 5.10a), but the catalog gives the profile name (`510a`).
+* **Typed getters for new subfields**: the profile updater added new subfields to `Profile` only. It now also adds them to the message classes:
+  * their index in `<Mesg><Field>Subfield`, creating the class if needed (e.g. `SplitClimbGradeValueSubfield`);
+  * a typed getter, such as `SessionMesg.getAvgSwimmingCadence()`, `LapMesg.getTotalPushes()` or `SplitMesg.getClimbGradeFrench()`.
+
+  At 21.217.0, this declares 63 subfields: 6 on `Session`, 7 on `Lap`, 27 on `Split` and 23 on `SplitSummary`.
 * **Verbatim enum value names in `FitProfileCatalog`**: the 11 values whose profile names start with a digit, which the catalog gave under their Dart constant's `v` prefix, now have their profile names: `4iiiis` (51) and `1partcarbon` (92) in `manufacturer`, `3WayCalfRaise`, `3WayWeightedCalfRaise`, `3WaySingleLegCalfRaise` and `3WayWeightedSingleLegCalfRaise` in `calfRaiseExerciseName`, `45DegreeCableExternalRotation` in `lateralRaiseExerciseName`, `45DegreePlank` and `90DegreeStaticHold` in `plankExerciseName`, `30DegreeLatPulldown` in `pullUpExerciseName`, and `90DegreeCableExternalRotation` in `shoulderStabilityExerciseName`.
   * **Behaviour change:** `EnumValueInfo.name` and `EnumTypeInfo.nameOf()` return these names (e.g. `nameOf(51)` on `manufacturer` is now `4iiiis`, was `v4iiiis`). Code matching on the old names must drop the `v`. The Dart constants (e.g. `Manufacturer.v4iiiis`) are unchanged, and the Vermin climbing grades keep their `v`: Garmin names them `v0` to `v17`.
 * **More verbatim enum value names in `FitProfileCatalog`**: 18 values whose names the original port recased or stripped of underscores now have their profile names: the eight India zones `indiaZoneIA` to `indiaZoneIVB` (14–21) in `displayPosition`, `oHR` (255), `foretrex601_701` (2769), `fenix6SSport` (3287), `fenix6S` (3288), `instinctE40mm` (4583), `instinctE45mm` (4584), `approachS44` (4647) and `approachS50` (4656) in `garminProduct`, `rGTCycling` (315) in `manufacturer`, and `stretch90_90` (34) in `warmUpExerciseName`. Every value name in the catalog now matches Garmin's profile.
