@@ -42,18 +42,49 @@ const _reserved = {
 
 const _classNameOverrides = {'dateTime': 'FitDateTime'};
 
-/// Identifiers the original Dart port gave to profile names starting with a
-/// digit: a `v` prefix where [_ident] uses `n` (`4iiiis` -> `v4iiiis`). The
-/// updater never renames a constant, so the list is closed. No rule can replace
-/// it: the Vermin grades are really named `v0`...`v17`.
-const _portVPrefixed = {
-  'v4iiiis', 'v1partcarbon', // manufacturer
-  'v3WayCalfRaise', 'v3WayWeightedCalfRaise', 'v3WaySingleLegCalfRaise',
-  'v3WayWeightedSingleLegCalfRaise', // calfRaiseExerciseName
-  'v45DegreeCableExternalRotation', // lateralRaiseExerciseName
-  'v45DegreePlank', 'v90DegreeStaticHold', // plankExerciseName
-  'v30DegreeLatPulldown', // pullUpExerciseName
-  'v90DegreeCableExternalRotation', // shoulderStabilityExerciseName
+/// Profile names of the original Dart port's identifiers that aren't [_ident]
+/// of them, by type. The port prefixed names starting with a digit with `v`
+/// where [_ident] uses `n` (`4iiiis` -> `v4iiiis`), and changed the case or
+/// dropped the underscores of a few others (`oHR` -> `ohr`, `stretch90_90` ->
+/// `stretch9090`). The updater never renames a constant, so the map is closed.
+/// No rule can replace it: the Vermin grades are really named `v0`...`v17`, and
+/// the other changes follow no pattern. Keyed by type, so that a later profile
+/// name equal to one of these identifiers in another type stays verbatim.
+const _portNames = <String, Map<String, String>>{
+  'calfRaiseExerciseName': {
+    'v3WayCalfRaise': '3WayCalfRaise',
+    'v3WayWeightedCalfRaise': '3WayWeightedCalfRaise',
+    'v3WaySingleLegCalfRaise': '3WaySingleLegCalfRaise',
+    'v3WayWeightedSingleLegCalfRaise': '3WayWeightedSingleLegCalfRaise',
+  },
+  'displayPosition': {
+    'indiaZoneIa': 'indiaZoneIA', 'indiaZoneIb': 'indiaZoneIB',
+    'indiaZoneIia': 'indiaZoneIIA', 'indiaZoneIib': 'indiaZoneIIB',
+    'indiaZoneIiia': 'indiaZoneIIIA', 'indiaZoneIiib': 'indiaZoneIIIB',
+    'indiaZoneIva': 'indiaZoneIVA', 'indiaZoneIvb': 'indiaZoneIVB',
+  },
+  'garminProduct': {
+    'ohr': 'oHR', 'foretrex601701': 'foretrex601_701',
+    'fenix6sSport': 'fenix6SSport', 'fenix6s': 'fenix6S',
+    'instincte40mm': 'instinctE40mm', 'instincte45mm': 'instinctE45mm',
+    'approachs44': 'approachS44', 'approachs50': 'approachS50',
+  },
+  'lateralRaiseExerciseName': {
+    'v45DegreeCableExternalRotation': '45DegreeCableExternalRotation',
+  },
+  'manufacturer': {
+    'v4iiiis': '4iiiis', 'v1partcarbon': '1partcarbon',
+    'rgtCycling': 'rGTCycling',
+  },
+  'plankExerciseName': {
+    'v45DegreePlank': '45DegreePlank',
+    'v90DegreeStaticHold': '90DegreeStaticHold',
+  },
+  'pullUpExerciseName': {'v30DegreeLatPulldown': '30DegreeLatPulldown'},
+  'shoulderStabilityExerciseName': {
+    'v90DegreeCableExternalRotation': '90DegreeCableExternalRotation',
+  },
+  'warmUpExerciseName': {'stretch9090': 'stretch90_90'},
 };
 
 String _jsToJson(String s) {
@@ -102,13 +133,14 @@ String _ident(String name) {
 
 /// Reverses [_ident] so profile names round-trip verbatim: its reserved-word
 /// suffix (`new_` -> `new`) and its numeric prefix (`n510a` -> `510a`, a
-/// climbing grade). No profile name starts with `n` and a digit. Also drops the
-/// port's own prefix, but only on the names of [_portVPrefixed]
-/// (`v4iiiis` -> `4iiiis`): other `v` names are verbatim (Vermin's `v0`...).
-String _unident(String n) {
-  if (_portVPrefixed.contains(n) || RegExp(r'^n[0-9]').hasMatch(n)) {
-    return n.substring(1);
-  }
+/// climbing grade). No profile name starts with `n` and a digit. The original
+/// port's own identifiers in [type] get their name from [_portNames]
+/// (`v4iiiis` -> `4iiiis`, `ohr` -> `oHR`): other `v` names are verbatim
+/// (Vermin's `v0`...).
+String _unident(String type, String n) {
+  final port = _portNames[type]?[n];
+  if (port != null) return port;
+  if (RegExp(r'^n[0-9]').hasMatch(n)) return n.substring(1);
   return n.endsWith('_') && _reserved.contains(n.substring(0, n.length - 1))
       ? n.substring(0, n.length - 1)
       : n;
@@ -379,8 +411,8 @@ void _generateEnumType() {
     final body = StringBuffer();
     for (final r in rows) {
       // Emit the verbatim profile name, undoing the identifier's suffix or
-      // prefix (see _unident).
-      body.writeln('    EnumValueInfo(${_dartStr(_unident(r.name))}, ${r.value}),');
+      // prefix, or the port's own changes (see _unident).
+      body.writeln('    EnumValueInfo(${_dartStr(_unident(camel, r.name))}, ${r.value}),');
     }
     types.add((ident: ident, name: camel, body: body.toString()));
   }

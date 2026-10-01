@@ -143,6 +143,48 @@ void main() {
       }
     });
 
+    test('value names the original port recased are verbatim', () {
+      // The port's Dart constants keep their case and drop underscores
+      // (GarminProduct.ohr), but the profile names don't.
+      expect(GarminProduct.ohr, 255);
+      expect(WarmUpExerciseName.stretch9090, 34);
+      const expected = {
+        ProfileType.displayPosition: {
+          14: 'indiaZoneIA',
+          15: 'indiaZoneIB',
+          16: 'indiaZoneIIA',
+          17: 'indiaZoneIIB',
+          18: 'indiaZoneIIIA',
+          19: 'indiaZoneIIIB',
+          20: 'indiaZoneIVA',
+          21: 'indiaZoneIVB',
+        },
+        ProfileType.garminProduct: {
+          255: 'oHR',
+          2769: 'foretrex601_701',
+          3287: 'fenix6SSport',
+          3288: 'fenix6S',
+          4583: 'instinctE40mm',
+          4584: 'instinctE45mm',
+          4647: 'approachS44',
+          4656: 'approachS50',
+        },
+        ProfileType.manufacturer: {315: 'rGTCycling'},
+        ProfileType.warmUpExerciseName: {34: 'stretch90_90'},
+      };
+      for (final MapEntry(key: type, value: names) in expected.entries) {
+        final e = catalog.enumType(type)!;
+        for (final MapEntry(key: value, value: name) in names.entries) {
+          expect(e.nameOf(value), name, reason: '${e.name} $value');
+        }
+      }
+      // The Profile.xlsx docs are joined by value: they stay.
+      expect(catalog.enumType(ProfileType.displayPosition)!.valueOf(18)!.doc,
+          'India zone IIIA');
+      expect(catalog.enumType(ProfileType.garminProduct)!.valueOf(255)!.doc,
+          contains('Optical Heart Rate'));
+    });
+
     test('subfield-only types are enumerations, with verbatim names', () {
       // The climbing grade scales only type subfields of ClimbGradeValue.
       final yds = catalog.enumType(ProfileType.ydsGradingScale)!;
