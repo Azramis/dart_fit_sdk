@@ -2385,6 +2385,9 @@ const Map<ProfileType, List<EnumValueInfo>> profileEnumTypeValues = {
     EnumValueInfo('trainingPeaksVirtualWindows', 30061),
     EnumValueInfo('trainingPeaksVirtualMacOs', 30062),
     EnumValueInfo('trainingPeaksVirtualAppleTv', 30063),
+    EnumValueInfo('approachS7243mm', 4874),
+    EnumValueInfo('approachS7247mm', 4875),
+    EnumValueInfo('enduro4', 5169),
   ],
   ProfileType.gasConsumptionRateType: [
     EnumValueInfo('pressureSac', 0),
