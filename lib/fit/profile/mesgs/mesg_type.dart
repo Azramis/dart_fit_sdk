@@ -147,6 +147,10 @@ enum MesgType {
   tankSummary('TankSummary', 'tank_summary', MesgNum.tankSummary),
   sleepAssessment(
       'SleepAssessment', 'sleep_assessment', MesgNum.sleepAssessment),
+  tsbSonarMessageEvent('TsbSonarMessageEvent', 'tsb_sonar_message_event',
+      MesgNum.tsbSonarMessageEvent),
+  tsbSettings('TsbSettings', 'tsb_settings', MesgNum.tsbSettings),
+  tsbDiverConfig('TsbDiverConfig', 'tsb_diver_config', MesgNum.tsbDiverConfig),
   hrvStatusSummary(
       'HrvStatusSummary', 'hrv_status_summary', MesgNum.hrvStatusSummary),
   hrvValue('HrvValue', 'hrv_value', MesgNum.hrvValue),

@@ -213,3 +213,7 @@ export 'dankyu_grading_scale.dart';
 export 'split_status.dart';
 export 'dive_section_type.dart';
 export 'apnea_discipline.dart';
+export 'sonar_packet_id.dart';
+export 'sonar_heading.dart';
+export 'sonar_message_type.dart';
+export 'sonar_message_source.dart';

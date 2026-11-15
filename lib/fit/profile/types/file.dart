@@ -38,4 +38,6 @@ class File {
   static const int mfgRangeMin = 247;
   /// 0xF7 - 0xFE reserved for manufacturer specific file types
   static const int mfgRangeMax = 254;
+  static const int tsbSonarEvents = 66;
+  static const int tsbDiverConfig = 67;
 }

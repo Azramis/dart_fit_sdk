@@ -123,3 +123,6 @@ export 'workout_step_mesg.dart';
 export 'zones_target_mesg.dart';
 export 'nap_event_mesg.dart';
 export 'battery_mesg.dart';
+export 'tsb_sonar_message_event_mesg.dart';
+export 'tsb_settings_mesg.dart';
+export 'tsb_diver_config_mesg.dart';

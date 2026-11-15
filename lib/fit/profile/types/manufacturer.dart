@@ -256,4 +256,8 @@ class Manufacturer {
   static const int tymewear = 352;
   static const int exposureLights = 353;
   static const int fortoCycling = 354;
+  static const int fairWeatherAthletics = 356;
+  static const int hatchFactory = 357;
+  static const int torqano = 358;
+  static const int rockbros = 359;
 }
