@@ -538,4 +538,12 @@ class GarminProduct {
   static const int trainingPeaksVirtualWindows = 30061;
   static const int trainingPeaksVirtualMacOs = 30062;
   static const int trainingPeaksVirtualAppleTv = 30063;
+  static const int approachS7243mm = 4874;
+  static const int approachS7247mm = 4875;
+  static const int edge1060 = 4962;
+  static const int edgeExplore3 = 4970;
+  static const int edgeExplore3Plus = 4972;
+  static const int marq3 = 5000;
+  static const int descentX10 = 5026;
+  static const int enduro4 = 5169;
 }

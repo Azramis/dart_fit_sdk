@@ -1,0 +1,34 @@
+class SonarPacketId {
+  static const int xxAntId = 0;
+  static const int t1PressureDepth = 1;
+  static const int t1MsgRlyFromTsb = 2;
+  static const int rsvd3 = 3;
+  static const int t1InfoResp = 4;
+  static const int t1NavRlyFromTsb = 5;
+  static const int rsvd6 = 6;
+  static const int rsvd7 = 7;
+  static const int rsvd8 = 8;
+  static const int rsvd9 = 9;
+  static const int t1PressureHeartRespRate = 10;
+  static const int rsvd11 = 11;
+  static const int t1AckRelay = 12;
+  static const int rsvd13 = 13;
+  static const int rsvd14 = 14;
+  static const int rsvd15 = 15;
+  static const int tsbEmerAlert = 16;
+  static const int tsbCannedMsg = 17;
+  static const int tsbInfoReq = 18;
+  static const int tsbNav = 19;
+  static const int rsvd21 = 21;
+  static const int tsbAck = 22;
+  static const int rsvd23 = 23;
+  static const int rsvd24 = 24;
+  static const int rsvd25 = 25;
+  static const int wchEmerAlert = 26;
+  static const int wchCannedMsg = 27;
+  static const int wchHeartRespRate = 28;
+  static const int wchAck = 29;
+  static const int rsvd30 = 30;
+  static const int rsvd31 = 31;
+  static const int genDebug = 32;
+}

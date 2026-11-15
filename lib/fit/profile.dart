@@ -240,6 +240,9 @@ enum ProfileType {
   uiaaGradingScale,
   verminGradingScale,
   ydsGradingScale,
+  sonarMessageSource,
+  sonarMessageType,
+  sonarPacketId,
 }
 
 class Profile {
@@ -674,6 +677,15 @@ class Profile {
         break;
       case MesgNum.battery:
         newMesg = createBatteryMesg();
+        break;
+      case MesgNum.tsbSonarMessageEvent:
+        newMesg = createTsbSonarMessageEventMesg();
+        break;
+      case MesgNum.tsbSettings:
+        newMesg = createTsbSettingsMesg();
+        break;
+      case MesgNum.tsbDiverConfig:
+        newMesg = createTsbDiverConfigMesg();
         break;
       default:
         break;
@@ -15222,6 +15234,110 @@ class Profile {
     );
     newMesg.setField(
       Field("Capacity", 2, 2, 1.0, 0.0, "%", false, ProfileType.uint8),
+    );
+    return newMesg;
+  }
+
+  static Mesg createTsbSonarMessageEventMesg() {
+    final Mesg newMesg =
+        Mesg("TsbSonarMessageEvent", MesgNum.tsbSonarMessageEvent);
+    newMesg.setField(
+      Field("SonarPacketId", 0, 0, 1.0, 0.0, "", false,
+          ProfileType.sonarPacketId),
+    );
+    newMesg.setField(
+      Field("DiverLocationAccuracy", 21, 132, 1.0, 0.0, "degrees", false,
+          ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("MessageType", 22, 0, 1.0, 0.0, "", false,
+          ProfileType.sonarMessageType),
+    );
+    newMesg.setField(
+      Field("MessageSource", 23, 0, 1.0, 0.0, "", false,
+          ProfileType.sonarMessageSource),
+    );
+    return newMesg;
+  }
+
+  static Mesg createTsbSettingsMesg() {
+    final Mesg newMesg = Mesg("TsbSettings", MesgNum.tsbSettings);
+    newMesg.setField(
+      Field("TxEnable", 0, 0, 1.0, 0.0, "", false, ProfileType.bool_),
+    );
+    newMesg.setField(
+      Field("ProportionalGain", 1, 136, 1.0, 0.0, "dB", false,
+          ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("IntegralGain", 2, 136, 1.0, 0.0, "dB", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("FixedGain", 3, 2, 1.0, 0.0, "dB", false, ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("RssiSetpoint", 4, 134, 1.0, 0.0, "", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("PltThreshMult", 5, 136, 1.0, 0.0, "", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("PltThresh", 6, 134, 1.0, 0.0, "", false, ProfileType.uint32),
+    );
+    newMesg.setField(
+      Field("TransducerSpacing", 7, 136, 1.0, 0.0, "m", false,
+          ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("CalibAccel", 8, 136, 1.0, 0.0, "", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("CalibGyro", 9, 136, 1.0, 0.0, "", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("CalibMag", 10, 136, 1.0, 0.0, "", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("CalibMagSoftX", 11, 136, 1.0, 0.0, "", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("CalibMagSoftY", 12, 136, 1.0, 0.0, "", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("CalibMagSoftZ", 13, 136, 1.0, 0.0, "", false, ProfileType.float32),
+    );
+    newMesg.setField(
+      Field("MaxTxDutyCycle", 14, 2, 1.0, 0.0, "", false, ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("TxChan", 15, 2, 1.0, 0.0, "", false, ProfileType.uint8),
+    );
+    newMesg.setField(
+      Field("SearchGain", 16, 2, 1.0, 0.0, "dB", false, ProfileType.uint8),
+    );
+    return newMesg;
+  }
+
+  static Mesg createTsbDiverConfigMesg() {
+    final Mesg newMesg = Mesg("TsbDiverConfig", MesgNum.tsbDiverConfig);
+    newMesg.setField(
+      Field("AntId", 0, 140, 1.0, 0.0, "", false, ProfileType.uint32z),
+    );
+    newMesg.setField(
+      Field("DiverName", 1, 7, 1.0, 0.0, "", false, ProfileType.string),
+    );
+    newMesg.setField(
+      Field(
+          "T1TankpodSwVer", 2, 132, 100.0, 0.0, "", false, ProfileType.uint16),
+    );
+    newMesg.setField(
+      Field("LocationEnabled", 3, 0, 1.0, 0.0, "", false, ProfileType.bool_),
+    );
+    newMesg.setField(
+      Field("MessagingEnabled", 4, 0, 1.0, 0.0, "", false, ProfileType.bool_),
+    );
+    newMesg.setField(
+      Field("T1OwnerAntId", 5, 140, 1.0, 0.0, "", false, ProfileType.uint32z),
     );
     return newMesg;
   }

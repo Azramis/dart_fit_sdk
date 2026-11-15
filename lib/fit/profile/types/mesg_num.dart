@@ -129,4 +129,7 @@ class MesgNum {
   static const int mfgRangeMax = 65534;
   static const int napEvent = 412;
   static const int battery = 104;
+  static const int tsbSonarMessageEvent = 364;
+  static const int tsbSettings = 365;
+  static const int tsbDiverConfig = 366;
 }
